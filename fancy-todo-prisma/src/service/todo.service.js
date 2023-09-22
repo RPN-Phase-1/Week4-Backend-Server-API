@@ -14,6 +14,15 @@ const getTodo = async (id) => {
   return todo;
 };
 
+const getTodoByUserId = async(userId) => {
+  const todo = await prisma.todo.findMany({
+    where: {
+      userId
+    }
+  });
+  return todo;
+}
+
 const createTodo = async (title, description, status, userId) => {
   const todo = await prisma.todo.create({
     data: {
@@ -49,4 +58,11 @@ const deleteTodo = async (id) => {
   return todo;
 };
 
-module.exports = { createTodo, getTodos, getTodo, updateTodo, deleteTodo };
+module.exports = {
+  createTodo,
+  getTodos,
+  getTodo,
+  updateTodo,
+  deleteTodo,
+  getTodoByUserId,
+};

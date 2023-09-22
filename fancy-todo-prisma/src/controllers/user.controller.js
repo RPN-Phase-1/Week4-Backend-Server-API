@@ -1,4 +1,3 @@
-const { param } = require("../routes");
 const userService = require("../service/user.service");
 
 

@@ -35,6 +35,24 @@ const getTodo = async (req, res) => {
   }
 };
 
+const getTodoByUserId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await todoService.getTodoByUserId(id);
+    res.status(200).send({
+      status: 200,
+      message: "Get Todo by User Id Success",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: 500,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 const createTodo = async (req, res) => {
   try {
     const { title, description, status, userId } = req.body;
@@ -94,4 +112,11 @@ const deleteTodo = async (req, res) => {
   }
 };
 
-module.exports = { createTodo, updateTodo, getTodo, getTodos, deleteTodo};
+module.exports = {
+  createTodo,
+  updateTodo,
+  getTodo,
+  getTodos,
+  deleteTodo,
+  getTodoByUserId,
+};

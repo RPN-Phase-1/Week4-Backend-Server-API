@@ -12,4 +12,6 @@ router
   .put(todoController.updateTodo)
   .delete(todoController.deleteTodo);
 
+router.get("/getByUserId/:id", todoController.getTodoByUserId);
+
 module.exports = router;

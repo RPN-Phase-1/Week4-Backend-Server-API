@@ -1,16 +1,23 @@
 const prisma = require("../../prisma/client");
 
 const getUsers = async() => {
-  const user = await prisma.user.findMany();
+  const user = await prisma.user.findMany({
+    include: {
+      todos: true
+    }
+  });
   return user;
 }
 
 const getUser = async(id) => {
   const user = await prisma.user.findUnique({
     where: {
-      id
-    }
-  })
+      id,
+    },
+    include: {
+      todos: true,
+    },
+  });
   return user
 }
 
