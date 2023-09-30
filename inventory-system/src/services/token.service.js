@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const config = require('../config/config');
 const { tokenTypes } = require('../config/tokens');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 
 const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
   const payload = {
