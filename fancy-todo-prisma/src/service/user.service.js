@@ -8,9 +8,9 @@ const getUsers = async () =>{
 const createUser = async ({name,email,phone})=>{
     const res = await prisma.user.create({
         data:{
-            name,
-            email,
-            phone
+            name:name,
+            email:email,
+            phone:phone
         }
     })
     return res;
@@ -19,9 +19,9 @@ const createUser = async ({name,email,phone})=>{
 const updateUser = async({id, name, email, phone})=>{
     const res = await prisma.user.update({
         data:{
-            name,
-            email,
-            phone
+            name:name,
+            email:email,
+            phone:phone
         },
         where:{
             id:parseInt(id)
