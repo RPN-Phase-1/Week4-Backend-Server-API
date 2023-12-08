@@ -11,3 +11,5 @@ const {
 router.route('/').get(getAllTodos).post(createTodo);
 
 router.route('/:id').get(getTodo).update(updateTodo).delete(deleteTodo);
+
+module.exports = router;
