@@ -26,12 +26,50 @@ const getUsers = async (_,res)=>{
     }
 }
 
+const getUser = async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const result = await UserService.getUser({id})
+        res.status(200).json({
+            status:200,
+            data:result,
+            message:"Get User Success"
+        })  
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({
+            status: 500,
+            message: "Internal Server Error",
+            error: error.message,
+          });
+    }
+}
+
+const getUserTodos = async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const result = await UserService.getUserTodos({id})
+        res.status(200).json({
+            status:200,
+            data:result,
+            message:"Get User Todos Success"
+        })  
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({
+            status: 500,
+            message: "Internal Server Error",
+            error: error.message,
+          });
+    }
+}
+
 const createUser = async (req,res)=>{
     try {
         const {name, email, phone } = req.body 
         const result = await UserService.createUser({name,email,phone})
-        res.status(200).json({
-            status:200,
+        res.status(201).json({
+            status:201,
             data:result,
             message:"Create User Success"
         })   
@@ -90,6 +128,8 @@ const deleteUser = async (req, res)=>{
 
 module.exports = {
     getUsers,
+    getUser,
+    getUserTodos,
     createUser,
     updateUser,
     deleteUser

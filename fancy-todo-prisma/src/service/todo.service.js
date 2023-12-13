@@ -5,6 +5,16 @@ const getTodos = async () =>{
     return res;
 }
 
+const getTodo = async ({id}) =>{
+    const res = await prisma.todo.findUnique({
+        where:{
+            id:parseInt(id)
+        }
+       
+    })
+    return res
+}
+
 
 const createTodo = async ({title, description, status, userId})=>{
     const res = await prisma.todo.create({
@@ -46,6 +56,7 @@ const deleteTodo = async ({id})=>{
 
 module.exports = {
     getTodos,
+    getTodo,
     createTodo,
     updateTodo,
     deleteTodo

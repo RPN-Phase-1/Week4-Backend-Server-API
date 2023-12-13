@@ -5,6 +5,28 @@ const getUsers = async () =>{
     return res;
 }
 
+const getUser = async ({id}) =>{
+    const res = await prisma.user.findUnique({
+        where:{
+            id:parseInt(id)
+        }
+       
+    })
+    return res
+}
+
+const getUserTodos = async ({id}) =>{
+    const res = await prisma.user.findUnique({
+        where:{
+            id:parseInt(id)
+        },
+        include: {
+            todos: true
+        }
+    })
+    return res
+}
+
 const createUser = async ({name,email,phone})=>{
     const res = await prisma.user.create({
         data:{
@@ -41,6 +63,8 @@ const deleteUser = async({id})=>{
 
 module.exports = {
     getUsers,
+    getUser,
+    getUserTodos,
     createUser,
     updateUser,
     deleteUser

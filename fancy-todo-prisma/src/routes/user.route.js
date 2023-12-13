@@ -3,6 +3,8 @@ const router = express.Router();
 
 const {
     getUsers,
+    getUser,
+    getUserTodos,
     createUser,
     updateUser,
     deleteUser
@@ -13,7 +15,11 @@ router.route("/")
     .post(createUser);
 
 router.route("/:id")
+    .get(getUser)
     .put(updateUser)
     .delete(deleteUser);
+
+router.route("/:id/todos")
+    .get(getUserTodos);
 
 module.exports = router;
