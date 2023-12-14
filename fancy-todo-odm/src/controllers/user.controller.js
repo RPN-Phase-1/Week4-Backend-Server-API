@@ -1,5 +1,21 @@
 const userService = require('../service/user.service');
 
+const getAllUsers = async (req, res) => {
+  try {
+    const result = await userService.getAllUsers();
+    res.status(200).send({
+      status: 200,
+      message: 'Get All User Success',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: 500,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
+  }
+};
 const createUser = async (req, res) => {
   try {
     console.log(req.body);
@@ -19,4 +35,4 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = createUser;
+module.exports = { getAllUsers, createUser };
