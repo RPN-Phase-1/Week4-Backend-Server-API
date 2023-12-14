@@ -1,1 +1,1 @@
-const todoService = require('../services/todo.service');
+const todoService = require('../service/todo.service');

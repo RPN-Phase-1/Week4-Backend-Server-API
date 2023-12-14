@@ -5,6 +5,6 @@ const userRouter = require('./user.route');
 const todoRouter = require('./todo.route');
 
 router.use('/user', userRouter);
-router.use('/todo', todoRouter);
+// router.use('/todo', todoRouter);
 
 module.exports = router;
