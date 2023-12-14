@@ -22,6 +22,11 @@ const getUser = async (id) => {
   const user = await User.findById(id);
   return user;
 };
+
+const deleteUser = async (id) => {
+  const user = await User.findByIdAndDelete(id);
+  return user;
+};
 // const getUser = async (_id) => {
 //   const user = await User.aggregate([
 //     {
@@ -41,4 +46,4 @@ const getUser = async (id) => {
 
 //   return user;
 // };
-module.exports = { getAllUsers, createUser, getUser };
+module.exports = { getAllUsers, createUser, getUser, deleteUser };
