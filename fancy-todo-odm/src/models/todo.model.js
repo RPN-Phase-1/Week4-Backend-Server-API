@@ -1,25 +1,21 @@
 const mongoose = require('mongoose');
 
 const todoSchema = new mongoose.Schema({
-  tittle: {
+  title: {
     type: String,
-    required: [true, 'Please add a tittle'],
+    required: true,
   },
-  description: String,
+  description: {
+    type: String,
+    required: true,
+  },
   status: {
     type: String,
     required: true,
-    enum: ['Pending', 'Completed'],
-    default: 'Pending',
   },
-  user: {
-    type: mongoose.Schema.Types.name,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-  },
-  created: {
-    type: Date,
-    default: Date.now,
   },
 });
 
