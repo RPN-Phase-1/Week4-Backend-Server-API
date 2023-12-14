@@ -70,4 +70,23 @@ const deleteUser = async (req, res) => {
     });
   }
 };
-module.exports = { getAllUsers, createUser, getUser, deleteUser };
+
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, phone } = req.body;
+    const result = await userService.updateUser(id, name, email, phone);
+    res.status(200).send({
+      status: 200,
+      message: 'Update User Success',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: 500,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
+  }
+};
+module.exports = { getAllUsers, createUser, getUser, deleteUser, updateUser };
