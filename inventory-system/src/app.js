@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
+const passport = require('passport');
 
 const app = express();
 
@@ -31,6 +32,9 @@ app.use(xss());
 
 // gzip compression
 app.use(compression());
+
+// passport
+app.use(passport.initialize());
 
 // enable cors
 app.use(cors());
