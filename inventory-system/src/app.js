@@ -9,7 +9,6 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
-const passport = require('passport');
 
 const app = express();
 
@@ -34,7 +33,12 @@ app.use(xss());
 app.use(compression());
 
 // passport
+const { jwtStrategy } = require('./config/passport');
+const passport = require('passport');
+
+// jwt authentication
 app.use(passport.initialize());
+passport.use('jwt', jwtStrategy);
 
 // enable cors
 app.use(cors());
