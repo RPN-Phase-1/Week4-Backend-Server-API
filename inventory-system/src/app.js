@@ -1,6 +1,6 @@
 const express = require('express');
 const httpStatus = require('http-status');
-// const router = require('./routes');
+const routes = require('./routes/v1');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { errorConverter, errorHandler } = require('./middlewares/error');
@@ -40,7 +40,8 @@ app.get('/', (req, res) => {
   res.send('hello world');
 });
 
-// app.use(router)
+// v1 api routes
+app.use('/v1', routes);
 
 // send 404 error jika route tidak ada
 app.use((req, res, next) => {
