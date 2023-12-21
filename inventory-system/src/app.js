@@ -9,6 +9,8 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
+const passport = require('passport');
+const { jwtStrategy } = require('./config/passport');
 
 const app = express();
 
@@ -16,6 +18,9 @@ if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
+
+app.use(passport.initialize());
+passport.use('jwt',jwtStrategy);
 
 // set security HTTP headers
 app.use(helmet());
