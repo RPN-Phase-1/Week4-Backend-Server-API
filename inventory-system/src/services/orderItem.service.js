@@ -22,11 +22,11 @@ const createOrderItem = async (orderItemBody) => {
         },
     })
 
-    if (!currentProduct) {
+    if(!currentProduct) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
     }
 
-    if (!currentOrder) {
+    if(!currentOrder) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
     }
 
@@ -44,6 +44,11 @@ const createOrderItem = async (orderItemBody) => {
         },
       });
     
+    if(!updatedProduct) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update product stock');
+    }
+
+
     const totalPriceProduct = orderItemBody.quantity * orderItemBody.unitPrice;
     const totalPriceOrder = totalPriceProduct + currentOrder.totalPrice;
 
@@ -55,6 +60,18 @@ const createOrderItem = async (orderItemBody) => {
             totalPrice: totalPriceOrder,
         }
     })
+
+    if(!updatedOrder) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update order total price');
+    }
+
+    const createdOrderItem = await prisma.orderItem.create({
+        data: orderItemBody,
+    });
+
+    return createdOrderItem;
+
+
 
 
 //   return prisma.orderItem.create({
