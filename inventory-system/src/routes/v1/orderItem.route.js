@@ -8,13 +8,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth(), validate(orderItemValidation.createOrderItem), orderItemController.createOrderItem)
-  .get(auth(), orderItemController.getOrderItems);
+  .post( validate(orderItemValidation.createOrderItem), orderItemController.createOrderItem)
+  .get( orderItemController.getOrderItems);
 
 router
-  .route('/:orderId')
-  .get(auth(), validate(orderItemValidation.getOrderItem), orderItemController.getOrderItem)
-  .patch(auth(), validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem)
-  .delete(auth(), validate(orderItemValidation.deleteOrderItem), orderItemController.deleteOrderItem);
+  .route('/:orderItemId')
+  .get( validate(orderItemValidation.getOrderItem), orderItemController.getOrderItem)
+  .patch( validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem)
+  .delete( validate(orderItemValidation.deleteOrderItem), orderItemController.deleteOrderItem);
 
 module.exports = router;
