@@ -138,23 +138,24 @@ const updateOrderItemById = async (orderItemId, updateBody) => {
   }
 
 
-  // const updatedQuantity = await prisma.product.update({
-  //   where: {
-  //     id: updateBody.productId,
-  //   },
-  //   data: {
-  //     quantityInStock: currentProduct.quantityInStock - (updateBody.quantity + orderItem.quantity) ,
+  const updatedQuantity = await prisma.product.update({
+    where: {
+      id: updateBody.productId,
+    },
+    data: {
+      quantityInStock: (orderItem.quantity+currentProduct.quantityInStock)-updateBody.quantity,
       
-  //   },
-  // });
+      
+    },
+  });
 
-  // if(!updatedQuantity){
-  //   throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update product stock');
-  // }
+  if(!updatedQuantity){
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update product stock');
+  }
 
 
- //  const totalPriceProduct =  ;
-  // const totalPriceOrder = totalPriceProduct + currentOrder.totalPrice;
+ 
+  /* coret-coretan
   console.log("quantityinstocksaatini", currentProduct.quantityInStock)
   console.log("inputquantity", updateBody.quantity)
   console.log("orderitemquantitysaatini", orderItem.quantity)
@@ -164,35 +165,37 @@ const updateOrderItemById = async (orderItemId, updateBody) => {
   console.log("totalpriceorderITEMsaatini", orderItem.quantity*orderItem.unitPrice)
   console.log("totalpriceordersaatini", currentOrder.totalPrice)
   console.log("totalpricesesudah", updateBody.quantity*updateBody.unitPrice);
-  // console.log("totalpriceordercurrent", currentOrder.totalPrice );
-  // console.log("totalpriceorderupdate", currentOrder.totalPrice + (updateBody.quantity*updateBody.unitPrice) );
+
+  */
+
+
+ 
+  const totalPriceOrder = updateBody.quantity*updateBody.unitPrice;
   
- // console.log("totalprice", )
-  //console.log("totalpriceorder", totalPriceOrder)
-  // const updatedOrder = await prisma.order.update({
-  //   where:{
-  //       id: updateBody.orderId,
-  //   },
-  //   data:{
-  //       totalPrice: totalPriceOrder,
-  //   }
-  // })
+  const updatedOrder = await prisma.order.update({
+    where:{
+        id: updateBody.orderId,
+    },
+    data:{
+        totalPrice: totalPriceOrder,
+    }
+  })
 
-  // if(!updatedOrder) {
-  //     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update order total price');
-  // }
+  if(!updatedOrder) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update order total price');
+  }
 
 
 
   
-  // const updatedOrderItem = await prisma.orderItem.update({
-  //   where: {
-  //     id: orderItemId,
-  //   },
-  //   data: updateBody
-  // })
+  const updatedOrderItem = await prisma.orderItem.update({
+    where: {
+      id: orderItemId,
+    },
+    data: updateBody
+  })
 
-  // return updatedOrderItem;
+  return updatedOrderItem;
 };
 
 /**
