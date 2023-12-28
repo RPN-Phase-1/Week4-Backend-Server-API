@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const prisma = require('../../prisma/client')
 const ApiError = require('../utils/ApiError');
+const { deleteOrderItemById } = require('./orderItem.service');
 
 /**
  * Create a order
@@ -63,16 +64,28 @@ const updateOrderById = async (orderId, updateBody) => {
  * @returns {Promise<Order>}
  */
 const deleteOrderById = async (orderId) => {
-  const order = await getOrderById(orderId);
-  if (!order) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  const orderItems = await prisma.orderItem.findMany({
+    where:{
+      orderId:orderId
+    }
+  })
+  if (!orderItems || orderItems.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order items not found');
   }
+
+  for(const orderItem of orderItems){
+    await deleteOrderItemById(orderItem.id)
+  }
+
 
   const deleteOrders = await prisma.order.deleteMany({
     where: {
       id: orderId
     },
   })
+
+  
+
 
   return deleteOrders;
 };
