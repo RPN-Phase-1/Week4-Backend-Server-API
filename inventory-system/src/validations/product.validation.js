@@ -12,11 +12,14 @@ const createProduct = {
   }),
 };
 
+
 const getProduct = {
   params: Joi.object().keys({
     productId: Joi.string().custom(objectId),
   }),
 };
+
+
 
 const updateProduct = {
   params: Joi.object().keys({
@@ -44,6 +47,7 @@ const deleteProduct = {
 module.exports = {
   createProduct,
   getProduct,
+ 
   updateProduct,
   deleteProduct,
 };

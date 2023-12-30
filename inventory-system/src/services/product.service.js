@@ -35,6 +35,8 @@ const getProductById = async (id) => {
   })
 };
 
+
+
 /**
  * Update product by id
  * @param {ObjectId} productId
@@ -77,10 +79,25 @@ const deleteProductById = async (productId) => {
   return deleteProducts;
 };
 
+const getAllProducts = async(category,skip=0,take=10)=>{
+  let products = await prisma.product.findMany({
+    skip:parseInt(skip),
+    take:parseInt(take),
+    where:{
+      category:{
+        name:category
+      }
+    }
+  })
+
+  return products
+}
+
 module.exports = {
   createProduct,
   queryProducts,
   getProductById,
+  getAllProducts,
   updateProductById,
   deleteProductById,
 };

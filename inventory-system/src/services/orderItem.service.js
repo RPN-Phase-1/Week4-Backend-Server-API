@@ -255,10 +255,20 @@ const deleteOrderItemById = async (orderItemId) => {
 
 };
 
+const getAllOrderItems = async (skip=0,take=10) => {
+  const orderItems = await prisma.orderItem.findMany({
+    skip:parseInt(skip),
+    take:parseInt(take),
+  });
+  return orderItems;
+};
+
+
 module.exports = {
   createOrderItem,
   queryOrderItems,
   getOrderItemById,
+  getAllOrderItems,
   updateOrderItemById,
   deleteOrderItemById,
 };

@@ -6,6 +6,7 @@ const productController = require('../../controllers/product.controller');
 
 const router = express.Router();
 
+
 router
   .route('/')
   .post( validate(productValidation.createProduct), productController.createProduct)
@@ -16,5 +17,7 @@ router
   .get( validate(productValidation.getProduct), productController.getProduct)
   .patch( validate(productValidation.updateProduct), productController.updateProduct)
   .delete( validate(productValidation.deleteProduct), productController.deleteProduct);
+
+
 
 module.exports = router;

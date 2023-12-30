@@ -14,7 +14,8 @@ const createOrder = catchAsync(async (req, res) => {
 });
 
 const getOrders = catchAsync(async (req, res) => {
-  const result = await orderService.queryOrders();
+  const {skip, take} = req.query
+  const result = await orderService.getAllOrder(skip,take);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

@@ -14,7 +14,8 @@ const createOrderItem = catchAsync(async (req, res) => {
 });
 
 const getOrderItems = catchAsync(async (req, res) => {
-  const result = await orderItemService.queryOrderItems();
+  const {skip, take}= req.query;
+  const result = await orderItemService.getAllOrderItems(skip,take);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

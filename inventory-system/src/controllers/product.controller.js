@@ -14,7 +14,9 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getProducts = catchAsync(async (req, res) => {
-  const result = await productService.queryProducts();
+  const {category , skip, take} = req.query;
+  
+  const result = await productService.getAllProducts(category,skip,take);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -35,6 +37,9 @@ const getProduct = catchAsync(async (req, res) => {
     data: product
   });
 });
+
+
+
 
 const updateProduct = catchAsync(async (req, res) => {
   const product = await productService.updateProductById(req.params.productId, req.body);
@@ -60,6 +65,7 @@ module.exports = {
   createProduct,
   getProducts,
   getProduct,
+  
   updateProduct,
   deleteProduct,
 };

@@ -77,10 +77,19 @@ const deleteCategoryById = async (categoryId) => {
   return deleteCategorys;
 };
 
+const getAllCategory = async (skip=0, take=10) => {
+  const categorys = await prisma.category.findMany({
+    skip: parseInt(skip),
+    take: parseInt(take),
+  });
+  return categorys;
+};
+
 module.exports = {
   createCategory,
   queryCategorys,
   getCategoryById,
+  getAllCategory,
   updateCategoryById,
   deleteCategoryById,
 };
