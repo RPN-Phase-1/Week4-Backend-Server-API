@@ -1,6 +1,6 @@
 const prisma = require('../../prisma/client');
 
-const getUsers = async () => {
+const getAllUsers = async () => {
   const user = await prisma.user.findMany({
     include: {
       todos: true,
@@ -59,4 +59,4 @@ const deleteUser = async (userId) => {
   return user;
 };
 
-module.exports = { getUser, getUsers, createUser, updateUser, deleteUser };
+module.exports = { getUser, getAllUsers, createUser, updateUser, deleteUser };

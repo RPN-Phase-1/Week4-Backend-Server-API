@@ -1,6 +1,6 @@
 const prisma = require('../../prisma/client');
 
-const getTodos = async () => {
+const getAllTodos = async () => {
   const Todo = await prisma.todo.findMany();
 
   return Todo;
@@ -54,4 +54,4 @@ const deleteTodo = async (todoId) => {
   return todo;
 };
 
-module.exports = { getTodo, getTodos, createTodo, updateTodo, deleteTodo };
+module.exports = { getTodo, getAllTodos, createTodo, updateTodo, deleteTodo };

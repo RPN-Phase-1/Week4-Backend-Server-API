@@ -1,104 +1,127 @@
-const todoService = require('../service/todo-service');
+const todoService = require('../services/todo.service');
 
-const getTodos = async (req, res) => {
+const getAllTodos = async (req, res) => {
   try {
-    const result = await todoService.getTodos();
-    res.status(200).json({
+    const result = await todoService.getAllTodos();
+    res.status(200).send({
       status: 200,
-      message: 'Success get Todos',
+      message: 'Get Todos Success',
       data: result,
     });
-  } catch (err) {
-    res.status(500).json({
+  } catch (error) {
+    res.status(500).send({
       status: 500,
-      message: 'Failed Get Todos',
-      error: err.message,
+      message: 'Internal Server Error',
+      error: error.message,
     });
   }
 };
 
 const getTodo = async (req, res) => {
   try {
-    const result = await todoService.getTodo(req.params.id);
-    res.status(200).json({
+    const { id } = req.params;
+    const result = await todoService.getTodo(id);
+    res.status(200).send({
       status: 200,
-      message: 'Success get Todo',
+      message: 'Get Todos Success',
       data: result,
     });
-  } catch (err) {
-    res.status(500).json({
-      status: 200,
-      message: 'Failed Get Todos',
-      error: err.message,
+  } catch (error) {
+    res.status(500).send({
+      status: 500,
+      message: 'Internal Server Error',
+      error: error.message,
     });
   }
 };
-
+const getTodoByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const result = await todoService.getTodoByUserId(userId);
+    res.status(200).send({
+      status: 200,
+      message: 'Get Todos By UserId Success',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: 500,
+      message: 'Internal Server Error',
+      error: error.message,
+    });
+  }
+};
 const createTodo = async (req, res) => {
   try {
+    console.log(req.body);
     const { title, description, status, userId } = req.body;
-
     const result = await todoService.createTodo(
       title,
       description,
       status,
       userId
     );
-    res.status(200).json({
+    res.status(200).send({
       status: 200,
-      message: 'Success Create Todo',
+      message: 'Create Todo Success',
       data: result,
     });
-  } catch (err) {
-    res.status(500).json({
+  } catch (error) {
+    res.status(500).send({
       status: 500,
-      message: 'Failed Create Todo',
-      error: err.message,
+      message: 'Internal Server Error',
+      error: error.message,
     });
   }
 };
-
 const updateTodo = async (req, res) => {
   try {
     const { title, description, status, userId } = req.body;
-    const todoId = req.params.id;
-
+    const { id } = req.params;
     const result = await todoService.updateTodo(
       title,
       description,
       status,
       userId,
-      todoId
+      id
     );
-    res.status(200).json({
+    res.status(200).send({
       status: 200,
-      message: 'Success Update Todo',
+      message: 'Update Todo Success',
       data: result,
     });
-  } catch (err) {
-    res.status(500).json({
+  } catch (error) {
+    res.status(500).send({
       status: 500,
-      message: 'Failed Update Todo',
-      error: err.message,
+      message: 'Internal Server Error',
+      error: error.message,
     });
   }
 };
 
 const deleteTodo = async (req, res) => {
   try {
-    const result = await todoService.deleteTodo(req.params.id);
-    res.status(200).json({
+    const { id } = req.params;
+    const result = await todoService.deleteTodo(id);
+    res.status(200).send({
       status: 200,
-      message: 'Success delete Todo',
+      message: 'Delete Todo Success',
       data: result,
     });
-  } catch (err) {
-    res.status(500).json({
+  } catch (error) {
+    res.status(500).send({
       status: 500,
-      message: 'Failed Delete Data',
-      error: err.message,
+      message: 'Internal Server Error',
+      error: error.message,
     });
   }
 };
 
-module.exports = { getTodos, getTodo, createTodo, updateTodo, deleteTodo };
+module.exports = {
+  getAllTodos,
+  getTodo,
+  getTodoByUserId,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+};
