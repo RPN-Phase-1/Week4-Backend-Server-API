@@ -3,7 +3,7 @@ const prisma = require('./prisma/client');
 // const router = require('./routes')
 
 let server;
-let port = 3000;
+const port = 3000;
 
 if (prisma) {
   console.log('Connected to Database');
