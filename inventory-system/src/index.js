@@ -1,14 +1,14 @@
 const app = require('./app');
 const prisma = require('./prisma/client');
+const config = require('./config/config');
 // const router = require('./routes')
 
 let server;
-const port = 3000;
 
 if (prisma) {
   console.log('Connected to Database');
-  server.app.listen(port, () => {
-    console.log(`Listening to port ${port}`);
+  server.app.listen(config.port, () => {
+    console.log(`Listening to port ${config.port}`);
   });
 }
 
