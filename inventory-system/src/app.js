@@ -1,5 +1,9 @@
 const express = require('express');
 const httpStatus = require('http-status');
+const compressions = require('compression');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const cors = require('cors');
 const router = require('./routes');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
@@ -13,11 +17,24 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
+// Set Security HTTP Headers
+app.use(helmet());
+
 // aktifin parsing json
 app.use(express.json());
 
 // aktifin urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// sanitize request data
+app.use(xss());
+
+// gzip compression
+app.use(compressions());
+
+// enable cors
+app.use(cors());
+app.options('*', cors());
 
 app.get('/', (req, res) => {
   res.send('hello world');
