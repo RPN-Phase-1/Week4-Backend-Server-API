@@ -1,5 +1,6 @@
 const express = require('express');
-const auth = require('../../middlewares/auth');
+const {auth} = require('../../middlewares/auth');
+
 const validate = require('../../middlewares/validate');
 const categoryValidation = require('../../validations/category.validation');
 const categoryController = require('../../controllers/category.controller');
@@ -8,13 +9,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post( validate(categoryValidation.createCategory), categoryController.createCategory)
-  .get( categoryController.getCategorys);
+  .post(auth(),  validate(categoryValidation.createCategory), categoryController.createCategory)
+  .get( auth(),categoryController.getCategorys);
 
 router
   .route('/:categoryId')
-  .get( validate(categoryValidation.getCategory), categoryController.getCategory)
-  .patch( validate(categoryValidation.updateCategory), categoryController.updateCategory)
-  .delete( validate(categoryValidation.deleteCategory), categoryController.deleteCategory);
+  .get( auth(),validate(categoryValidation.getCategory), categoryController.getCategory)
+  .patch( auth(),validate(categoryValidation.updateCategory), categoryController.updateCategory)
+  .delete( auth(),validate(categoryValidation.deleteCategory), categoryController.deleteCategory);
 
 module.exports = router;

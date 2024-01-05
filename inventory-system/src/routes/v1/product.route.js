@@ -9,14 +9,14 @@ const router = express.Router();
 
 router
   .route('/')
-  .post( validate(productValidation.createProduct), productController.createProduct)
-  .get( productController.getProducts);
+  .post(auth(), validate(productValidation.createProduct), productController.createProduct)
+  .get(auth(), productController.getProducts);
 
 router
   .route('/:productId')
-  .get( validate(productValidation.getProduct), productController.getProduct)
-  .patch( validate(productValidation.updateProduct), productController.updateProduct)
-  .delete( validate(productValidation.deleteProduct), productController.deleteProduct);
+  .get(auth(), validate(productValidation.getProduct), productController.getProduct)
+  .patch(auth(), validate(productValidation.updateProduct), productController.updateProduct)
+  .delete(auth(), validate(productValidation.deleteProduct), productController.deleteProduct);
 
 
 

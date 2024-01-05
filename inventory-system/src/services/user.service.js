@@ -28,8 +28,52 @@ const getUserByEmail = async (email) => {
   });
 };
 
+const getUserById = async (userId) =>{
+  return prisma.user.findFirst({
+    where:{
+      id:userId
+    }
+  })
+}
+
+const getAllUsers = async(skip=0,take=10)=>{
+  let users = await prisma.user.findMany({
+    skip:parseInt(skip),
+    take:parseInt(take),
+   
+  })
+
+  return users
+}
+
+const updateUserById = async (userId, updateBody) => {
+  
+  const updateUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: updateBody
+  })
+
+  return updateUser;
+};
+
+const deleteUserById = async (userId, updateBody) => {
+  
+  const deleteUser = await prisma.user.deleteMany({
+    where: {
+      id: userId,
+    }
+  })
+
+  return deleteUser;
+};
 
 module.exports = {
   createUser,
-  getUserByEmail
+  getUserByEmail,
+  getUserById,
+  getAllUsers,
+  updateUserById,
+  deleteUserById,
 };
