@@ -14,8 +14,24 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  const { page, size } = req.query;
-  const result = await categoryService.queryCategorys(parseInt(page), parseInt(size));
+  const { sort, search, page, size } = req.query;
+  const filter = {
+    contains: search,
+    orderBy: {
+      name: sort
+    }
+  };
+
+  const options = {
+    skip: page,
+    take: size,
+  };
+
+  const result = await categoryService.queryCategorys(options, filter);
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

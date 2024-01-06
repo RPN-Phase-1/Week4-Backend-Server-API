@@ -3,8 +3,18 @@ const { orderService } = require('../services');
 const catchAsync = require('../utils/catchAsync');
 
 const getAll = catchAsync(async (req, res) => {
-  const { page, size } = req.query;
-  const order = await orderService.getOrders(parseInt(page), parseInt(size));
+  const { id, page, size } = req.query;
+
+  const filter = {
+    contains: id,
+  };
+
+  const options = {
+    skip: page,
+    take: size,
+  };
+
+  const order = await orderService.getOrders(options, filter);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

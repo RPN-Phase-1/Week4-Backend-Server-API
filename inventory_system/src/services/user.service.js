@@ -24,10 +24,30 @@ const getUserByEmail = async (email) => {
   });
 };
 
-const getUser = async (page, size) => {
-  return prisma.user.findMany({
+const getUser = async (options, filter) => {
+  const page = Number(options.skip) || 0;
+  const size = Number(options.take) || 5;
+
+  options = {
     skip: page,
     take: size,
+    where: {
+      name: filter,
+    },
+  };
+
+  return prisma.user.findMany(options);
+};
+
+const getOrderAndProductByUser = async (name) => {
+  return prisma.user.findFirst({
+    where: {
+      name,
+    },
+    include: {
+      products: true,
+      orders: true,
+    },
   });
 };
 
@@ -35,4 +55,5 @@ module.exports = {
   createUser,
   getUserByEmail,
   getUser,
+  getOrderAndProductByUser,
 };

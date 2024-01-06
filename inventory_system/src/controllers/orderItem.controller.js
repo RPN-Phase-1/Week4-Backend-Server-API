@@ -4,8 +4,18 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 
 const queryOrderItems = catchAsync(async (req, res) => {
-  const { page, size } = req.query;
-  const orderItem = await orderItemService.getOrderItems(parseInt(page), parseInt(size));
+  const { id, page, size } = req.query;
+
+  const filter = {
+    contains: id,
+  };
+
+  const options = {
+    skip: page,
+    take: size,
+  };
+
+  const orderItem = await orderItemService.getOrderItems(options, filter);
 
   if (!orderItem) throw new ApiError(httpStatus.NOT_FOUND, 'Order Items not found');
 

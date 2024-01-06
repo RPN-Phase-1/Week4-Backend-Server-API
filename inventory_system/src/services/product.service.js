@@ -15,11 +15,24 @@ const createProduct = async (productBody) => {
   return newProduct;
 };
 
-const queryProduct = async (page, size) => {
-  return prisma.product.findMany({
+const queryProduct = async (options, filter) => {
+  const page = Number(options.skip) || 0;
+  const size = Number(options.take) || 5;
+
+  options = {
     skip: page,
     take: size,
-  });
+    where: {
+      name: filter.contains,
+    },
+    orderBy: {
+      price: filter.price || 'asc',
+    }
+  };
+
+  const products = await prisma.product.findMany(options);
+
+  return products;
 };
 
 const getProductById = async (productId) => {

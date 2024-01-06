@@ -2,11 +2,19 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const prisma = require('../../prisma/client');
 
-const getOrderItems = async (page, size) => {
-  return prisma.orderItem.findMany({
+const getOrderItems = async (options, filter) => {
+  const page = Number(options.skip) || 0;
+  const size = Number(options.take) || 5;
+
+  options = {
     skip: page,
     take: size,
-  });
+    where: {
+      id: filter,
+    },
+  };
+
+  return prisma.orderItem.findMany(options);
 };
 
 const getOrderItemById = async (orderItemId) => {

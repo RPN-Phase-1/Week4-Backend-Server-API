@@ -13,7 +13,19 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getProducts = catchAsync(async (req, res) => {
-  const product = await productService.queryProduct(parseInt(req.query.page), parseInt(req.query.size));
+  const { sort, search, page, size } = req.query;
+
+  const filter = {
+    contains: search,
+    price: sort,
+  };
+
+  const options = {
+    skip: page,
+    take: size,
+  };
+
+  const product = await productService.queryProduct(options, filter);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

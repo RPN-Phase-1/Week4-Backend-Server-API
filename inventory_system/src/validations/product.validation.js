@@ -21,7 +21,7 @@ const updateProduct = {
     .keys({
       name: Joi.string(),
       quantityInStock: Joi.number().integer(),
-      price: Joi.number().integer()
+      price: Joi.number().integer(),
     })
     .min(1),
 };
