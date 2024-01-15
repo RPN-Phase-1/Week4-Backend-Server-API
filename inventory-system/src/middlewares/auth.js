@@ -19,4 +19,13 @@ const auth = () => async (req, res, next) => {
     .catch((err) => next(err));
 };
 
-module.exports = auth;
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized to access this route');
+    }
+    next();
+  };
+};
+
+module.exports = { auth, authorizePermissions };
