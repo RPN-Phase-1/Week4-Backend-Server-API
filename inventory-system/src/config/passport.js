@@ -1,11 +1,12 @@
-const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
+const { Strategy: JwtStrategy } = require('passport-jwt');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
 const prisma = require('../../prisma/client');
+const cookieExtractor = require('../utils/cookieExtractor');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: cookieExtractor,
 };
 
 const jwtVerify = async (payload, done) => {

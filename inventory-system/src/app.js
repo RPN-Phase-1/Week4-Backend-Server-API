@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const router = require('./routes/v1');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
@@ -22,6 +23,7 @@ app.use(helmet());
 
 // aktifin parsing json
 app.use(express.json());
+app.use(cookieParser(config.jwt.secret));
 
 // aktifin urlencoded
 app.use(express.urlencoded({ extended: true }));

@@ -19,4 +19,18 @@ const auth = () => async (req, res, next) => {
     .catch((err) => next(err));
 };
 
-module.exports = auth;
+const authorizePermissions =
+  (...roles) =>
+  async (req, res, next) => {
+    return new Promise((resolve, reject) => {
+      passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject))(req, res, next);
+    })
+      .then(() => {
+        if (!roles.includes(req.user.role)) throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized to access this route');
+
+        next();
+      })
+      .catch((err) => next(err));
+  };
+
+module.exports = { auth, authorizePermissions };

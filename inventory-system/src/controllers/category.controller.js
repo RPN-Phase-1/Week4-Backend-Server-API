@@ -14,7 +14,20 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  const result = await categoryService.queryCategorys();
+  const filter = { category: req.query.category };
+  const options = {
+    take: req.query.take || 10,
+    page: req.query.page || 1,
+    skip: (req.query.page - 1) * (req.query.take || 10),
+    orderBy: req.query.sort === 'latest' ? { createdAt: 'desc' } : { createdAt: 'asc' },
+  };
+  const { sort } = req.query;
+
+  // If sort a-z or z-a
+  if (sort === 'a-z') options.orderBy = { name: 'asc' };
+  if (sort === 'z-a') options.orderBy = { name: 'desc' };
+
+  const result = await categoryService.queryCategorys(filter, options);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
