@@ -4,10 +4,11 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const passport = require('passport');
 const router = require('./routes/v1');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
+const { jwtStrategy } = require('./config/passport');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -21,9 +22,12 @@ if (config.env !== 'test') {
 // set security HTTP headers
 app.use(helmet());
 
+// jwt authentication
+app.use(passport.initialize());
+passport.use('jwt', jwtStrategy);
+
 // aktifin parsing json
 app.use(express.json());
-app.use(cookieParser(config.jwt.secret));
 
 // aktifin urlencoded
 app.use(express.urlencoded({ extended: true }));
