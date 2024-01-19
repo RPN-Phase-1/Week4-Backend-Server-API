@@ -1,7 +1,7 @@
-const httpStatus = require('http-status');
+// const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
 const prisma = require('../../prisma/client');
-const ApiError = require('../utils/ApiError');
+// const ApiError = require('../utils/ApiError');
 
 /**
  * Create a user

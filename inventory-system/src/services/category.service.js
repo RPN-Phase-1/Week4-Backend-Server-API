@@ -8,9 +8,10 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Category>}
  */
 const createCategory = async (categoryBody) => {
-  return prisma.category.create({
+  const result = await prisma.category.create({
     data: categoryBody,
   });
+  return result;
 };
 
 /**
