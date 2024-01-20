@@ -13,19 +13,19 @@ const createCategory = catchAsync(async (req, res) => {
   });
 });
 
-const getCategorys = catchAsync(async (req, res) => {
-  const filter = { category: req.query.category };
+const getAllCategorys = catchAsync(async (req, res) => {
+  const filter = { name: req.query.name };
   const options = {
     take: req.query.take || 10,
     page: req.query.page || 1,
     skip: (req.query.page - 1) * (req.query.take || 10),
-    orderBy: req.query.sort === 'latest' ? { createdAt: 'desc' } : { createdAt: 'asc' },
+    sort: req.query.sort === 'latest' ? { createdAt: 'desc' } : { createdAt: 'asc' },
   };
   const { sort } = req.query;
 
   // If sort a-z or z-a
-  if (sort === 'a-z') options.orderBy = { name: 'asc' };
-  if (sort === 'z-a') options.orderBy = { name: 'desc' };
+  if (sort === 'a-z') options.sort = { name: 'asc' };
+  if (sort === 'z-a') options.sort = { name: 'desc' };
 
   const result = await categoryService.queryCategorys(filter, options);
 
@@ -71,7 +71,7 @@ const deleteCategory = catchAsync(async (req, res) => {
 
 module.exports = {
   createCategory,
-  getCategorys,
+  getAllCategorys,
   getCategory,
   updateCategory,
   deleteCategory,

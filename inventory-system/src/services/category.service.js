@@ -19,12 +19,12 @@ const createCategory = async (categoryBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryCategorys = async (filter, options) => {
-  const { category } = filter;
-  const { take, skip, orderBy } = options;
+  const { name } = filter;
+  const { take, skip, sort: orderBy } = options;
   const categorys = await prisma.category.findMany({
     where: {
       name: {
-        contains: category,
+        contains: name,
       },
     },
     include: {
@@ -32,8 +32,13 @@ const queryCategorys = async (filter, options) => {
     },
     orderBy,
     take,
-    skip,
+    skip: skip || 0,
   });
+
+  if (categorys.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
+
   return categorys;
 };
 
@@ -43,11 +48,17 @@ const queryCategorys = async (filter, options) => {
  * @returns {Promise<Category>}
  */
 const getCategoryById = async (id) => {
-  return prisma.category.findFirst({
+  const category = await prisma.category.findFirst({
     where: {
       id,
     },
   });
+
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
+
+  return category;
 };
 
 /**
