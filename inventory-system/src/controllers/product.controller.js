@@ -23,9 +23,10 @@ const getAllProducts = catchAsync(async (req, res) => {
   const options = {
     take: req.query.take || 10,
     page: req.query.page || 1,
-    skip: (req.query.page - 1) * (req.query.take || 10),
     sort: req.query.sort === 'latest' ? { createdAt: 'desc' } : { createdAt: 'asc' },
   };
+
+  options.skip = (options.page - 1) * (options.take || 10);
 
   const { sort } = req.query;
 

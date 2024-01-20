@@ -21,6 +21,7 @@ const createCategory = async (categoryBody) => {
 const queryCategorys = async (filter, options) => {
   const { name } = filter;
   const { take, skip, sort: orderBy } = options;
+
   const categorys = await prisma.category.findMany({
     where: {
       name: {
@@ -31,8 +32,8 @@ const queryCategorys = async (filter, options) => {
       products: true,
     },
     orderBy,
-    take,
-    skip: skip || 0,
+    take: Number(take),
+    skip,
   });
 
   if (categorys.length === 0) {
