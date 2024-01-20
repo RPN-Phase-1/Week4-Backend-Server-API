@@ -59,22 +59,16 @@ const getProductById = async (id) => {
   return product;
 };
 
-/**
- * Update category by id
- * @param {ObjectId} categoryId
- * @param {Object} updateBody
- * @returns {Promise<Category>}
- */
-// const updateProductById = async (categoryId, updateBody) => {
-//   const updateCategory = await prisma.category.update({
-//     where: {
-//       id: categoryId,
-//     },
-//     data: updateBody,
-//   });
+const updateProductById = async (productId, updateBody) => {
+  const updateProduct = await prisma.product.update({
+    where: {
+      id: productId,
+    },
+    data: updateBody,
+  });
 
-//   return updateCategory;
-// };
+  return updateProduct;
+};
 
 // /**
 //  * Delete category by id
@@ -96,4 +90,4 @@ const getProductById = async (id) => {
 //   return deletecategorys;
 // };
 
-module.exports = { createProduct, queryProducts, getProductById };
+module.exports = { createProduct, queryProducts, getProductById, updateProductById };

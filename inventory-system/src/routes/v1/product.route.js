@@ -11,6 +11,9 @@ router
   .post(auth(), validate(productValidation.createProduct), productController.createProduct)
   .get(auth(), productController.getAllProducts);
 
-router.route('/:productId').get(auth(), validate(productValidation.getProductById), productController.getProductById);
+router
+  .route('/:productId')
+  .patch(auth(), validate(productValidation.updateProduct), productController.updateProduct)
+  .get(auth(), validate(productValidation.getProduct), productController.getProduct);
 
 module.exports = router;
