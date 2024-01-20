@@ -12,6 +12,18 @@ const createProduct = {
   }),
 };
 
+const updateProduct = {
+  params: Joi.object().keys({
+    categoryId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      name: Joi.string(),
+    })
+    .min(1),
+};
+
 module.exports = {
   createProduct,
+  updateProduct,
 };

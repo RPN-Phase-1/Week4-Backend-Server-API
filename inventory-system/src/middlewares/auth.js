@@ -7,8 +7,8 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
     return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
   }
   // blacklisted chechker
-  console.log(user);
-  req.user = user;
+  const { password, ...userWithoutPassword } = user;
+  req.user = userWithoutPassword;
 
   resolve();
 };

@@ -43,6 +43,8 @@ const getAllProducts = catchAsync(async (req, res) => {
   });
 });
 
+const getProduct = catchAsync(async (req, res) => {});
+
 module.exports = {
   createProduct,
   getAllProducts,
