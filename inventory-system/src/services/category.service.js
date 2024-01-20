@@ -68,11 +68,6 @@ const getCategoryById = async (id) => {
  * @returns {Promise<Category>}
  */
 const updateCategoryById = async (categoryId, updateBody) => {
-  const category = await getCategoryById(categoryId);
-  if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
-  }
-
   const updateCategory = await prisma.category.update({
     where: {
       id: categoryId,

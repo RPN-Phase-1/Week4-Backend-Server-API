@@ -12,6 +12,12 @@ const createProduct = {
   }),
 };
 
+const getProductById = {
+  params: Joi.object().keys({
+    productId: Joi.string().custom(objectId),
+  }),
+};
+
 const updateProduct = {
   params: Joi.object().keys({
     categoryId: Joi.required().custom(objectId),
@@ -26,4 +32,5 @@ const updateProduct = {
 module.exports = {
   createProduct,
   updateProduct,
+  getProductById,
 };

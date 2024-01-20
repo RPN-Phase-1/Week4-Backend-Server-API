@@ -27,12 +27,12 @@ const getAllCategorys = catchAsync(async (req, res) => {
   if (sort === 'a-z') options.sort = { name: 'asc' };
   if (sort === 'z-a') options.sort = { name: 'desc' };
 
-  const result = await categoryService.queryCategorys(filter, options);
+  const categorys = await categoryService.queryCategorys(filter, options);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Get Categorys Success',
-    data: result,
+    data: categorys,
   });
 });
 

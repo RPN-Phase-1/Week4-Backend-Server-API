@@ -34,18 +34,27 @@ const getAllProducts = catchAsync(async (req, res) => {
   if (sort === 'a-z') options.sort = { name: 'asc' };
   if (sort === 'z-a') options.sort = { name: 'desc' };
 
-  const result = await productService.queryProducts(filters, options);
+  const products = await productService.queryProducts(filters, options);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Get Products Success',
-    data: result,
+    data: products,
   });
 });
 
-const getProduct = catchAsync(async (req, res) => {});
+const getProductById = catchAsync(async (req, res) => {
+  const product = await productService.getProductById(req.params.productId);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Product Success',
+    data: product,
+  });
+});
 
 module.exports = {
   createProduct,
   getAllProducts,
+  getProductById,
 };

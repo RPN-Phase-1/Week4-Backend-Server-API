@@ -45,4 +45,55 @@ const queryProducts = async (filters, options) => {
   return products;
 };
 
-module.exports = { createProduct, queryProducts };
+const getProductById = async (id) => {
+  const product = await prisma.product.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
+
+  return product;
+};
+
+/**
+ * Update category by id
+ * @param {ObjectId} categoryId
+ * @param {Object} updateBody
+ * @returns {Promise<Category>}
+ */
+// const updateProductById = async (categoryId, updateBody) => {
+//   const updateCategory = await prisma.category.update({
+//     where: {
+//       id: categoryId,
+//     },
+//     data: updateBody,
+//   });
+
+//   return updateCategory;
+// };
+
+// /**
+//  * Delete category by id
+//  * @param {ObjectId} categoryId
+//  * @returns {Promise<Category>}
+//  */
+// const deleteProductById = async (categoryId) => {
+//   const category = await getCategoryById(categoryId);
+//   if (!category) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+//   }
+
+//   const deletecategorys = await prisma.category.deleteMany({
+//     where: {
+//       id: categoryId,
+//     },
+//   });
+
+//   return deletecategorys;
+// };
+
+module.exports = { createProduct, queryProducts, getProductById };
