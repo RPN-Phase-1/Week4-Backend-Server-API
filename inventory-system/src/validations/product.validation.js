@@ -29,8 +29,22 @@ const updateProduct = {
     .min(1),
 };
 
+const deleteProduct = {
+  params: Joi.object().keys({
+    productId: Joi.string().custom(objectId),
+  }),
+};
+
+const getProductByUser = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createProduct,
   updateProduct,
   getProduct,
+  deleteProduct,
+  getProductByUser,
 };

@@ -53,13 +53,17 @@ const getProductById = async (id) => {
   });
 
   if (!product) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
   return product;
 };
 
 const updateProductById = async (productId, updateBody) => {
+  const product = await getProductById(productId);
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
   const updateProduct = await prisma.product.update({
     where: {
       id: productId,
@@ -70,24 +74,33 @@ const updateProductById = async (productId, updateBody) => {
   return updateProduct;
 };
 
-// /**
-//  * Delete category by id
-//  * @param {ObjectId} categoryId
-//  * @returns {Promise<Category>}
-//  */
-// const deleteProductById = async (categoryId) => {
-//   const category = await getCategoryById(categoryId);
-//   if (!category) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
-//   }
+const deleteProductById = async (productId) => {
+  const product = await getProductById(productId);
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
 
-//   const deletecategorys = await prisma.category.deleteMany({
-//     where: {
-//       id: categoryId,
-//     },
-//   });
+  const deleteProducts = await prisma.product.deleteMany({
+    where: {
+      id: productId,
+    },
+  });
 
-//   return deletecategorys;
-// };
+  return deleteProducts;
+};
 
-module.exports = { createProduct, queryProducts, getProductById, updateProductById };
+const getProductsByUser = async (userId) => {
+  const products = await prisma.product.findMany({
+    where: {
+      userId,
+    },
+  });
+
+  if (products.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  return products;
+};
+
+module.exports = { createProduct, queryProducts, getProductById, updateProductById, deleteProductById, getProductsByUser };

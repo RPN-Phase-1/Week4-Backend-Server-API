@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { productService } = require('../services');
-// const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/ApiError');
 
 const createProduct = catchAsync(async (req, res) => {
   const product = await productService.createProduct(req.body);
@@ -63,9 +63,37 @@ const updateProduct = catchAsync(async (req, res) => {
   });
 });
 
+const deleteProduct = catchAsync(async (req, res) => {
+  await productService.deleteProductById(req.params.productId);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Delete Product Success',
+    data: null,
+  });
+});
+
+const getProductsByUser = catchAsync(async (req, res) => {
+  const { id, roles } = req.user;
+  const reqUserId = req.params.userId;
+  if (roles === 'user' && id !== reqUserId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized to access this route');
+  }
+
+  const products = await productService.getProductBysUser({ reqUserId });
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Products Success',
+    data: products,
+  });
+});
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProduct,
   updateProduct,
+  deleteProduct,
+  getProductsByUser,
 };
