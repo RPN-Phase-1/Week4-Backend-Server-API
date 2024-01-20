@@ -8,5 +8,5 @@ const router = express.Router();
 
 router
   .route('/:userId/products')
-  .get(auth(), validate(productValidation.getProductByUser), productController.getAllProducts);
+  .get(auth(), validate(productValidation.getProductByUser), productController.getProductsByUser);
 module.exports = router;
