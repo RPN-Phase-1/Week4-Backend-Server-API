@@ -1,10 +1,10 @@
 const Joi = require('joi');
-const { objectId } = require('./category.validation');
+const { objectId } = require('./custom.validation');
 
 const createOrder = {
   body: Joi.object().keys({
     date: Joi.date().required(),
-    totalPrife: Joi.number().required(),
+    totalPrice: Joi.number().required(),
     customerName: Joi.string().required(),
     customerEmail: Joi.string().required(),
     userId: Joi.string().custom(objectId).required(),
@@ -24,7 +24,7 @@ const updateOrder = {
   body: Joi.object()
     .keys({
       date: Joi.date(),
-      totalPrife: Joi.number(),
+      totalPrice: Joi.number().required(),
       customerName: Joi.string(),
       customerEmail: Joi.string(),
       userId: Joi.string().custom(objectId),
