@@ -79,10 +79,21 @@ const deleteUser = async (userId) => {
   return deletedUser;
 };
 
+const getUserByEmail = async (email) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
   getUserById,
   updateUser,
   deleteUser,
+  getUserByEmail,
 };
