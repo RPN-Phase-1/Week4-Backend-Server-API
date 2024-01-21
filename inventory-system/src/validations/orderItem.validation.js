@@ -29,7 +29,7 @@ const updateOrderItem = {
     .min(1),
 };
 
-const delelteOrderItem = {
+const deleteOrderItem = {
   params: Joi.object().keys({
     orderItemId: Joi.string().custom(objectId),
   }),
@@ -39,5 +39,5 @@ module.exports = {
   createOrderItem,
   getOrderItem,
   updateOrderItem,
-  delelteOrderItem,
+  deleteOrderItem,
 };

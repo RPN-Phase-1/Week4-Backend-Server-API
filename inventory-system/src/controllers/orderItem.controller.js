@@ -48,9 +48,20 @@ const updateOrderItem = catchAsync(async (req, res) => {
     data: order,
   });
 });
+
+const deleteOrderItem = catchAsync(async (req, res) => {
+  await orderItemService.deleteOrderItemById(req.params.orderItemId);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Delete Order Success',
+    data: null,
+  });
+});
 module.exports = {
   createOrderItem,
   getAllOrderItems,
   getOrderItem,
   updateOrderItem,
+  deleteOrderItem,
 };

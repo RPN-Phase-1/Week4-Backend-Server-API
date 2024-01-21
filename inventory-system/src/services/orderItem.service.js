@@ -121,9 +121,37 @@ const updateOrderItemById = async (orderItemId, data) => {
   return updatedOrderItem;
 };
 
+const deleteOrderItemById = async (orderItemId) => {
+  const orderItem = await getOrderItemById(orderItemId);
+
+  // check if order exists and get data
+  const order = await orderService.getOrderById(orderItem.orderId);
+  // check if product exists and get quantity data
+  const product = await productService.getProductById(orderItem.productId);
+
+  const deletedOrderItem = await prisma.orderItem.delete({
+    where: {
+      id: orderItemId,
+    },
+  });
+
+  // update order total price
+  await orderService.updateOrderById(order.id, {
+    totalPrice: order.totalPrice - orderItem.unitPrice * orderItem.quantity,
+  });
+
+  // update product quantity
+  await productService.updateProductById(product.id, {
+    quantityInStock: product.quantityInStock + orderItem.quantity,
+  });
+
+  return deletedOrderItem;
+};
+
 module.exports = {
   createOrderItem,
   queryOrderItems,
   getOrderItemById,
   updateOrderItemById,
+  deleteOrderItemById,
 };

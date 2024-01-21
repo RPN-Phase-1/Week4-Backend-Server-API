@@ -14,7 +14,7 @@ router
 router
   .route('/:orderItemId')
   .get(auth(), validate(orderItemValidation.getOrderItem), orderItemController.getOrderItem)
-  .patch(auth(), validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem);
-// .delete(auth(), orderItemController.deleteOrderItem);
+  .patch(auth(), validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem)
+  .delete(auth(), validate(orderItemValidation.deleteOrderItem), orderItemController.deleteOrderItem);
 
 module.exports = router;
