@@ -30,8 +30,8 @@ const queryProducts = async (filters, options) => {
       },
     },
     include: {
-      category: true,
-      user: true,
+      category: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true } },
     },
     orderBy,
     take: Number(take),
@@ -49,6 +49,10 @@ const getProductById = async (id) => {
   const product = await prisma.product.findFirst({
     where: {
       id,
+    },
+    include: {
+      category: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true } },
     },
   });
 
@@ -93,6 +97,10 @@ const getProductsByUser = async (userId) => {
   const products = await prisma.product.findMany({
     where: {
       userId,
+    },
+    include: {
+      category: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true } },
     },
   });
 
