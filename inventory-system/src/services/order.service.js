@@ -52,11 +52,33 @@ const getOrderById = async (id) => {
     },
   });
 
+  if (!order) throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+
   return order;
+};
+
+const updateOrderById = async (id, body) => {
+  const order = await prisma.order.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!order) throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+
+  const updatedOrder = await prisma.order.update({
+    where: {
+      id,
+    },
+    data: body,
+  });
+
+  return updatedOrder;
 };
 
 module.exports = {
   createOrder,
   queryOrders,
   getOrderById,
+  updateOrderById,
 };

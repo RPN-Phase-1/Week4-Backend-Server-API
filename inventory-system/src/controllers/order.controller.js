@@ -39,8 +39,19 @@ const getOrder = catchAsync(async (req, res) => {
   });
 });
 
+const updateOrder = catchAsync(async (req, res) => {
+  const order = await orderService.updateOrderById(req.params.orderId, req.body);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Update Order Success',
+    data: order,
+  });
+});
+
 module.exports = {
   createOrder,
   getAllOrders,
   getOrder,
+  updateOrder,
 };
