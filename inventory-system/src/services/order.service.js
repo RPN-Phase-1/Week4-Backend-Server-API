@@ -94,10 +94,34 @@ const deleteOrderById = async (id) => {
   return deletedOrder;
 };
 
+const getOrdersByUserId = async (userId) => {
+  const orders = await prisma.order.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      orderItems: true,
+    },
+  });
+
+  if (orders.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  }
+
+  return orders;
+};
+
 module.exports = {
   createOrder,
   queryOrders,
   getOrderById,
   updateOrderById,
   deleteOrderById,
+  getOrdersByUserId,
 };

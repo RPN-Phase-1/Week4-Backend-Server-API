@@ -36,9 +36,16 @@ const deleteUser = {
   }),
 };
 
+const getOrdersByUser = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createUser,
   getUserById,
   updateUser,
   deleteUser,
+  getOrdersByUser,
 };
