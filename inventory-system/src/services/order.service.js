@@ -17,6 +17,15 @@ const queryOrders = async (filter, options) => {
         lte: totalPrice,
       },
     },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      orderItems: true,
+    },
     orderBy,
     take: Number(take),
     skip,
