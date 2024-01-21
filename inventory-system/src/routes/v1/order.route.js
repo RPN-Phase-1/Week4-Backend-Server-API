@@ -14,6 +14,7 @@ router
 router
   .route('/:orderId')
   .get(auth(), authorizePermissions('admin'), validate(orderValidation.getOrder), orderController.getOrder)
-  .patch(auth(), authorizePermissions('admin'), validate(orderValidation.updateOrder), orderController.updateOrder);
+  .patch(auth(), authorizePermissions('admin'), validate(orderValidation.updateOrder), orderController.updateOrder)
+  .delete(auth(), authorizePermissions('admin'), validate(orderValidation.deleteOrder), orderController.deleteOrder);
 
 module.exports = router;
