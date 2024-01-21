@@ -1,7 +1,7 @@
-// const httpStatus = require('http-status');
+const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
 const prisma = require('../../prisma/client');
-// const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/ApiError');
 
 /**
  * Create a user
@@ -12,23 +12,77 @@ const createUser = async (userBody) => {
   // eslint-disable-next-line no-param-reassign
   userBody.password = bcrypt.hashSync(userBody.password, 8);
 
-  return prisma.user.create({
+  const user = await prisma.user.create({
     data: userBody,
   });
+
+  const { password, ...userWithoutPassword } = user;
+
+  return userWithoutPassword;
 };
 
-/**
- * Get user by email
- * @param {string} email
- * @returns {Promise<User>}
- */
-const getUserByEmail = async (email) => {
-  return prisma.user.findUnique({
-    where: { email },
+const queryUsers = async (filter, options) => {
+  const { name } = filter;
+  const { take, skip, sort: orderBy } = options;
+
+  const users = await prisma.user.findMany({
+    where: {
+      name: {
+        contains: name,
+      },
+    },
+    orderBy,
+    take: Number(take),
+    skip,
   });
+
+  if (!users) throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
+
+  return users;
+};
+
+const getUserById = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  return user;
+};
+
+const updateUser = async (userId, updateBody) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: updateBody,
+  });
+
+  return updatedUser;
+};
+
+const deleteUser = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  const deletedUser = await prisma.user.deleteMany({
+    where: { id: userId },
+  });
+
+  return deletedUser;
 };
 
 module.exports = {
   createUser,
-  getUserByEmail,
+  queryUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
 };

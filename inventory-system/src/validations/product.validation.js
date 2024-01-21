@@ -25,6 +25,9 @@ const updateProduct = {
   body: Joi.object()
     .keys({
       name: Joi.string(),
+      price: Joi.number(),
+      description: Joi.string(),
+      quantityInStock: Joi.number(),
     })
     .min(1),
 };
