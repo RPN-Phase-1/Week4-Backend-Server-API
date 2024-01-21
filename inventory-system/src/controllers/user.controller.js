@@ -36,15 +36,17 @@ const getUserById = catchAsync(async (req, res) => {
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: 'Create User Success',
+    message: 'Get User Success',
     data: user,
   });
 });
 
 const updateUser = catchAsync(async (req, res) => {
+  const user = await userService.updateUser(req.params.userId, req.body);
+
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: 'Create User Success',
+    message: 'Update User Success',
     data: user,
   });
 });

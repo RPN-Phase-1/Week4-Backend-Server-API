@@ -50,6 +50,21 @@ const getUserById = async (userId) => {
 
   return user;
 };
+
+const updateUser = async (userId, updateBody) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: updateBody,
+  });
+
+  return updatedUser;
+};
 /**
  * Get user by email
  * @param {string} email
@@ -65,5 +80,6 @@ module.exports = {
   createUser,
   queryUsers,
   getUserById,
+  updateUser,
   // getUserByEmail,
 };

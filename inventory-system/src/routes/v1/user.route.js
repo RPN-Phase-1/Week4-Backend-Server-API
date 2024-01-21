@@ -12,7 +12,10 @@ router
   .post(validate(userValidation.createUser), userController.createUser)
   .get(auth(), userController.getAllUsers);
 
-router.route('/:userId').get(auth(), validate(userValidation.getUserById), userController.getUserById);
+router
+  .route('/:userId')
+  .get(auth(), validate(userValidation.getUserById), userController.getUserById)
+  .patch(auth(), validate(userValidation.updateUser), userController.updateUser);
 
 router
   .route('/:userId/products')
