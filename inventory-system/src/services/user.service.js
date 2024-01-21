@@ -65,15 +65,18 @@ const updateUser = async (userId, updateBody) => {
 
   return updatedUser;
 };
-/**
- * Get user by email
- * @param {string} email
- * @returns {Promise<User>}
- */
-const getUserByEmail = async (email) => {
-  return prisma.user.findUnique({
-    where: { email },
+
+const deleteUser = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
   });
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  const deletedUser = await prisma.user.deleteMany({
+    where: { id: userId },
+  });
+
+  return deletedUser;
 };
 
 module.exports = {
@@ -81,5 +84,5 @@ module.exports = {
   queryUsers,
   getUserById,
   updateUser,
-  // getUserByEmail,
+  deleteUser,
 };

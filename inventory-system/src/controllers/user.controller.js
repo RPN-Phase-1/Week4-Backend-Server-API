@@ -1,7 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
-const ApiError = require('../utils/ApiError');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -52,26 +51,14 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
+  await userService.deleteUser(req.params.userId);
+
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: 'Create User Success',
-    data: user,
+    message: 'Delete User Success',
+    data: null,
   });
 });
-
-const getUserByEmail = catchAsync(async (req, res) => {
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
-    message: 'Create User Success',
-    data: user,
-  });
-});
-
-// const getUserById = catchAsync(async (req, res) => {
-//   const user = await userService.getUserById(req.params.userId);
-
-//   res.send(user);
-// });
 
 module.exports = {
   createUser,
@@ -79,5 +66,4 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  getUserByEmail,
 };

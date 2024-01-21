@@ -15,7 +15,8 @@ router
 router
   .route('/:userId')
   .get(auth(), validate(userValidation.getUserById), userController.getUserById)
-  .patch(auth(), validate(userValidation.updateUser), userController.updateUser);
+  .patch(auth(), validate(userValidation.updateUser), userController.updateUser)
+  .delete(auth(), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
   .route('/:userId/products')
