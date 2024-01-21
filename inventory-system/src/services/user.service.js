@@ -1,7 +1,7 @@
-// const httpStatus = require('http-status');
+const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
 const prisma = require('../../prisma/client');
-// const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/ApiError');
 
 /**
  * Create a user
@@ -12,9 +12,13 @@ const createUser = async (userBody) => {
   // eslint-disable-next-line no-param-reassign
   userBody.password = bcrypt.hashSync(userBody.password, 8);
 
-  return prisma.user.create({
+  const user = await prisma.user.create({
     data: userBody,
   });
+
+  const { password, ...userWithoutPassword } = user;
+
+  return userWithoutPassword;
 };
 
 /**
