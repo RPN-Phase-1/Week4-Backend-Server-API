@@ -38,8 +38,19 @@ const getOrderItem = catchAsync(async (req, res) => {
     data: order,
   });
 });
+
+const updateOrderItem = catchAsync(async (req, res) => {
+  const order = await orderItemService.updateOrderItemById(req.params.orderItemId, req.body);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Update Order Success',
+    data: order,
+  });
+});
 module.exports = {
   createOrderItem,
   getAllOrderItems,
   getOrderItem,
+  updateOrderItem,
 };

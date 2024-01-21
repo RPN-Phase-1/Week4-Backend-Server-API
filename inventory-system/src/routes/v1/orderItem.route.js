@@ -11,7 +11,10 @@ router
   .post(auth(), validate(orderItemValidation.createOrderItem), orderItemController.createOrderItem)
   .get(auth(), orderItemController.getAllOrderItems);
 
-router.route('/:orderItemId').get(auth(), orderItemController.getOrderItem);
+router
+  .route('/:orderItemId')
+  .get(auth(), validate(orderItemValidation.getOrderItem), orderItemController.getOrderItem)
+  .patch(auth(), validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem);
 // .delete(auth(), orderItemController.deleteOrderItem);
 
 module.exports = router;

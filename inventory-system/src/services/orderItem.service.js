@@ -76,11 +76,12 @@ const getOrderItemById = async (id) => {
   return orderItem;
 };
 
-const updateOrderById = async (orderItemId, data) => {
+const updateOrderItemById = async (orderItemId, data) => {
   // check if order exists and get data
   const order = await orderService.getOrderById(data.orderId);
   // check if product exists and get quantity data
   const product = await productService.getProductById(data.productId);
+  if (product.quantityInStock < data.quantity) throw new ApiError(httpStatus.BAD_REQUEST, 'Quantity not enough');
   // get old older item
   const oldOrderItem = await getOrderItemById(orderItemId);
 
@@ -107,14 +108,22 @@ const updateOrderById = async (orderItemId, data) => {
   const quantityDifference = updatedOrderItem.quantity - oldOrderItem.quantity;
 
   // Update product quantity
-  await productService.updateProductById(product.id, {
-    quantityInStock: product.quantityInStock + quantityDifference,
-  });
+  if (quantityDifference > 0) {
+    await productService.updateProductById(product.id, {
+      quantityInStock: product.quantityInStock - quantityDifference,
+    });
+  } else if (quantityDifference < 0) {
+    await productService.updateProductById(product.id, {
+      quantityInStock: product.quantityInStock + Math.abs(quantityDifference),
+    });
+  }
+
+  return updatedOrderItem;
 };
 
 module.exports = {
   createOrderItem,
   queryOrderItems,
   getOrderItemById,
-  updateOrderById,
+  updateOrderItemById,
 };
