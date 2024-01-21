@@ -148,10 +148,29 @@ const deleteOrderItemById = async (orderItemId) => {
   return deletedOrderItem;
 };
 
+const getOrderItemsByOrderId = async (orderId) => {
+  const orders = await prisma.orderItem.findMany({
+    where: {
+      orderId,
+    },
+    include: {
+      order: true,
+      product: true,
+    },
+  });
+
+  if (orders.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order item not found');
+  }
+
+  return orders;
+};
+
 module.exports = {
   createOrderItem,
   queryOrderItems,
   getOrderItemById,
   updateOrderItemById,
   deleteOrderItemById,
+  getOrderItemsByOrderId,
 };
