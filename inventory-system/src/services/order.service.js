@@ -36,7 +36,27 @@ const queryOrders = async (filter, options) => {
   return orders;
 };
 
+const getOrderById = async (id) => {
+  const order = await prisma.order.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      orderItems: true,
+    },
+  });
+
+  return order;
+};
+
 module.exports = {
   createOrder,
   queryOrders,
+  getOrderById,
 };

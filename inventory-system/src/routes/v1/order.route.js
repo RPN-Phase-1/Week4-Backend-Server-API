@@ -11,4 +11,8 @@ router
   .get(auth(), authorizePermissions('admin'), orderController.getAllOrders)
   .post(auth(), authorizePermissions('admin'), validate(orderValidation.createOrder), orderController.createOrder);
 
+router
+  .route('/:orderId')
+  .get(auth(), authorizePermissions('admin'), validate(orderValidation.getOrder), orderController.getOrder);
+
 module.exports = router;

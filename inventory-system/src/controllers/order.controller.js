@@ -29,7 +29,18 @@ const getAllOrders = catchAsync(async (req, res) => {
   });
 });
 
+const getOrder = catchAsync(async (req, res) => {
+  const order = await orderService.getOrderById(req.params.orderId);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Order Success',
+    data: order,
+  });
+});
+
 module.exports = {
   createOrder,
   getAllOrders,
+  getOrder,
 };
