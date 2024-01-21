@@ -31,7 +31,7 @@ const queryOrders = async (filter, options) => {
     skip,
   });
 
-  if (!orders) throw new ApiError(httpStatus.NOT_FOUND, 'Orders not found');
+  if (orders.length === 0) throw new ApiError(httpStatus.NOT_FOUND, 'Orders not found');
 
   return orders;
 };

@@ -36,7 +36,7 @@ const queryUsers = async (filter, options) => {
     skip,
   });
 
-  if (!users) throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
+  if (users.length === 0) throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
 
   return users;
 };

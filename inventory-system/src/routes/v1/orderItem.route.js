@@ -6,6 +6,12 @@ const orderItemController = require('../../controllers/orderItem.controller');
 
 const router = express.Router();
 
-router.route('/').post(auth(), validate(orderItemValidation.createOrderItem), orderItemController.createOrderItem);
+router
+  .route('/')
+  .post(auth(), validate(orderItemValidation.createOrderItem), orderItemController.createOrderItem)
+  .get(auth(), orderItemController.getAllOrderItems);
+
+router.route('/:orderItemId').get(auth(), orderItemController.getOrderItem);
+// .delete(auth(), orderItemController.deleteOrderItem);
 
 module.exports = router;
