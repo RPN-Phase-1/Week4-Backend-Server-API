@@ -40,6 +40,18 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+const refreshTokens = catchAsync(async (req, res) => {
+  const { token } = req.body;
+
+  const tokens = await tokenService.refreshTokens(token);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Refresh Token Success',
+    data: tokens,
+  });
+});
+
 const logout = catchAsync(async (req, res) => {
   const token = req.headers.authorization;
   if (!token || !token.startsWith('Bearer ')) {
@@ -57,21 +69,9 @@ const logout = catchAsync(async (req, res) => {
   });
 });
 
-const refreshTokens = catchAsync(async (req, res) => {
-  const { token: payload } = req.body;
-
-  const tokens = await tokenService.refreshTokens(payload);
-
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
-    message: 'Refresh Token Success',
-    data: tokens,
-  });
-});
-
 module.exports = {
   register,
   login,
-  logout,
   refreshTokens,
+  logout,
 };

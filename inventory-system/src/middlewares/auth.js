@@ -6,7 +6,7 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
   if (err || info || !user) {
     return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
   }
-  // blacklisted chechker
+
   const { password, ...userWithoutPassword } = user;
   req.user = userWithoutPassword;
 

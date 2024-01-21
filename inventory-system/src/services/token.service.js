@@ -94,8 +94,8 @@ const generateAuthTokens = async (user) => {
  * @param {string} refreshToken
  * @returns {Promise<string>} New access token
  */
-const refreshTokens = async (payload) => {
-  const userDecoded = jwt.verify(payload, config.jwt.secret);
+const refreshTokens = async (token) => {
+  const userDecoded = jwt.verify(token, config.jwt.secret);
   if (userDecoded.type !== tokenTypes.REFRESH) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid token type');
 
   const decodedExpires = moment.unix(userDecoded.exp);
@@ -104,11 +104,11 @@ const refreshTokens = async (payload) => {
   const tokenDoc = await prisma.token.findFirst({
     where: {
       userId: userDecoded.sub,
-      blacklisted: false,
     },
   });
 
   if (!tokenDoc) throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
+  if (tokenDoc.blacklisted) throw new ApiError(httpStatus.BAD_REQUEST, 'Token is blacklisted');
 
   const user = await prisma.user.findFirst({
     where: {
@@ -124,12 +124,9 @@ const refreshTokens = async (payload) => {
 
   if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
 
-  await prisma.token.update({
+  await prisma.token.delete({
     where: {
       id: tokenDoc.id,
-    },
-    data: {
-      blacklisted: true,
     },
   });
 
@@ -138,10 +135,33 @@ const refreshTokens = async (payload) => {
   return newTokens;
 };
 
+const deleteToken = async (token) => {
+  const userDecoded = jwt.verify(token, config.jwt.secret);
+  if (userDecoded.type !== tokenTypes.ACCESS) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid token type');
+
+  const tokenDoc = await prisma.token.findFirst({
+    where: {
+      userId: userDecoded.sub,
+    },
+  });
+  if (!tokenDoc) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
+  }
+
+  const deleteTokens = await prisma.token.deleteMany({
+    where: {
+      id: tokenDoc.id,
+    },
+  });
+
+  return deleteTokens;
+};
+
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
   refreshTokens,
+  deleteToken,
 };

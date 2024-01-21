@@ -19,8 +19,6 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   return user;
 };
 
-const logout = async () => {};
-
 module.exports = {
   loginUserWithEmailAndPassword,
 };
