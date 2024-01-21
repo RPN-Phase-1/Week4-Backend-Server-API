@@ -1,9 +1,9 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { orderService } = require('../services');
+const { orderItemService } = require('../services');
 
 const createOrderItem = catchAsync(async (req, res) => {
-  const orderItem = await orderService.createOrderItem(req.body);
+  const orderItem = await orderItemService.createOrderItem(req.body);
 
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
