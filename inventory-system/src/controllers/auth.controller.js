@@ -58,14 +58,9 @@ const logout = catchAsync(async (req, res) => {
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
-  const token = req.headers.authorization;
-  if (!token || !token.startsWith('Bearer ')) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized, please login/register first');
-  }
+  const { token: payload } = req.body;
 
-  const splittedToken = token.split('Bearer ')[1];
-
-  const tokens = await tokenService.refreshTokens(splittedToken);
+  const tokens = await tokenService.refreshTokens(payload);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

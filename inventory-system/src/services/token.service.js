@@ -94,26 +94,48 @@ const generateAuthTokens = async (user) => {
  * @param {string} refreshToken
  * @returns {Promise<string>} New access token
  */
-const refreshTokens = async (token) => {
-  const decoded = jwt.verify(token, config.jwt.secret);
+const refreshTokens = async (payload) => {
+  const userDecoded = jwt.verify(payload, config.jwt.secret);
+  if (userDecoded.type !== tokenTypes.REFRESH) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid token type');
+
+  const decodedExpires = moment.unix(userDecoded.exp);
+  if (moment().isAfter(decodedExpires)) throw new ApiError(httpStatus.BAD_REQUEST, 'Refresh token expired');
 
   const tokenDoc = await prisma.token.findFirst({
     where: {
-      userId: decoded.sub,
-      type: tokenTypes.REFRESH,
+      userId: userDecoded.sub,
       blacklisted: false,
     },
   });
 
   if (!tokenDoc) throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
-  if (tokenDoc.blacklisted) throw new ApiError(httpStatus.BAD_REQUEST, 'Token is blacklisted');
-  if (moment().isBefore(tokenDoc.expires)) throw new ApiError(httpStatus.BAD_REQUEST, 'Token is not expired');
 
-  const user = await prisma.user.findFirst({ where: { id: tokenDoc.sub } });
+  const user = await prisma.user.findFirst({
+    where: {
+      id: tokenDoc.userId,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+    },
+  });
+
   if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
 
-  const newToken = await generateAuthTokens(user);
-  return newToken;
+  await prisma.token.update({
+    where: {
+      id: tokenDoc.id,
+    },
+    data: {
+      blacklisted: true,
+    },
+  });
+
+  const newTokens = await generateAuthTokens(user);
+
+  return newTokens;
 };
 
 module.exports = {
