@@ -30,12 +30,12 @@ const queryProducts = async (filters, options) => {
       },
     },
     include: {
-      category: true,
-      user: true,
+      category: { select: { name: true } },
+      user: { select: { name: true } },
     },
     orderBy,
-    take,
-    skip: skip || 0,
+    take: Number(take),
+    skip,
   });
 
   if (products.length === 0) {
@@ -45,4 +45,70 @@ const queryProducts = async (filters, options) => {
   return products;
 };
 
-module.exports = { createProduct, queryProducts };
+const getProductById = async (id) => {
+  const product = await prisma.product.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      category: { select: { name: true } },
+      user: { select: { name: true } },
+    },
+  });
+
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  return product;
+};
+
+const updateProductById = async (productId, updateBody) => {
+  const product = await getProductById(productId);
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+  const updateProduct = await prisma.product.update({
+    where: {
+      id: productId,
+    },
+    data: updateBody,
+  });
+
+  return updateProduct;
+};
+
+const deleteProductById = async (productId) => {
+  const product = await getProductById(productId);
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  const deleteProducts = await prisma.product.deleteMany({
+    where: {
+      id: productId,
+    },
+  });
+
+  return deleteProducts;
+};
+
+const getProductsByUser = async (userId) => {
+  const products = await prisma.product.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      category: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true } },
+    },
+  });
+
+  if (products.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  return products;
+};
+
+module.exports = { createProduct, queryProducts, getProductById, updateProductById, deleteProductById, getProductsByUser };

@@ -40,12 +40,38 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+const refreshTokens = catchAsync(async (req, res) => {
+  const { token } = req.body;
+
+  const tokens = await tokenService.refreshTokens(token);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Refresh Token Success',
+    data: tokens,
+  });
+});
+
 const logout = catchAsync(async (req, res) => {
-  // Blacklisted : true
+  const token = req.headers.authorization;
+  if (!token || !token.startsWith('Bearer ')) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized, please login/register first');
+  }
+
+  const splittedToken = token.split('Bearer ')[1];
+
+  await tokenService.deleteToken(splittedToken);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Logout Success',
+    data: null,
+  });
 });
 
 module.exports = {
   register,
   login,
+  refreshTokens,
   logout,
 };

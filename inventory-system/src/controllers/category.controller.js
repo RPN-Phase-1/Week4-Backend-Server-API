@@ -1,5 +1,4 @@
 const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
 
@@ -18,29 +17,28 @@ const getAllCategorys = catchAsync(async (req, res) => {
   const options = {
     take: req.query.take || 10,
     page: req.query.page || 1,
-    skip: (req.query.page - 1) * (req.query.take || 10),
     sort: req.query.sort === 'latest' ? { createdAt: 'desc' } : { createdAt: 'asc' },
   };
+
+  options.skip = (options.page - 1) * (options.take || 10);
+
   const { sort } = req.query;
 
   // If sort a-z or z-a
   if (sort === 'a-z') options.sort = { name: 'asc' };
   if (sort === 'z-a') options.sort = { name: 'desc' };
 
-  const result = await categoryService.queryCategorys(filter, options);
+  const categorys = await categoryService.queryCategorys(filter, options);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Get Categorys Success',
-    data: result,
+    data: categorys,
   });
 });
 
 const getCategory = catchAsync(async (req, res) => {
   const category = await categoryService.getCategoryById(req.params.categoryId);
-  if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
-  }
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

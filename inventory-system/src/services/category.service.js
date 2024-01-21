@@ -21,18 +21,17 @@ const createCategory = async (categoryBody) => {
 const queryCategorys = async (filter, options) => {
   const { name } = filter;
   const { take, skip, sort: orderBy } = options;
+
   const categorys = await prisma.category.findMany({
     where: {
       name: {
         contains: name,
       },
     },
-    include: {
-      products: true,
-    },
+    include: { products: true },
     orderBy,
-    take,
-    skip: skip || 0,
+    take: Number(take),
+    skip,
   });
 
   if (categorys.length === 0) {
@@ -51,6 +50,9 @@ const getCategoryById = async (id) => {
   const category = await prisma.category.findFirst({
     where: {
       id,
+    },
+    include: {
+      product: true,
     },
   });
 
@@ -91,7 +93,7 @@ const updateCategoryById = async (categoryId, updateBody) => {
 const deleteCategoryById = async (categoryId) => {
   const category = await getCategoryById(categoryId);
   if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
   const deleteCategorys = await prisma.category.deleteMany({

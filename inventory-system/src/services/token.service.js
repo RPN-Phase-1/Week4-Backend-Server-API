@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+const httpStatus = require('http-status');
 const config = require('../config/config');
 const { tokenTypes } = require('../config/tokens');
 const prisma = require('../../prisma/client');
+const ApiError = require('../utils/ApiError');
 
 /**
  * Generate token
@@ -87,9 +89,79 @@ const generateAuthTokens = async (user) => {
   };
 };
 
+/**
+ * Refresh access token using refresh token
+ * @param {string} refreshToken
+ * @returns {Promise<string>} New access token
+ */
+const refreshTokens = async (token) => {
+  const userDecoded = jwt.verify(token, config.jwt.secret);
+  if (userDecoded.type !== tokenTypes.REFRESH) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid token type');
+
+  const decodedExpires = moment.unix(userDecoded.exp);
+  if (moment().isAfter(decodedExpires)) throw new ApiError(httpStatus.BAD_REQUEST, 'Refresh token expired');
+
+  const tokenDoc = await prisma.token.findFirst({
+    where: {
+      userId: userDecoded.sub,
+    },
+  });
+
+  if (!tokenDoc) throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
+  if (tokenDoc.blacklisted) throw new ApiError(httpStatus.BAD_REQUEST, 'Token is blacklisted');
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: tokenDoc.userId,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+    },
+  });
+
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  await prisma.token.delete({
+    where: {
+      id: tokenDoc.id,
+    },
+  });
+
+  const newTokens = await generateAuthTokens(user);
+
+  return newTokens;
+};
+
+const deleteToken = async (token) => {
+  const userDecoded = jwt.verify(token, config.jwt.secret);
+  if (userDecoded.type !== tokenTypes.ACCESS) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid token type');
+
+  const tokenDoc = await prisma.token.findFirst({
+    where: {
+      userId: userDecoded.sub,
+    },
+  });
+  if (!tokenDoc) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
+  }
+
+  const deleteTokens = await prisma.token.deleteMany({
+    where: {
+      id: tokenDoc.id,
+    },
+  });
+
+  return deleteTokens;
+};
+
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
+  refreshTokens,
+  deleteToken,
 };
