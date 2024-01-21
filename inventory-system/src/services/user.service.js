@@ -21,6 +21,35 @@ const createUser = async (userBody) => {
   return userWithoutPassword;
 };
 
+const queryUsers = async (filter, options) => {
+  const { name } = filter;
+  const { take, skip, sort: orderBy } = options;
+
+  const users = await prisma.user.findMany({
+    where: {
+      name: {
+        contains: name,
+      },
+    },
+    orderBy,
+    take: Number(take),
+    skip,
+  });
+
+  if (!users) throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
+
+  return users;
+};
+
+const getUserById = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  return user;
+};
 /**
  * Get user by email
  * @param {string} email
@@ -34,5 +63,7 @@ const getUserByEmail = async (email) => {
 
 module.exports = {
   createUser,
-  getUserByEmail,
+  queryUsers,
+  getUserById,
+  // getUserByEmail,
 };

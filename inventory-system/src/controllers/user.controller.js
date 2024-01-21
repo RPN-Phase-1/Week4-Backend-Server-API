@@ -12,7 +12,60 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
-// const getUser = catchAsync(async (req, res) => {
+const getAllUsers = catchAsync(async (req, res) => {
+  const filter = { name: req.query.name };
+  const options = {
+    take: req.query.take || 10,
+    page: req.query.page || 1,
+    sort: req.query.sort === 'a-z' ? { name: 'asc' } : { name: 'desc' },
+  };
+
+  options.skip = (options.page - 1) * (options.take || 10);
+
+  const users = await userService.queryUsers(filter, options);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Users Success',
+    data: users,
+  });
+});
+
+const getUserById = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.params.userId);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Create User Success',
+    data: user,
+  });
+});
+
+const updateUser = catchAsync(async (req, res) => {
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Create User Success',
+    data: user,
+  });
+});
+
+const deleteUser = catchAsync(async (req, res) => {
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Create User Success',
+    data: user,
+  });
+});
+
+const getUserByEmail = catchAsync(async (req, res) => {
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Create User Success',
+    data: user,
+  });
+});
+
+// const getUserById = catchAsync(async (req, res) => {
 //   const user = await userService.getUserById(req.params.userId);
 
 //   res.send(user);
@@ -20,5 +73,9 @@ const createUser = catchAsync(async (req, res) => {
 
 module.exports = {
   createUser,
-  // getUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getUserByEmail,
 };

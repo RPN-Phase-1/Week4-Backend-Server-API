@@ -7,7 +7,12 @@ const productController = require('../../controllers/product.controller');
 
 const router = express.Router();
 
-router.route('/').post(validate(userValidation.createUser), userController.createUser);
+router
+  .route('/')
+  .post(validate(userValidation.createUser), userController.createUser)
+  .get(auth(), userController.getAllUsers);
+
+router.route('/:userId').get(auth(), validate(userValidation.getUserById), userController.getUserById);
 
 router
   .route('/:userId/products')
