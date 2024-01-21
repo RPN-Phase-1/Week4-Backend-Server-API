@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { orderService } = require('../services');
+const { orderService, orderItemService } = require('../services');
 
 const createOrder = catchAsync(async (req, res) => {
   const order = await orderService.createOrder(req.body);
@@ -59,10 +59,21 @@ const deleteOrder = catchAsync(async (req, res) => {
   });
 });
 
+const getOrderItemsByOrder = catchAsync(async (req, res) => {
+  const order = await orderItemService.getOrderItemsByOrderId(req.params.orderId);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Order Items Success',
+    data: order,
+  });
+});
+
 module.exports = {
   createOrder,
   getAllOrders,
   getOrder,
   updateOrder,
   deleteOrder,
+  getOrderItemsByOrder,
 };

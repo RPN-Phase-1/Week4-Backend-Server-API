@@ -37,10 +37,16 @@ const deleteOrder = {
     orderId: Joi.string().custom(objectId),
   }),
 };
+const getOrderItemsByOrderId = {
+  params: Joi.object().keys({
+    orderId: Joi.string().custom(objectId),
+  }),
+};
 
 module.exports = {
   createOrder,
   getOrder,
   updateOrder,
   deleteOrder,
+  getOrderItemsByOrderId,
 };

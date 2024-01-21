@@ -6,7 +6,6 @@ const createOrderItem = {
     orderId: Joi.string().custom(objectId).required(),
     productId: Joi.string().custom(objectId).required(),
     quantity: Joi.number().required(),
-    unitPrice: Joi.number().required(),
   }),
 };
 
@@ -30,7 +29,7 @@ const updateOrderItem = {
     .min(1),
 };
 
-const delelteOrderItem = {
+const deleteOrderItem = {
   params: Joi.object().keys({
     orderItemId: Joi.string().custom(objectId),
   }),
@@ -40,5 +39,5 @@ module.exports = {
   createOrderItem,
   getOrderItem,
   updateOrderItem,
-  delelteOrderItem,
+  deleteOrderItem,
 };
