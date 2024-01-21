@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+const httpStatus = require('http-status');
 const config = require('../config/config');
 const { tokenTypes } = require('../config/tokens');
 const prisma = require('../../prisma/client');
+const ApiError = require('../utils/ApiError');
 
 /**
  * Generate token
@@ -87,9 +89,37 @@ const generateAuthTokens = async (user) => {
   };
 };
 
+/**
+ * Refresh access token using refresh token
+ * @param {string} refreshToken
+ * @returns {Promise<string>} New access token
+ */
+const refreshTokens = async (token) => {
+  const decoded = jwt.verify(token, config.jwt.secret);
+
+  const tokenDoc = await prisma.token.findFirst({
+    where: {
+      userId: decoded.sub,
+      type: tokenTypes.REFRESH,
+      blacklisted: false,
+    },
+  });
+
+  if (!tokenDoc) throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
+  if (tokenDoc.blacklisted) throw new ApiError(httpStatus.BAD_REQUEST, 'Token is blacklisted');
+  if (moment().isBefore(tokenDoc.expires)) throw new ApiError(httpStatus.BAD_REQUEST, 'Token is not expired');
+
+  const user = await prisma.user.findFirst({ where: { id: tokenDoc.sub } });
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  const newToken = await generateAuthTokens(user);
+  return newToken;
+};
+
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
+  refreshTokens,
 };

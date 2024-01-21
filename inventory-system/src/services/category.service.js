@@ -28,9 +28,7 @@ const queryCategorys = async (filter, options) => {
         contains: name,
       },
     },
-    include: {
-      product: { select: { name: true, quantityInStock: true } },
-    },
+    include: { products: true },
     orderBy,
     take: Number(take),
     skip,
@@ -54,7 +52,7 @@ const getCategoryById = async (id) => {
       id,
     },
     include: {
-      product: { select: { name: true, quantityInStock: true } },
+      product: true,
     },
   });
 

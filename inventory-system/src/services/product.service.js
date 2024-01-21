@@ -30,8 +30,8 @@ const queryProducts = async (filters, options) => {
       },
     },
     include: {
-      category: { select: { id: true, name: true } },
-      user: { select: { id: true, name: true } },
+      category: { select: { name: true } },
+      user: { select: { name: true } },
     },
     orderBy,
     take: Number(take),
@@ -51,8 +51,8 @@ const getProductById = async (id) => {
       id,
     },
     include: {
-      category: { select: { id: true, name: true } },
-      user: { select: { id: true, name: true } },
+      category: { select: { name: true } },
+      user: { select: { name: true } },
     },
   });
 
