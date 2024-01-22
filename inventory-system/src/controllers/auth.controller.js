@@ -4,24 +4,26 @@ const { authService, userService, tokenService } = require('../services');
 const ApiError = require('../utils/ApiError');
 
 const register = catchAsync(async (req, res) => {
-  const existingUser = await userService.getUserByEmail(req.body.email);
+  try {
+    await userService.getUserByEmail(req.body.email);
 
-  if (existingUser) {
+    // Jika existingUser tidak melempar kesalahan, berarti email sudah ada
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  } catch (error) {
+    if (error.message === 'User not found') {
+      // Lanjutkan proses registrasi karena email belum ada
+      const userCreated = await userService.createUser(req.body);
+      const tokens = await tokenService.generateAuthTokens(userCreated);
+
+      res.status(httpStatus.CREATED).send({
+        status: httpStatus.CREATED,
+        message: 'Register Success',
+        data: { userCreated, tokens },
+      });
+    } else {
+      throw error; // Melempar kembali kesalahan yang tidak terduga
+    }
   }
-
-  const userCreated = await userService.createUser(req.body);
-  const tokens = await tokenService.generateAuthTokens(userCreated);
-
-  res.status(httpStatus.CREATED).send({
-    user: {
-      id: userCreated.id,
-      name: userCreated.name,
-      email: userCreated.email,
-      role: userCreated.role,
-    },
-    tokens,
-  });
 });
 
 const login = catchAsync(async (req, res) => {
@@ -30,13 +32,9 @@ const login = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(user);
 
   res.status(httpStatus.OK).send({
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    },
-    tokens,
+    status: httpStatus.OK,
+    message: 'Login Success',
+    data: { user, tokens },
   });
 });
 
