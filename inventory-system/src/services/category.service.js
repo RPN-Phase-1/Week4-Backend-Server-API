@@ -47,13 +47,11 @@ const queryCategorys = async (filter, options) => {
  * @returns {Promise<Category>}
  */
 const getCategoryById = async (id) => {
-  const category = await prisma.category.findFirst({
+  const category = await prisma.category.findUnique({
     where: {
       id,
     },
-    include: {
-      product: true,
-    },
+    include: { products: true },
   });
 
   if (!category) {
