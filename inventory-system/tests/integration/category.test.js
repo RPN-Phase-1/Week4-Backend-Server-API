@@ -165,7 +165,22 @@ describe('Categories routes', () => {
           name: category.name,
           createdAt: expect.anything(),
           updatedAt: expect.anything(),
+          products: expect.any(Array),
         });
+      });
+    });
+
+    describe('DELETE /v1/categories/:categoryId', () => {
+      test('Should return 200 and null data', async () => {
+        const res = await request(app)
+          .delete(`/v1/categories/${categoryOne.id}`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .expect(httpStatus.OK);
+
+        // Response Body Macthup
+        const categoryData = res.body.data;
+
+        expect(categoryData).toBeNull();
       });
     });
   });
