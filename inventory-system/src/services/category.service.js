@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -47,13 +47,11 @@ const queryCategorys = async (filter, options) => {
  * @returns {Promise<Category>}
  */
 const getCategoryById = async (id) => {
-  const category = await prisma.category.findFirst({
+  const category = await prisma.category.findUnique({
     where: {
       id,
     },
-    include: {
-      product: true,
-    },
+    include: { products: true },
   });
 
   if (!category) {

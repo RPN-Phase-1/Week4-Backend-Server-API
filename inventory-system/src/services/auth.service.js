@@ -11,6 +11,7 @@ const ApiError = require('../utils/ApiError');
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
+
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!user || !validPassword) {

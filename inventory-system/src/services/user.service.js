@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -16,9 +16,7 @@ const createUser = async (userBody) => {
     data: userBody,
   });
 
-  const { password, ...userWithoutPassword } = user;
-
-  return userWithoutPassword;
+  return user;
 };
 
 const queryUsers = async (filter, options) => {
@@ -85,6 +83,8 @@ const getUserByEmail = async (email) => {
       email,
     },
   });
+
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
 
   return user;
 };
