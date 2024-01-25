@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 const { v4 } = require('uuid');
 const prisma = require('../../prisma/index');
 
@@ -9,16 +9,16 @@ const hashedPassword = bcrypt.hashSync(password, salt);
 
 const userOne = {
   id: v4(),
-  name: faker.name.findName(),
+  name: faker.person.name(),
   email: faker.internet.email().toLowerCase(),
-  password,
+  password: 'password1',
   role: 'user',
   isEmailVerified: false,
 };
 
 const userTwo = {
   id: v4(),
-  name: faker.name.findName(),
+  name: faker.person.name(),
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'user',
@@ -27,7 +27,7 @@ const userTwo = {
 
 const admin = {
   id: v4(),
-  name: faker.name.findName(),
+  name: faker.person.name(),
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'admin',

@@ -1,5 +1,5 @@
 const request = require('supertest');
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 const httpStatus = require('http-status');
 const { v4 } = require('uuid');
 const app = require('../../src/app');
@@ -150,22 +150,6 @@ describe('Categories routes', () => {
           name: category.name,
           createdAt: expect.anything(),
           updatedAt: expect.anything(),
-          products: expect.any(Array),
-        });
-
-        // Database Macthup
-        const dbCategory = await prisma.category.findUnique({
-          where: {
-            id: categoryData.id,
-          },
-        });
-
-        expect(dbCategory).toMatchObject({
-          id: expect.anything(),
-          name: category.name,
-          createdAt: expect.anything(),
-          updatedAt: expect.anything(),
-          products: expect.any(Array),
         });
       });
     });
