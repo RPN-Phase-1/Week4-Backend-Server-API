@@ -60,7 +60,7 @@ describe('Products Route', () => {
 
       const resData = res.body.message;
 
-      expect(resData).toContain('Invalid input data');
+      expect(resData).toContain('must be a valid UUID');
     });
   });
   describe('GET Method on /products & /products:id', () => {
@@ -132,7 +132,6 @@ describe('Products Route', () => {
           user: expect.anything(),
         });
       });
-
       test('Should return 404 if product not found', async () => {
         const res = await request(app)
           .get(`/v1/products/${v4()}`)
@@ -163,6 +162,102 @@ describe('Products Route', () => {
 
         expect(resData).toContain('Please authenticate');
       });
+    });
+  });
+  describe('DELETE Method on /products:id', () => {
+    test('Should return 200 and null data', async () => {
+      const res = await request(app)
+        .delete(`/v1/products/${productOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
+
+      const productData = res.body.data;
+
+      expect(productData).toEqual(null);
+    });
+    test('Should return 400 if invalid id given', async () => {
+      const res = await request(app)
+        .delete(`/v1/products/123`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
+
+      const resData = res.body.message;
+
+      expect(resData).toContain('must be a valid UUID');
+    });
+    test('Should return 404 if user not logged in', async () => {
+      const res = await request(app)
+        .delete(`/v1/products/${productOne.id}`)
+        .set('Authorization', `Bearer invalidToken `)
+        .expect(httpStatus.UNAUTHORIZED);
+
+      const resData = res.body.message;
+
+      expect(resData).toContain('Please authenticate');
+    });
+    test('Should return 404 if product not found', async () => {
+      const res = await request(app)
+        .delete(`/v1/products/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+
+      const resData = res.body.message;
+
+      expect(resData).toEqual('Product not found');
+    });
+  });
+  describe('PATCH Method on /products:id', () => {
+    test('Should return 200 and updated product', async () => {
+      const res = await request(app)
+        .patch(`/v1/products/${productOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ name: 'sir' })
+        .expect(httpStatus.OK);
+
+      const productData = res.body.data;
+
+      expect(productData).toMatchObject({
+        id: expect.anything(),
+        name: 'sir',
+        description: productOne.description,
+        price: expect.anything(),
+        quantityInStock: productOne.quantityInStock,
+        categoryId: categoryOne.id,
+        userId: userOne.id,
+      });
+    });
+    test('Should return 400 if invalid id given', async () => {
+      const res = await request(app)
+        .patch(`/v1/products/123`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ name: 'sir' })
+        .expect(httpStatus.BAD_REQUEST);
+
+      const resData = res.body.message;
+
+      expect(resData).toContain('must be a valid UUID');
+    });
+    test('Should return 404 if user not logged in', async () => {
+      const res = await request(app)
+        .patch(`/v1/products/${productOne.id}`)
+        .set('Authorization', `Bearer invalidToken `)
+        .send({ name: 'sir' })
+        .expect(httpStatus.UNAUTHORIZED);
+
+      const resData = res.body.message;
+
+      expect(resData).toContain('Please authenticate');
+    });
+    test('Should return 404 if product not found', async () => {
+      const res = await request(app)
+        .patch(`/v1/products/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ name: 'sir' })
+        .expect(httpStatus.NOT_FOUND);
+
+      const resData = res.body.message;
+
+      expect(resData).toEqual('Product not found');
     });
   });
 });
