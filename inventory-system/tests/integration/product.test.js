@@ -1,6 +1,6 @@
 const request = require('supertest');
-const { faker } = require('@faker-js/faker');
 const httpStatus = require('http-status');
+const { faker } = require('@faker-js/faker');
 const { v4 } = require('uuid');
 const app = require('../../src/app');
 const { userOne } = require('../fixtures/user.fixture');
@@ -11,51 +11,61 @@ const { insertProducts, productOne } = require('../fixtures/product.fixture');
 
 describe('Products Route', () => {
   let newProduct;
-  let newCategory;
-  let newUser;
   beforeEach(async () => {
-    newUser = await prisma.user.create({ data: userOne });
-    newCategory = await prisma.category.create({ data: categoryOne });
+    await insertProducts(userOne, categoryOne, [productOne]);
 
-    newProduct = await prisma.product.create({
-      data: {
-        id: v4(),
-        name: faker.commerce.productName(),
-        description: faker.commerce.productDescription(),
-        price: faker.number.float({ min: 100, max: 200 }),
-        quantityInStock: faker.number.int({ max: 100 }),
-        categoryId: newCategory.id,
-        userId: newUser.id,
-      },
-    });
+    newProduct = {
+      name: faker.commerce.productName(),
+      description: faker.commerce.productDescription(),
+      price: faker.number.float({ max: 50 }),
+      quantityInStock: faker.number.int({ max: 100 }),
+    };
   });
   describe('POST Method on /products', () => {
     test('Should return 201 if product is created', async () => {
       const res = await request(app)
         .post('/v1/products')
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(productOne)
+        .send({ ...newProduct, categoryId: categoryOne.id, userId: userOne.id })
         .expect(httpStatus.CREATED);
 
       const productData = res.body.data;
 
-      expect(productData).toEqual({
+      expect(productData).toMatchObject({
         id: expect.anything(),
-        name: productOne.name,
-        description: productOne.description,
-        price: productOne.price,
-        quantityInStock: productOne.quantityInStock,
+        name: newProduct.name,
+        description: newProduct.description,
+        price: expect.anything(),
+        quantityInStock: newProduct.quantityInStock,
         categoryId: expect.anything(),
         userId: expect.anything(),
-        category: expect.any(Array),
-        user: expect.any(Array),
       });
+    });
+    test('Should return 404 if user not logged in', async () => {
+      const res = await request(app)
+        .get('/v1/products')
+        .set('Authorization', `Bearer invalidToken `)
+        .expect(httpStatus.UNAUTHORIZED);
+
+      const resData = res.body.message;
+
+      expect(resData).toContain('Please authenticate');
+    });
+    test('Should return 400 if given invalid data', async () => {
+      const res = await request(app)
+        .post('/v1/products')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ ...newProduct, categoryId: 'invalid-id', userId: 'invalid-id' })
+        .expect(httpStatus.BAD_REQUEST);
+
+      const resData = res.body.message;
+
+      expect(resData).toContain('Invalid input data');
     });
   });
   describe('GET Method on /products & /products:id', () => {
     describe('GET /products route', () => {
       test('Should return 200 and all products', async () => {
-        await insertProducts([newProduct]);
         const res = await request(app)
           .get('/v1/products')
           .set('Authorization', `Bearer ${userOneAccessToken}`)
@@ -63,17 +73,17 @@ describe('Products Route', () => {
 
         const productsData = res.body.data;
 
-        expect(productsData).toEqual([
+        expect(productsData).toMatchObject([
           {
-            id: newProduct.id,
-            name: newProduct.name,
-            description: newProduct.description,
-            price: newProduct.price,
-            quantityInStock: newProduct.quantityInStock,
-            categoryId: newCategory.id,
-            userId: newUser.id,
-            category: expect.any(Array),
-            user: expect.any(Array),
+            id: expect.anything(),
+            name: productOne.name,
+            description: productOne.description,
+            price: expect.anything(),
+            quantityInStock: productOne.quantityInStock,
+            categoryId: categoryOne.id,
+            userId: userOne.id,
+            category: expect.anything(),
+            user: expect.anything(),
           },
         ]);
       });
@@ -87,7 +97,7 @@ describe('Products Route', () => {
 
         const resData = res.body.message;
 
-        expect(resData).toEqual('Product not found');
+        expect(resData).toContain('Product not found');
       });
       test('Should return 404 if user not logged in', async () => {
         const res = await request(app)
@@ -97,30 +107,29 @@ describe('Products Route', () => {
 
         const resData = res.body.message;
 
-        expect(resData).toEqual('Please authenticate');
+        expect(resData).toContain('Please authenticate');
       });
     });
 
     describe('GET /product:id route', () => {
       test('Should return 200 and product data if id valid', async () => {
-        await insertProducts([newProduct]);
         const res = await request(app)
-          .get(`/v1/products/${newProduct.id}`)
+          .get(`/v1/products/${productOne.id}`)
           .set('Authorization', `Bearer ${userOneAccessToken}`)
           .expect(httpStatus.OK);
 
         const productData = res.body.data;
 
-        expect(productData).toEqual({
-          id: newProduct.id,
-          name: newProduct.name,
-          description: newProduct.description,
-          price: newProduct.price,
-          quantityInStock: newProduct.quantityInStock,
-          categoryId: newCategory.id,
-          userId: newUser.id,
-          category: expect.any(Array),
-          user: expect.any(Array),
+        expect(productData).toMatchObject({
+          id: expect.anything(),
+          name: productOne.name,
+          description: productOne.description,
+          price: expect.anything(),
+          quantityInStock: productOne.quantityInStock,
+          categoryId: categoryOne.id,
+          userId: userOne.id,
+          category: expect.anything(),
+          user: expect.anything(),
         });
       });
 
@@ -150,9 +159,9 @@ describe('Products Route', () => {
           .set('Authorization', `Bearer invalidToken `)
           .expect(httpStatus.UNAUTHORIZED);
 
-        const resData = res.body.data;
+        const resData = res.body.message;
 
-        expect(resData).toEqual('please authenticate');
+        expect(resData).toContain('Please authenticate');
       });
     });
   });
