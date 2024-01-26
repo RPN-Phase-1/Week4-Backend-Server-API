@@ -1,5 +1,5 @@
 const request = require('supertest');
-const faker = require('@faker-js/faker');
+const { faker } = require('@faker-js/faker');
 const httpStatus = require('http-status');
 const { v4 } = require('uuid');
 const app = require('../../src/app');
@@ -15,7 +15,7 @@ describe('Categories routes', () => {
     await insertUsers([userOne]);
 
     category = {
-      name: faker.random.words(),
+      name: faker.word.adjective(),
     };
   });
 

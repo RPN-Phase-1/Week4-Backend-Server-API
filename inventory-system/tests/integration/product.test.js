@@ -22,7 +22,7 @@ describe('Products Route', () => {
         id: v4(),
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
-        price: faker.commerce.price({ min: 100, max: 200 }),
+        price: faker.number.float({ min: 100, max: 200 }),
         quantityInStock: faker.number.int({ max: 100 }),
         categoryId: newCategory.id,
         userId: newUser.id,

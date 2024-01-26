@@ -1,10 +1,10 @@
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 const { v4 } = require('uuid');
 const prisma = require('../../prisma/index');
 
 const categoryOne = {
   id: v4(),
-  name: faker.name.findName(),
+  name: faker.word.adjective(),
 };
 
 const insertCategories = async (categories) => {

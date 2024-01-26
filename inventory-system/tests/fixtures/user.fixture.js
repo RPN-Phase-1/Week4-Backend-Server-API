@@ -9,7 +9,7 @@ const hashedPassword = bcrypt.hashSync(password, salt);
 
 const userOne = {
   id: v4(),
-  name: faker.person.name(),
+  name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password: 'password1',
   role: 'user',
@@ -18,7 +18,7 @@ const userOne = {
 
 const userTwo = {
   id: v4(),
-  name: faker.person.name(),
+  name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'user',
@@ -27,7 +27,7 @@ const userTwo = {
 
 const admin = {
   id: v4(),
-  name: faker.person.name(),
+  name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password,
   role: 'admin',
