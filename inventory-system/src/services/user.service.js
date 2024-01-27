@@ -9,6 +9,14 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
+  const existingEmail = await prisma.user.findUnique({
+    where: {
+      email: userBody.email,
+    },
+  });
+  if (existingEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
   // eslint-disable-next-line no-param-reassign
   userBody.password = bcrypt.hashSync(userBody.password, 8);
 

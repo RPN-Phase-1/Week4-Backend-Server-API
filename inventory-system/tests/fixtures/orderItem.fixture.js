@@ -4,12 +4,11 @@ const prisma = require('../../prisma/index');
 const { insertCategories } = require('./category.fixture');
 const { insertUsers } = require('./user.fixture');
 
-const productOne = {
+const orderItemOne = {
   id: v4(),
-  name: faker.commerce.productName(),
-  description: faker.commerce.productDescription(),
-  price: faker.number.float({ max: 50 }),
-  quantityInStock: faker.number.int({ min: 21, max: 100 }),
+  orderId: orderOne.id,
+  productId: productOne.id,
+  quantity: faker.number.int({ max: 20 }),
 };
 const insertProducts = async (users, category, product) => {
   await insertUsers([users]);
