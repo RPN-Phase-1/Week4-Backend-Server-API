@@ -29,6 +29,10 @@ const queryUsers = async (filter, options) => {
         contains: name,
       },
     },
+    include: {
+      orders: true,
+      products: true,
+    },
     orderBy,
     skip,
     take: Number(take),
@@ -42,6 +46,10 @@ const queryUsers = async (filter, options) => {
 const getUserById = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
+    include: {
+      orders: true,
+      products: true,
+    },
   });
 
   if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -81,6 +89,10 @@ const getUserByEmail = async (email) => {
   const user = await prisma.user.findUnique({
     where: {
       email,
+    },
+    include: {
+      orders: true,
+      products: true,
     },
   });
 
