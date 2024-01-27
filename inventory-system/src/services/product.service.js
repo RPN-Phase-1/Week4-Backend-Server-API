@@ -34,8 +34,8 @@ const queryProducts = async (filters, options) => {
       user: { select: { name: true } },
     },
     orderBy,
-    take: Number(take),
     skip,
+    take: Number(take),
   });
 
   if (products.length === 0) {
