@@ -50,8 +50,8 @@ const queryOrderItems = async (filter, options) => {
       product: true,
     },
     orderBy,
-    take: Number(take),
     skip,
+    take: Number(take),
   });
 
   if (orderItems.length === 0) {

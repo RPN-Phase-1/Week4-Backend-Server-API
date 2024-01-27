@@ -9,6 +9,14 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
+  const existingEmail = await prisma.user.findUnique({
+    where: {
+      email: userBody.email,
+    },
+  });
+  if (existingEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
   // eslint-disable-next-line no-param-reassign
   userBody.password = bcrypt.hashSync(userBody.password, 8);
 
@@ -29,9 +37,13 @@ const queryUsers = async (filter, options) => {
         contains: name,
       },
     },
+    include: {
+      orders: true,
+      products: true,
+    },
     orderBy,
-    take: Number(take),
     skip,
+    take: Number(take),
   });
 
   if (users.length === 0) throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
@@ -42,6 +54,10 @@ const queryUsers = async (filter, options) => {
 const getUserById = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
+    include: {
+      orders: true,
+      products: true,
+    },
   });
 
   if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -81,6 +97,10 @@ const getUserByEmail = async (email) => {
   const user = await prisma.user.findUnique({
     where: {
       email,
+    },
+    include: {
+      orders: true,
+      products: true,
     },
   });
 
