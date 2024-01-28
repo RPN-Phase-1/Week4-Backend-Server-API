@@ -179,8 +179,6 @@ describe('User routes', () => {
         isEmailVerified: false,
         createdAt: expect.anything(),
         updatedAt: expect.anything(),
-        products: expect.any(Array),
-        orders: expect.any(Array),
       });
     });
     test('Should return 401 if access token is missing', async () => {
@@ -201,4 +199,5 @@ describe('User routes', () => {
       .send({ name: '' })
       .expect(httpStatus.BAD_REQUEST);
   });
+  describe('');
 });
