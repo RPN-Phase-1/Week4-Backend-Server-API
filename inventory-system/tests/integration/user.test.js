@@ -110,14 +110,13 @@ describe('User routes', () => {
       expect(res.body.data).toMatchObject([
         {
           id: expect.anything(),
-          name: newUser.name,
+          name: userOne.name,
           password: expect.anything(),
-          email: newUser.email,
-          role: newUser.role,
+          email: userOne.email,
+          role: userOne.role,
           isEmailVerified: false,
           createdAt: expect.anything(),
           updatedAt: expect.anything(),
-          tokens: expect.any(Array),
           products: expect.any(Array),
           orders: expect.any(Array),
         },
@@ -129,6 +128,42 @@ describe('User routes', () => {
     });
     test('Should return 401 if access token is missing', async () => {
       await request(app).get('/v1/users').expect(httpStatus.UNAUTHORIZED);
+    });
+  });
+  describe('GET /v1/users/:userId', () => {
+    test('Should return 200 and the user object if user is exist', async () => {
+      const res = await request(app)
+        .get(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
+
+      expect(res.body.data).toMatchObject({
+        id: expect.anything(),
+        name: userOne.name,
+        password: expect.anything(),
+        email: userOne.email,
+        role: userOne.role,
+        isEmailVerified: false,
+        createdAt: expect.anything(),
+        updatedAt: expect.anything(),
+        products: expect.any(Array),
+        orders: expect.any(Array),
+      });
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).get(`/v1/users/${userOne.id}`).expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if user is not found', async () => {
+      await request(app)
+        .get(`/v1/users/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 400 if id given not an UUID', async () => {
+      await request(app)
+        .get('/v1/users/123')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
     });
   });
 });
