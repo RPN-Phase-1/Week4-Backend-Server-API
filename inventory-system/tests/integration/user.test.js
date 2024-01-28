@@ -39,6 +39,26 @@ describe('User routes', () => {
         updatedAt: expect.anything(),
         isEmailVerified: false,
       });
+
+      const dbUser = await prisma.user.findUnique({
+        where: {
+          id: userData.id,
+        },
+      });
+
+      expect(dbUser).toBeDefined();
+      expect(dbUser.password).not.toBe(newUser.password);
+
+      expect(dbUser).toMatchObject({
+        id: expect.anything(),
+        name: newUser.name,
+        password: expect.anything(),
+        email: newUser.email,
+        role: newUser.role,
+        isEmailVerified: false,
+        createdAt: expect.anything(),
+        updatedAt: expect.anything(),
+      });
     });
     test('Should return 400 if email already taken', async () => {
       await prisma.user.create({ data: newUser });
@@ -75,6 +95,40 @@ describe('User routes', () => {
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(newUser)
         .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).post('/v1/users').send(newUser).expect(httpStatus.UNAUTHORIZED);
+    });
+  });
+  describe('GET /v1/users', () => {
+    test('Should return 200 and list of users', async () => {
+      const res = await request(app)
+        .get('/v1/users')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
+
+      expect(res.body.data).toMatchObject([
+        {
+          id: expect.anything(),
+          name: newUser.name,
+          password: expect.anything(),
+          email: newUser.email,
+          role: newUser.role,
+          isEmailVerified: false,
+          createdAt: expect.anything(),
+          updatedAt: expect.anything(),
+          tokens: expect.any(Array),
+          products: expect.any(Array),
+          orders: expect.any(Array),
+        },
+      ]);
+    });
+    test('Should return 404 if user is not found', async () => {
+      await prisma.user.deleteMany({});
+      await request(app).get('/v1/users').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).get('/v1/users').expect(httpStatus.UNAUTHORIZED);
     });
   });
 });
