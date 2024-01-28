@@ -199,5 +199,31 @@ describe('User routes', () => {
       .send({ name: '' })
       .expect(httpStatus.BAD_REQUEST);
   });
-  describe('');
+  describe('DELETE /v1/users/:userId', () => {
+    test('Should return 200 and null data', async () => {
+      const res = await request(app)
+        .delete(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
+
+      const userData = res.body.data;
+
+      expect(userData).toEqual(null);
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).delete(`/v1/users/${userOne.id}`).expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if user is not found', async () => {
+      await request(app)
+        .delete(`/v1/users/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 400 if id given not an UUID', async () => {
+      await request(app)
+        .delete('/v1/users/123')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+  });
 });
