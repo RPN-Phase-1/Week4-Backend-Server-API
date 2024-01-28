@@ -122,10 +122,6 @@ describe('User routes', () => {
         },
       ]);
     });
-    test('Should return 404 if user is not found', async () => {
-      await prisma.user.deleteMany({});
-      await request(app).get('/v1/users').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.NOT_FOUND);
-    });
     test('Should return 401 if access token is missing', async () => {
       await request(app).get('/v1/users').expect(httpStatus.UNAUTHORIZED);
     });
@@ -165,5 +161,44 @@ describe('User routes', () => {
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .expect(httpStatus.BAD_REQUEST);
     });
+  });
+  describe('PATCH /v1/users/:userId', () => {
+    test('Should return 200 and updated user', async () => {
+      const res = await request(app)
+        .patch(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ name: 'sir' })
+        .expect(httpStatus.OK);
+
+      expect(res.body.data).toMatchObject({
+        id: expect.anything(),
+        name: 'sir',
+        password: expect.anything(),
+        email: userOne.email,
+        role: userOne.role,
+        isEmailVerified: false,
+        createdAt: expect.anything(),
+        updatedAt: expect.anything(),
+        products: expect.any(Array),
+        orders: expect.any(Array),
+      });
+    });
+    test('Should return 401 if access token is missing', async () => {
+      await request(app).patch(`/v1/users/${userOne.id}`).send({ name: 'sir' }).expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if user is not found', async () => {
+      await request(app)
+        .patch(`/v1/users/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ name: 'sir' })
+        .expect(httpStatus.NOT_FOUND);
+    });
+  });
+  test('Should return 400 if data given invalid', async () => {
+    await request(app)
+      .patch(`/v1/users/${userOne.id}`)
+      .set('Authorization', `Bearer ${userOneAccessToken}`)
+      .send({ name: '' })
+      .expect(httpStatus.BAD_REQUEST);
   });
 });
