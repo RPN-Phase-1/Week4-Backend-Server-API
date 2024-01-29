@@ -50,16 +50,11 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @returns {Promise<void>}
  */
 const revokeTokensForUser = async (userId) => {
-  // Delete all refresh tokens for the user from the database
   await prisma.token.deleteMany({
     where: { userId, type: tokenTypes.REFRESH },
   });
 };
 
-module.exports = {
-  // ... other functions
-  revokeTokensForUser,
-};
 
 
 /**
