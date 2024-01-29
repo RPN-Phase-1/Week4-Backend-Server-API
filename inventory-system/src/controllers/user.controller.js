@@ -1,10 +1,13 @@
-const userServices = require('../services/user.service')
+const httpStatus = require('http-status');
+const catchAsync = require('../utils/catchAsync');
+const { productService, userService, orderService } = require('../services');
+const ApiError = require('../utils/ApiError');
 
 
 const getUsers = async (req, res) => {
     try {
         // console.log("coba")
-        const result = await userServices.getUsers()
+        const result = await userService.queryUsers()
         res.status(200).send({
             status: 200,
             message: "Get Users Success",
@@ -24,7 +27,7 @@ const getUsers = async (req, res) => {
 const findUser = async (req, res) => {
     try {
         // console.log("coba")
-        const result = await userServices.findUser(req.params.userId)
+        const result = await userService.getUserById(req.params.userId)
         res.status(200).send({
             status: 200,
             message: "Get User Success",
@@ -41,29 +44,22 @@ const findUser = async (req, res) => {
     }
 }
 
-const createUser = async (req, res) => {
-    try {
-        // console.log("coba")
-        const result = await userServices.createUser(req.body)
-        res.status(200).send({
-            status: 200,
-            message: "create User Success",
-            data: result
-        })
-    }catch (err){
-        console.log(err)
-        res.status(500).send({
-            status: 500,
-            message: "create User Error",
-            data: null
-        })
-
+const createUser = catchAsync(async (req, res) => {
+    const existingUser = await userService.getUserByEmail(req.body.email);
+  
+    if (existingUser) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     }
-}
+  
+    const userCreated = await userService.createUser(req.body);
+    res.status(httpStatus.CREATED).send({ userCreated });
+  });
+
+
 const updateUser = async (req, res) => {
     try {
         // console.log("coba")
-        const result = await userServices.updateUser(req.body,req.params.userId)
+        const result = await userService.updateUserById(req.params.userId,req.body)
         res.status(200).send({
             status: 200,
             message: "update User Success",
@@ -82,7 +78,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         // console.log("coba")
-        const result = await userServices.deleteUser(req.params.userId)
+        const result = await userService.deleteUserById(req.params.userId)
         res.status(200).send({
             status: 200,
             message: "delete User Success",
@@ -98,6 +94,25 @@ const deleteUser = async (req, res) => {
 
     }
 }
+const getProductsByUser = catchAsync(async (req, res) => {
+    const result = await productService.queryProductsByUserId(req.body.userId);
+    
+    res.status(httpStatus.OK).send({
+      status: httpStatus.OK,
+      message: "Get Products Success",
+      data: result
+    });
+  });
+
+const getOrdersByUser = catchAsync(async (req, res) => {
+const result = await orderService.queryOrdersByUserId(req.body.userId);
+
+res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Get Orders Success",
+    data: result
+});
+});
 
 
 module.exports = {
@@ -105,5 +120,7 @@ module.exports = {
     findUser,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getProductsByUser,
+    getOrdersByUser
 }

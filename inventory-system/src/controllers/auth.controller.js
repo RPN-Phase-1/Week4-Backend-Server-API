@@ -21,8 +21,18 @@ const login = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
 });
+const logout = catchAsync(async (req, res) => {
+  const { user } = req; 
+
+  await tokenService.revokeTokensForUser(user.id);
+
+  // Respond with success message
+  res.status(httpStatus.OK).send({ message: 'Logout successful' });
+});
+
 
 module.exports = {
   register,
   login,
+  logout
 };

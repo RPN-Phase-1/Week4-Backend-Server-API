@@ -45,6 +45,24 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
 };
 
 /**
+ * Revoke all refresh tokens
+ * @param {ObjectId} userId
+ * @returns {Promise<void>}
+ */
+const revokeTokensForUser = async (userId) => {
+  // Delete all refresh tokens for the user from the database
+  await prisma.token.deleteMany({
+    where: { userId, type: tokenTypes.REFRESH },
+  });
+};
+
+module.exports = {
+  // ... other functions
+  revokeTokensForUser,
+};
+
+
+/**
  * Verify token and return token doc (or throw an error if it is not valid)
  * @param {string} token
  * @param {string} type
@@ -68,7 +86,7 @@ const verifyToken = async (token, type) => {
  * @returns {Promise<Object>}
  */
 const generateAuthTokens = async (user) => {
-  const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
+  const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'days');
   const accessToken = generateToken(user.id, accessTokenExpires, tokenTypes.ACCESS);
 
   const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
@@ -90,6 +108,7 @@ const generateAuthTokens = async (user) => {
 module.exports = {
   generateToken,
   saveToken,
+  revokeTokensForUser,
   verifyToken,
   generateAuthTokens,
 };

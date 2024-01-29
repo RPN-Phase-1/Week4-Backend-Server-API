@@ -5,6 +5,13 @@ const objectId = (value, helpers) => {
     return value;
   };
   
+  const isNumber = (value, helpers) => {
+    const floatValue = parseFloat(value);
+    if (isNaN(floatValue)) {
+      return helpers.message('Invalid price format. Must be a valid float.');
+    }
+    return floatValue;
+  };
   const password = (value, helpers) => {
     if (value.length < 8) {
       return helpers.message('password must be at least 8 characters');
@@ -17,5 +24,6 @@ const objectId = (value, helpers) => {
   
   module.exports = {
     objectId,
+    isNumber,
     password,
   };

@@ -16,6 +16,27 @@ const createUser = async (userBody) => {
   });
 };
 
+/**
+ * Query for users
+ * @returns {Promise<QueryResult>}
+ */
+const queryUsers = async (filter, options) => {
+  const users = await prisma.user.findMany();
+  return users;
+};
+
+/**
+ * Get user by id
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getUserById = async (id) => {
+  return prisma.user.findFirst({
+    where: {
+      id: id
+    }
+  })
+};
 
 /**
  * Get user by email
@@ -28,8 +49,55 @@ const getUserByEmail = async (email) => {
   });
 };
 
+/**
+ * Update user by id
+ * @param {ObjectId} userId
+ * @param {Object} updateBody
+ * @returns {Promise<User>}
+ */
+const updateUserById = async (userId, updateBody) => {
+  console.log(updateBody);
+  updateBody.password = bcrypt.hashSync(updateBody.password, 8);
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  
+  const updateUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: updateBody
+  })
+
+  return updateUser;
+};
+
+/**
+ * Delete user by id
+ * @param {ObjectId} userId
+ * @returns {Promise<User>}
+ */
+const deleteUserById = async (userId) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const deleteUsers = await prisma.user.deleteMany({
+    where: {
+      id: userId
+    },
+  })
+
+  return deleteUsers;
+};
 
 module.exports = {
   createUser,
-  getUserByEmail
+  queryUsers,
+  getUserById,
+  getUserByEmail,
+  updateUserById,
+  deleteUserById,
 };
