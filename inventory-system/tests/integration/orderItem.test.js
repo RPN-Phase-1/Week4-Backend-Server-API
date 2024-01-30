@@ -131,18 +131,32 @@ describe('OrderItem Routes', () => {
     });
   });
   describe('PATCH:id', () => {
+    let quantity;
+    beforeEach(() => {
+      quantity = faker.number.int({ min: 1, max: 9 });
+    });
     test('Should return 200 and a orderItem', async () => {
-      await request(app)
+      const res = await request(app)
         .patch(`/v1/order-items/${orderItemOne.id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .send({ quantity })
         .expect(httpStatus.OK);
+
+      const orderItemData = res.body.data;
+
+      expect(orderItemData).toMatchObject({
+        id: expect.anything(),
+        orderId: expect.anything(),
+        productId: expect.anything(),
+        quantity,
+        unitPrice: expect.anything(),
+      });
     });
     test('Should return 401 if access token is invalid', async () => {
       await request(app)
         .patch(`/v1/order-items/${orderItemOne.id}`)
         .set('Authorization', `Bearer invalidtoken`)
-        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .send({ quantity })
         .expect(httpStatus.UNAUTHORIZED);
     });
     test('Should return 404 if orderItem is not found', async () => {
@@ -150,14 +164,14 @@ describe('OrderItem Routes', () => {
       await request(app)
         .patch(`/v1/order-items/${v4()}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .send({ quantity })
         .expect(httpStatus.NOT_FOUND);
     });
     test('Should return 400 if ID is not an UUID', async () => {
       await request(app)
         .patch(`/v1/order-items/123`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .send({ quantity })
         .expect(httpStatus.BAD_REQUEST);
     });
     test('Should return 400 if data required is missing', async () => {
@@ -184,6 +198,35 @@ describe('OrderItem Routes', () => {
           productId: v4(),
         })
         .expect(httpStatus.NOT_FOUND);
+    });
+  });
+  describe('DELETE:id', () => {
+    test('Should return 200 and a null', async () => {
+      const res = await request(app)
+        .delete(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
+
+      expect(res.body.data).toBeNull();
+    });
+    test('Should return 401 if access token is invalid', async () => {
+      await request(app)
+        .delete(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer invalidtoken`)
+        .expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if orderItem is not found', async () => {
+      await prisma.orderItem.deleteMany({});
+      await request(app)
+        .delete(`/v1/order-items/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 400 if ID is not an UUID', async () => {
+      await request(app)
+        .delete(`/v1/order-items/123`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
     });
   });
 });
