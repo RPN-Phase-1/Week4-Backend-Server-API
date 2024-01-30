@@ -14,7 +14,10 @@ const createOrder = catchAsync(async (req, res) => {
 });
 
 const getOrders = catchAsync(async (req, res) => {
-  const result = await orderService.queryOrders();
+  var page = 1;
+  var take = 5;
+  var skip = (page-1)*take;
+  const result = await orderService.queryOrders(skip,take);
   
   res.status(httpStatus.OK).send({
       status: httpStatus.OK,
@@ -23,7 +26,10 @@ const getOrders = catchAsync(async (req, res) => {
     });
   });
 const getOrdersByUser = catchAsync(async (req, res) => {
-  const result = await orderService.queryOrdersByUserId(req.user.id);
+  var page = 1;
+  var take = 5;
+  var skip = (page-1)*take;
+  const result = await orderService.queryOrdersByUserId(req.user.id,skip,take);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -46,12 +52,15 @@ const getOrder = catchAsync(async (req, res) => {
 });
 const getOrderItems = catchAsync(async (req, res) => {
   const orderId = req.params.orderId;
-  console.log(orderId);
+  // console.log(orderId);
+  var page = 1;
+  var take = 5;
+  var skip = (page-1)*take;
   const order = await orderService.getOrderById(orderId);
   if (!order) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
-  order.orderItems = await orderItemService.queryOrderItemsByOrderId(orderId);
+  order.orderItems = await orderItemService.queryOrderItemsByOrderId(orderId,skip,take);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

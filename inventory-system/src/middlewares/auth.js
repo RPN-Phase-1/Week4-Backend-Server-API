@@ -6,7 +6,7 @@ const verifyCallback = (req, resolve, reject, requiredRole) => async (err, user,
   if (err || info || !user) {
     return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
   }
-  console.log(user.role);
+  // console.log(user.role);
   
   if (requiredRole && user.role !== requiredRole) {
     return reject(new ApiError(httpStatus.FORBIDDEN, 'Insufficient permissions'));
@@ -17,7 +17,7 @@ const verifyCallback = (req, resolve, reject, requiredRole) => async (err, user,
 };
 
 const auth = (requiredRole) => async (req, res, next) => {
-  console.log(requiredRole);
+  // console.log(requiredRole);
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject, requiredRole))(req, res, next);
   })

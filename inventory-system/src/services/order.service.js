@@ -20,8 +20,10 @@ const createOrder = async (orderBody,userId) => {
  * Query for orders
  * @returns {Promise<QueryResult>}
  */
-const queryOrders = async (filter, options) => {
+const queryOrders = async (skip,take) => {
   const orders = await prisma.order.findMany({
+    skip: skip,
+    take: take,
     include: {
       user: true, 
 
@@ -35,8 +37,10 @@ const queryOrders = async (filter, options) => {
  * @param {string} userId - The ID of the user
  * @returns {Promise<QueryResult>}
  */
-const queryOrdersByUserId = async (userId) => {
+const queryOrdersByUserId = async (userId,skip,take) => {
   const orders = await prisma.order.findMany({
+    skip: skip,
+    take: take,
     where: {
       userId: userId,
     },

@@ -6,8 +6,11 @@ const ApiError = require('../utils/ApiError');
 
 const getUsers = async (req, res) => {
     try {
+        var page = 1;
+        var take = 5;
+        var skip = (page-1)*take;
         // console.log("coba")
-        const result = await userService.queryUsers()
+        const result = await userService.queryUsers(skip,take);
         res.status(200).send({
             status: 200,
             message: "Get Users Success",

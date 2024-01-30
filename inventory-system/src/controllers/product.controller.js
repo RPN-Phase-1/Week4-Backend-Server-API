@@ -18,7 +18,10 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getProducts = catchAsync(async (req, res) => {
-  const result = await productService.queryProducts();
+  var page = 1;
+  var take = 5;
+  var skip = (page-1)*take;
+  const result = await productService.queryProducts(skip,take);
   
   res.status(httpStatus.OK).send({
       status: httpStatus.OK,
@@ -27,7 +30,10 @@ const getProducts = catchAsync(async (req, res) => {
     });
   });
 const getProductsByUser = catchAsync(async (req, res) => {
-  const result = await productService.queryProductsByUserId(req.user.id);
+  var page = 1;
+  var take = 5;
+  var skip = (page-1)*take;
+  const result = await productService.queryProductsByUserId(req.user.id,skip,take);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

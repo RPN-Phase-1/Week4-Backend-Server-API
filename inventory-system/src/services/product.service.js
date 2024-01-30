@@ -19,8 +19,10 @@ const createProduct = async (productBody,userId) => {
  * Query for products
  * @returns {Promise<QueryResult>}
  */
-const queryProducts = async (filter, options) => {
+const queryProducts = async (skip,take) => {
   const products = await prisma.product.findMany({
+    skip: skip,
+    take: take,
     include: {
       user: true, 
       category: true, 
@@ -35,8 +37,10 @@ const queryProducts = async (filter, options) => {
  * @param {string} userId - The ID of the user
  * @returns {Promise<QueryResult>}
  */
-const queryProductsByUserId = async (userId) => {
+const queryProductsByUserId = async (userId,skip,take) => {
   const products = await prisma.product.findMany({
+    skip: skip,
+    take: take,
     where: {
       userId: userId,
     },
