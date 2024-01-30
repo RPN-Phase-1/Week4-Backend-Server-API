@@ -116,6 +116,8 @@ describe('Auth routes', () => {
         createdAt: expect.anything(),
         updatedAt: expect.anything(),
         isEmailVerified: userOne.isEmailVerified,
+        products: expect.any(Array),
+        orders: expect.any(Array),
       });
 
       expect(res.body.data.tokens).toEqual({

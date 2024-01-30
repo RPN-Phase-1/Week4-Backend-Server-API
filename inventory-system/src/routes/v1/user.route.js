@@ -9,18 +9,23 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth(), validate(userValidation.createUser), userController.createUser)
-  .get(auth(), userController.getAllUsers);
+  .post(auth(), authorizePermissions('admin'), validate(userValidation.createUser), userController.createUser)
+  .get(auth(), authorizePermissions('admin'), userController.getAllUsers);
 
 router
   .route('/:userId')
-  .get(auth(), validate(userValidation.getUserById), userController.getUserById)
-  .patch(auth(), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth(), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth(), authorizePermissions('admin'), validate(userValidation.getUserById), userController.getUserById)
+  .patch(auth(), authorizePermissions('admin'), validate(userValidation.updateUser), userController.updateUser)
+  .delete(auth(), authorizePermissions('admin'), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
   .route('/:userId/products')
-  .get(auth(), validate(productValidation.getProductByUser), productController.getProductsByUser);
+  .get(
+    auth(),
+    authorizePermissions('admin'),
+    validate(productValidation.getProductByUser),
+    productController.getProductsByUser
+  );
 
 router
   .route('/:userId/orders')
