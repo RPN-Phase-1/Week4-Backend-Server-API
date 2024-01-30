@@ -41,5 +41,45 @@ describe('OrderItem Routes', () => {
         unitPrice: productOne.price,
       });
     });
+    test('Should return 401 if access token is invalid', async () => {
+      await request(app)
+        .post('/v1/order-items')
+        .set('Authorization', `Bearer invalidtoken`)
+        .send({
+          ...newOrderItem,
+          orderId: orderOne.id,
+          productId: productOne.id,
+        })
+        .expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 400 if data required is missing', async () => {
+      delete newOrderItem.quantity;
+
+      await request(app)
+        .post('/v1/order-items')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({
+          ...newOrderItem,
+          orderId: orderOne.id,
+          productId: productOne.id,
+        })
+        .expect(httpStatus.BAD_REQUEST);
+    });
   });
+  // describe('GET', () => {
+  //   test('Should return 200 and list of orderItems', async () => {
+  //     await request(app).get('/v1/orders').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.OK);
+  //   });
+  //   test('Should return 401 if access token is invalid', async () => {
+  //     await request(app).get('/v1/orders').set('Authorization', `Bearer invalidtoken`).expect(httpStatus.UNAUTHORIZED);
+  //   });
+  //   test('Should return 403 if access token is not admin', async () => {
+  //     await request(app).get('/v1/orders').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.FORBIDDEN);
+  //   });
+  //   test('Should return 404 if order is not found', async () => {
+  //     await prisma.order.deleteMany({});
+
+  //     await request(app).get('/v1/orders').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.NOT_FOUND);
+  //   });
+  // });
 });
