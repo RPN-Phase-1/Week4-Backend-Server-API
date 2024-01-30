@@ -64,6 +64,28 @@ describe('OrderItem Routes', () => {
         })
         .expect(httpStatus.BAD_REQUEST);
     });
+    test('Should return 404 if orderId not found', async () => {
+      await request(app)
+        .post('/v1/order-items')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({
+          ...newOrderItem,
+          orderId: v4(),
+          productId: productOne.id,
+        })
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 404 if productId not found', async () => {
+      await request(app)
+        .post('/v1/order-items')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({
+          ...newOrderItem,
+          orderId: orderOne.id,
+          productId: v4(),
+        })
+        .expect(httpStatus.NOT_FOUND);
+    });
   });
   describe('GET', () => {
     test('Should return 200 and list of orderItems', async () => {
@@ -108,32 +130,60 @@ describe('OrderItem Routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
   });
-  // describe('PATCH:id', () => {
-  //   test('Should return 200 and a orderItem', async () => {
-  //     await request(app)
-  //       .patch(`/v1/order-items/${orderItemOne.id}`)
-  //       .set('Authorization', `Bearer ${userOneAccessToken}`)
-  //       .send({ quantity: faker })
-  //       .expect(httpStatus.OK);
-  //   });
-  //   test('Should return 401 if access token is invalid', async () => {
-  //     await request(app)
-  //       .patch(`/v1/order-items/${orderItemOne.id}`)
-  //       .set('Authorization', `Bearer invalidtoken`)
-  //       .expect(httpStatus.UNAUTHORIZED);
-  //   });
-  //   test('Should return 404 if orderItem is not found', async () => {
-  //     await prisma.orderItem.deleteMany({});
-  //     await request(app)
-  //       .patch(`/v1/order-items/${v4()}`)
-  //       .set('Authorization', `Bearer ${userOneAccessToken}`)
-  //       .expect(httpStatus.NOT_FOUND);
-  //   });
-  //   test('Should return 400 if ID is not an UUID', async () => {
-  //     await request(app)
-  //       .patch(`/v1/order-items/123`)
-  //       .set('Authorization', `Bearer ${userOneAccessToken}`)
-  //       .expect(httpStatus.BAD_REQUEST);
-  //   });
-  // });
+  describe('PATCH:id', () => {
+    test('Should return 200 and a orderItem', async () => {
+      await request(app)
+        .patch(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .expect(httpStatus.OK);
+    });
+    test('Should return 401 if access token is invalid', async () => {
+      await request(app)
+        .patch(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer invalidtoken`)
+        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if orderItem is not found', async () => {
+      await prisma.orderItem.deleteMany({});
+      await request(app)
+        .patch(`/v1/order-items/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 400 if ID is not an UUID', async () => {
+      await request(app)
+        .patch(`/v1/order-items/123`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ quantity: faker.number.int({ min: 1, max: 9 }) })
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 400 if data required is missing', async () => {
+      await request(app)
+        .patch(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({ foo: 'abc' })
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 404 if orderId not found', async () => {
+      await request(app)
+        .patch(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({
+          orderId: v4(),
+        })
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 404 if productId not found', async () => {
+      await request(app)
+        .patch(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send({
+          productId: v4(),
+        })
+        .expect(httpStatus.NOT_FOUND);
+    });
+  });
 });
