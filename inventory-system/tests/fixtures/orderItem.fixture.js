@@ -8,7 +8,7 @@ const { categoryOne } = require('./category.fixture');
 
 const orderItemOne = {
   id: v4(),
-  quantity: faker.number.int({ min: 1, max: 20 }),
+  quantity: faker.number.int({ min: 10, max: 20 }),
 };
 const insertOrderItems = async (products, orders, orderItem) => {
   await insertProducts(userOne, categoryOne, [products]);

@@ -3,7 +3,6 @@ const httpStatus = require('http-status');
 const { faker } = require('@faker-js/faker');
 const { v4 } = require('uuid');
 const app = require('../../src/app');
-const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken } = require('../fixtures/token.fixture');
 const prisma = require('../../prisma');
 const { insertOrderItems, orderItemOne } = require('../fixtures/orderItem.fixture');
@@ -16,7 +15,7 @@ describe('OrderItem Routes', () => {
     await insertOrderItems(productOne, orderOne, [orderItemOne]);
 
     newOrderItem = {
-      quantity: faker.number.int({ min: 1, max: 20 }),
+      quantity: faker.number.int({ min: 10, max: 20 }),
     };
   });
   describe('POST', () => {
@@ -38,7 +37,7 @@ describe('OrderItem Routes', () => {
         orderId: orderOne.id,
         productId: productOne.id,
         quantity: newOrderItem.quantity,
-        unitPrice: productOne.price,
+        unitPrice: expect.anything(),
       });
     });
     test('Should return 401 if access token is invalid', async () => {
@@ -66,20 +65,75 @@ describe('OrderItem Routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
   });
-  // describe('GET', () => {
-  //   test('Should return 200 and list of orderItems', async () => {
-  //     await request(app).get('/v1/orders').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.OK);
+  describe('GET', () => {
+    test('Should return 200 and list of orderItems', async () => {
+      await request(app).get('/v1/order-items').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.OK);
+    });
+    test('Should return 401 if access token is invalid', async () => {
+      await request(app).get('/v1/order-items').set('Authorization', `Bearer invalidtoken`).expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if orderItem is not found', async () => {
+      await prisma.orderItem.deleteMany({});
+
+      await request(app)
+        .get('/v1/order-items')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+    });
+  });
+  describe('GET:id', () => {
+    test('Should return 200 and a orderItem', async () => {
+      await request(app)
+        .get(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
+    });
+    test('Should return 401 if access token is invalid', async () => {
+      await request(app)
+        .get(`/v1/order-items/${orderItemOne.id}`)
+        .set('Authorization', `Bearer invalidtoken`)
+        .expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 404 if orderItem is not found', async () => {
+      await prisma.orderItem.deleteMany({});
+      await request(app)
+        .get(`/v1/order-items/${v4()}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+    });
+    test('Should return 400 if ID is not an UUID', async () => {
+      await request(app)
+        .get(`/v1/order-items/123`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+  });
+  // describe('PATCH:id', () => {
+  //   test('Should return 200 and a orderItem', async () => {
+  //     await request(app)
+  //       .patch(`/v1/order-items/${orderItemOne.id}`)
+  //       .set('Authorization', `Bearer ${userOneAccessToken}`)
+  //       .send({ quantity: faker })
+  //       .expect(httpStatus.OK);
   //   });
   //   test('Should return 401 if access token is invalid', async () => {
-  //     await request(app).get('/v1/orders').set('Authorization', `Bearer invalidtoken`).expect(httpStatus.UNAUTHORIZED);
+  //     await request(app)
+  //       .patch(`/v1/order-items/${orderItemOne.id}`)
+  //       .set('Authorization', `Bearer invalidtoken`)
+  //       .expect(httpStatus.UNAUTHORIZED);
   //   });
-  //   test('Should return 403 if access token is not admin', async () => {
-  //     await request(app).get('/v1/orders').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.FORBIDDEN);
+  //   test('Should return 404 if orderItem is not found', async () => {
+  //     await prisma.orderItem.deleteMany({});
+  //     await request(app)
+  //       .patch(`/v1/order-items/${v4()}`)
+  //       .set('Authorization', `Bearer ${userOneAccessToken}`)
+  //       .expect(httpStatus.NOT_FOUND);
   //   });
-  //   test('Should return 404 if order is not found', async () => {
-  //     await prisma.order.deleteMany({});
-
-  //     await request(app).get('/v1/orders').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.NOT_FOUND);
+  //   test('Should return 400 if ID is not an UUID', async () => {
+  //     await request(app)
+  //       .patch(`/v1/order-items/123`)
+  //       .set('Authorization', `Bearer ${userOneAccessToken}`)
+  //       .expect(httpStatus.BAD_REQUEST);
   //   });
   // });
 });

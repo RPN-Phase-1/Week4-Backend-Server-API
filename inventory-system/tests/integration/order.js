@@ -78,7 +78,7 @@ describe('Order Routes', () => {
     });
   });
   describe('GET:id', () => {
-    test('Should return 200 and a updated order', async () => {
+    test('Should return 200 and a order', async () => {
       await request(app)
         .get(`/v1/orders/${orderOne.id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
