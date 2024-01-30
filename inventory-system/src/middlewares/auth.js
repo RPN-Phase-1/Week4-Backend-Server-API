@@ -28,7 +28,7 @@ const authorizePermissions =
       passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject))(req, res, next);
     })
       .then(() => {
-        if (!roles.includes(req.user.role)) throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized to access this route');
+        if (!roles.includes(req.user.role)) throw new ApiError(httpStatus.FORBIDDEN, 'Unauthorized to access this route');
 
         next();
       })
