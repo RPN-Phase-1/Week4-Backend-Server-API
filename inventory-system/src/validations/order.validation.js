@@ -24,7 +24,7 @@ const updateOrder = {
   body: Joi.object()
     .keys({
       date: Joi.date(),
-      totalPrice: Joi.number().required(),
+      totalPrice: Joi.number(),
       customerName: Joi.string(),
       customerEmail: Joi.string(),
       userId: Joi.string().custom(objectId),
