@@ -1,34 +1,35 @@
 const { faker } = require('@faker-js/faker');
 const { v4 } = require('uuid');
 const prisma = require('../../prisma/index');
-const { insertCategories } = require('./category.fixture');
-const { insertUsers } = require('./user.fixture');
+const { userOne } = require('./user.fixture');
+const { insertProducts, productOne } = require('./product.fixture');
+const { insertOrdersTwo } = require('./order.fixture');
+const { categoryOne } = require('./category.fixture');
 
 const orderItemOne = {
   id: v4(),
-  orderId: orderOne.id,
-  productId: productOne.id,
-  quantity: faker.number.int({ max: 20 }),
+  quantity: faker.number.int({ min: 1, max: 20 }),
 };
-const insertProducts = async (users, category, product) => {
-  await insertUsers([users]);
-  await insertCategories([category]);
+const insertOrderItems = async (products, orders, orderItem) => {
+  await insertProducts(userOne, categoryOne, [products]);
+  await insertOrdersTwo(userOne, [orders]);
 
-  const productMapped = product.map((el) => {
+  const orderItemMapped = orderItem.map((el) => {
     return {
       ...el,
-      categoryId: category.id,
-      userId: users.id,
+      orderId: orders.id,
+      productId: products.id,
+      unitPrice: products.price,
     };
   });
 
-  await prisma.product.createMany({
-    data: productMapped,
+  await prisma.orderItem.createMany({
+    data: orderItemMapped,
     skipDuplicates: true,
   });
 };
 
 module.exports = {
-  productOne,
-  insertProducts,
+  orderItemOne,
+  insertOrderItems,
 };

@@ -26,8 +26,24 @@ const insertOrders = async (users, orders) => {
     skipDuplicates: true,
   });
 };
+const insertOrdersTwo = async (users, orders) => {
+  const ordersMapped = orders.map((order) => {
+    return {
+      ...order,
+      customerName: users.name,
+      customerEmail: users.email,
+      userId: users.id,
+    };
+  });
+
+  await prisma.order.createMany({
+    data: ordersMapped,
+    skipDuplicates: true,
+  });
+};
 
 module.exports = {
   orderOne,
   insertOrders,
+  insertOrdersTwo,
 };
