@@ -274,7 +274,7 @@ A refresh token is valid for 30 days. You can modify this expiration time by cha
 
 ## Authorization
 
-We `authorizePermissions` middleware to require certain rights/permissions to access a route.
+Use `authorizePermissions` middleware to require certain rights/permissions to access a route.
 
 ```javascript
 const express = require('express');
