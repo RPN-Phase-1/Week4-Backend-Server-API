@@ -1,15 +1,14 @@
-
 # Inventory System
 
 Inventory Management for employee
 
-
-
 ## Installation
-Clone the project : 
+
+Clone the project :
+
 ```bash
-https://github.com/yogiwijaya777/inventory-system.git
-cd inventory-system
+https://github.com/yogiwijaya777/Week4-Backend-Server-API.git
+cd Week4-Backend-Server-API/inventory-system
 ```
 
 Install the depedencies with npm :
@@ -19,12 +18,13 @@ npm install
 ```
 
 Set the environment variables :
+
 ```bash
 cp .env.example .env
 
 # open .env and modify the environment variables (if needed)
 ```
-    
+
 ## Table of Contents
 
 - [Features](#features)
@@ -61,14 +61,19 @@ cp .env.example .env
 ## Commands
 
 Running locally:
+
 ```bash
 npm run dev
 ```
+
 Running in production:
+
 ```bash
 npm start
 ```
+
 Testing:
+
 ```bash
 # run all tests
 npm run test
@@ -79,7 +84,9 @@ npm run test:watch
 # run test coverage
 npm run coverage
 ```
+
 Linting:
+
 ```bash
 # run ESLint
 npm run lint
@@ -93,6 +100,7 @@ npm run prettier
 # fix prettier errors
 npm run prettier:fix
 ```
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
@@ -114,6 +122,7 @@ JWT_REFRESH_EXPIRATION_DAYS=30
 ```
 
 ## Project Structure
+
 ```
 prisma\
  |--__mocks__       # Mocks Database for Testing
@@ -135,11 +144,11 @@ src\
  test\
   |--fixture       # Utils for integration
   |--integration   # Automation Code
- ```
+```
+
 ## API Documentation
 
 To view the list of available APIs and their specifications, run the server and go to `http://localhost:3000/v1/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
-
 
 ### API Endpoints
 
@@ -188,6 +197,7 @@ Get OrderItem by ID: `GET /v1/order-items/{orderItemId}`\
 Update OrderItem: `PUT /v1/order-items/{orderItemId}`\
 Delete OrderItem: `DELETE /v1/order-items/{orderItemId}`\
 Get OrderItems by Order: `GET /v1/orders/{orderId}/order-items`
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.
@@ -230,6 +240,7 @@ const getUser = async (userId) => {
   }
 };
 ```
+
 ## Validation
 
 Request data is validated using [Joi](https://joi.dev/). Check the [documentation](https://joi.dev/api/) for more details on how to write Joi validation schemas.
@@ -245,7 +256,9 @@ const userController = require('../../controllers/user.controller');
 const router = express.Router();
 
 router.post('/users', validate(userValidation.createUser), userController.createUser);
-```## Authentication
+```
+
+## Authentication
 
 To require authentication for certain routes, you can use the `auth` middleware.
 
@@ -279,7 +292,7 @@ Use `authorizePermissions` middleware to require certain rights/permissions to a
 
 ```javascript
 const express = require('express');
-const {auth, authorizePermissions} = require('../../middlewares/auth');
+const { auth, authorizePermissions } = require('../../middlewares/auth');
 const userController = require('../../controllers/user.controller');
 
 const router = express.Router();
@@ -290,6 +303,7 @@ router.post('/users', auth(), authorizePermissions('admin'), userController.crea
 In the example above, an authenticated user can access this route only if that user has the `Admin` permission.
 
 If the user making the request does not have the required permissions to access this route, a Forbidden (403) error is thrown.
+
 ## Logging
 
 Import the logger from `src/config/logger.js`. It is using the [Winston](https://github.com/winstonjs/winston) logging library.
@@ -314,6 +328,7 @@ It is up to the server (or process manager) to actually read them from the conso
 This app uses pm2 in production mode, which is already configured to store the logs in log files.
 
 Note: API request information (request url, response code, timestamp, etc.) are also automatically logged (using [morgan](https://github.com/expressjs/morgan)).
+
 ## Linting
 
 Linting is done using [ESLint](https://eslint.org/) and [Prettier](https://prettier.io).
