@@ -3,18 +3,20 @@ const config = require('./config');
 const { tokenTypes } = require('./tokens');
 const prisma = require('../../prisma/client');
 
+// Konfigurasi untuk Passport Strategy
 const jwtOptions = {
-  // Pasti error karena config.jwt belum di config
-  secretOrKey: config.jwt.secret,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: config.jwt.secret, // Mengambil secret key dari .env melalui /src/config/config
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Mengambil request header sebagai Bearer Token
 };
 
+// Function untuk memverifikasi token JWT
 const jwtVerify = async (payload, done) => {
   try {
+    // Memeriksa tipe token, kalau bukan access, maka ditolak
     if (payload.type !== tokenTypes.ACCESS) {
       throw new Error('Invalid token type');
     }
-    const user = await prisma.user.findFirst({ where: { id: payload.sub } });
+    const user = await prisma.user.findFirst({ where: { id: payload.sub } }); 
     if (!user) {
       return done(null, false);
     }

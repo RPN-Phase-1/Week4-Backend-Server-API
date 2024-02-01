@@ -4,7 +4,6 @@ const { authService, userService, tokenService } = require('../services');
 const ApiError = require('../utils/apiError');
 
 const register = catchAsync(async (req, res) => {
-  console.log(req.body)
   const existingUser = await userService.getUserByEmail(req.body.email);
 
   if (existingUser) {

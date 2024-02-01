@@ -4,6 +4,7 @@ const logger = require('../config/logger');
 const ApiError = require('../utils/apiError');
 const { Prisma } = require('@prisma/client');
 
+// Function yang memeriksa jenis kesalahan, mengubahnya sesuai dengan error yang ada, lalu mengirim kesalahan ke middleware selanjutnya
 const errorConverter = (err, req, res, next) => {
   let error = err;
   if (!(error instanceof ApiError)) {
@@ -28,6 +29,7 @@ const errorConverter = (err, req, res, next) => {
   next(error);
 };
 
+// Function yang memeriksa jenis error yang berasal dari prisma, lalu dikirimkan ke function errorConverter
 const handlePrismaError = (err) => {
   switch (err.code) {
     case 'P2002':
@@ -45,6 +47,7 @@ const handlePrismaError = (err) => {
   }
 };
 
+// Function yang akan mengirim response kesalahan ke client
 const errorHandler = (err, req, res, next) => {
   let { statusCode, message } = err;
   if (config.env === 'production' && !err.isOperational) {
