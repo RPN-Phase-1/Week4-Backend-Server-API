@@ -5,6 +5,8 @@ const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 const router = require('./routes/v1');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
@@ -18,6 +20,9 @@ if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
 }
+
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
 // set security HTTP headers
 app.use(helmet());
@@ -43,11 +48,15 @@ app.use(cors());
 app.options('*', cors());
 
 app.get('/', (req, res) => {
-  res.send('hello world');
+  res.render('index', {
+    title: 'Welcome!',
+  });
 });
 
+const swaggerDocs = YAML.load('./swagger.yaml');
 // v1 api routes
 app.use('/v1', router);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // send 404 error jika route tidak ada
 app.use((req, res, next) => {
