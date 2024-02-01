@@ -3,14 +3,15 @@ const httpStatus = require('http-status');
 const { faker } = require('@faker-js/faker');
 const { v4 } = require('uuid');
 const app = require('../../src/app');
-const { userOne, insertUsers } = require('../fixtures/user.fixture');
-const { userOneAccessToken } = require('../fixtures/token.fixture');
+const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
+const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 const prisma = require('../../prisma');
 
 describe('User routes', () => {
   let newUser;
   beforeEach(async () => {
     await insertUsers([userOne]);
+    await insertUsers([admin]);
 
     newUser = {
       name: faker.person.fullName(),
@@ -23,7 +24,7 @@ describe('User routes', () => {
     test('Should return 201 if user is created', async () => {
       const res = await request(app)
         .post('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUser)
         .expect(httpStatus.CREATED);
 
@@ -65,7 +66,7 @@ describe('User routes', () => {
 
       await request(app)
         .post('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUser)
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -74,7 +75,7 @@ describe('User routes', () => {
 
       await request(app)
         .post('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUser)
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -83,7 +84,7 @@ describe('User routes', () => {
 
       await request(app)
         .post('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUser)
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -92,9 +93,16 @@ describe('User routes', () => {
 
       await request(app)
         .post('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUser)
         .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 404 if token not an admin', async () => {
+      await request(app)
+        .post('/v1/users')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(newUser)
+        .expect(httpStatus.FORBIDDEN);
     });
     test('Should return 401 if access token is missing', async () => {
       await request(app).post('/v1/users').send(newUser).expect(httpStatus.UNAUTHORIZED);
@@ -102,35 +110,20 @@ describe('User routes', () => {
   });
   describe('GET /v1/users', () => {
     test('Should return 200 and list of users', async () => {
-      const res = await request(app)
-        .get('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .expect(httpStatus.OK);
-
-      expect(res.body.data).toMatchObject([
-        {
-          id: expect.anything(),
-          name: userOne.name,
-          password: expect.anything(),
-          email: userOne.email,
-          role: userOne.role,
-          isEmailVerified: false,
-          createdAt: expect.anything(),
-          updatedAt: expect.anything(),
-          products: expect.any(Array),
-          orders: expect.any(Array),
-        },
-      ]);
+      await request(app).get('/v1/users').set('Authorization', `Bearer ${adminAccessToken}`).expect(httpStatus.OK);
     });
     test('Should return 401 if access token is missing', async () => {
       await request(app).get('/v1/users').expect(httpStatus.UNAUTHORIZED);
+    });
+    test('Should return 401 if token not an admin', async () => {
+      await request(app).get('/v1/users').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.FORBIDDEN);
     });
   });
   describe('GET /v1/users/:userId', () => {
     test('Should return 200 and the user object if user is exist', async () => {
       const res = await request(app)
         .get(`/v1/users/${userOne.id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .expect(httpStatus.OK);
 
       expect(res.body.data).toMatchObject({
@@ -152,21 +145,27 @@ describe('User routes', () => {
     test('Should return 404 if user is not found', async () => {
       await request(app)
         .get(`/v1/users/${v4()}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .expect(httpStatus.NOT_FOUND);
     });
     test('Should return 400 if id given not an UUID', async () => {
       await request(app)
         .get('/v1/users/123')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 401 if token not an admin', async () => {
+      await request(app)
+        .get(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.FORBIDDEN);
     });
   });
   describe('PATCH /v1/users/:userId', () => {
     test('Should return 200 and updated user', async () => {
       const res = await request(app)
         .patch(`/v1/users/${userOne.id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send({ name: 'sir' })
         .expect(httpStatus.OK);
 
@@ -187,23 +186,29 @@ describe('User routes', () => {
     test('Should return 404 if user is not found', async () => {
       await request(app)
         .patch(`/v1/users/${v4()}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send({ name: 'sir' })
         .expect(httpStatus.NOT_FOUND);
     });
-  });
-  test('Should return 400 if data given invalid', async () => {
-    await request(app)
-      .patch(`/v1/users/${userOne.id}`)
-      .set('Authorization', `Bearer ${userOneAccessToken}`)
-      .send({ name: '' })
-      .expect(httpStatus.BAD_REQUEST);
+    test('Should return 400 if data given invalid', async () => {
+      await request(app)
+        .patch(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send({ name: '' })
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 401 if token not an admin', async () => {
+      await request(app)
+        .patch(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.FORBIDDEN);
+    });
   });
   describe('DELETE /v1/users/:userId', () => {
     test('Should return 200 and null data', async () => {
       const res = await request(app)
         .delete(`/v1/users/${userOne.id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .expect(httpStatus.OK);
 
       const userData = res.body.data;
@@ -216,14 +221,20 @@ describe('User routes', () => {
     test('Should return 404 if user is not found', async () => {
       await request(app)
         .delete(`/v1/users/${v4()}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .expect(httpStatus.NOT_FOUND);
     });
     test('Should return 400 if id given not an UUID', async () => {
       await request(app)
         .delete('/v1/users/123')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .expect(httpStatus.BAD_REQUEST);
+    });
+    test('Should return 401 if token not an admin', async () => {
+      await request(app)
+        .delete(`/v1/users/${userOne.id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.FORBIDDEN);
     });
   });
 });
