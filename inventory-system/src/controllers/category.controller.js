@@ -14,6 +14,40 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
+  // Object untuk menampung options dan orderBy yang akan dikirimkan menjadi parameter ke queryCategorys
+  const whereOptions = {};
+  const orderByOptions = {};
+  const skipTakeOptions = {};
+  ['id', 'name', 'createdAt', 'updatedAt'].forEach((param) => {
+    if (req.query[param]) {
+      whereOptions[param] = req.query[param];
+    }
+  });
+  if (req.query.skip) {
+    skipTakeOptions.skip = req.query.skip;
+  }
+  if (req.query.take) {
+    skipTakeOptions.take = req.query.take;
+  }
+  if (req.query.orderBy) {
+    orderByOptions.orderBy = req.query.orderBy.split(':');
+  }
+  
+  const sortingOptions = req.query.orderBy ? { [orderByOptions.orderBy[0]]: orderByOptions.orderBy[1] } : undefined;
+
+  const category = await categoryService.queryCategorys(whereOptions, skipTakeOptions, sortingOptions);
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Category Success',
+    data: category,
+  });
+});
+
+const getCategoryById = catchAsync(async (req, res) => {
   const category = await categoryService.getCategoryById(req.params.categoryId);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
@@ -46,4 +80,4 @@ const deleteCategory = catchAsync(async (req, res) => {
   });
 });
 
-module.exports = { createCategory, getCategorys, updateCategory, deleteCategory };
+module.exports = { createCategory, getCategorys, getCategoryById, updateCategory, deleteCategory };

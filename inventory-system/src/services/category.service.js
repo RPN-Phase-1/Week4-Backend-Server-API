@@ -17,8 +17,12 @@ const createCategory = async (categoryBody) => {
  * Query for categorys
  * @returns {Promise<QueryResult>}
  */
-const queryCategorys = async (filter, options) => {
-  const categorys = await prisma.category.findMany();
+const queryCategorys = async (filter, options, sorting) => {
+  const categorys = await prisma.category.findMany({
+    ...options,
+    where: filter,
+    orderBy: sorting,
+  });
   return categorys;
 };
 

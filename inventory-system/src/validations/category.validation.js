@@ -13,6 +13,25 @@ const getCategory = {
   }),
 };
 
+const queryCategorys = {
+  query: Joi.object().keys({
+    skip: Joi.number().integer().min(0),
+    take: Joi.number().integer().min(1),
+    id: Joi.string().custom(objectId),
+    name: Joi.string(),
+    createdAt: Joi.date(),
+    updatedAt: Joi.date(),
+    orderBy: Joi.string().valid(
+      'name:asc',
+      'name:desc',
+      'createdAt:asc',
+      'createdAt:desc',
+      'updatedAt:asc',
+      'updatedAt:desc'
+    ),
+  }),
+};
+
 const updateCategory = {
   params: Joi.object().keys({
     categoryId: Joi.required().custom(objectId),
@@ -30,4 +49,4 @@ const deleteCategory = {
   }),
 };
 
-module.exports = { createCategory, getCategory, updateCategory, deleteCategory };
+module.exports = { createCategory, queryCategorys, getCategory, updateCategory, deleteCategory };
