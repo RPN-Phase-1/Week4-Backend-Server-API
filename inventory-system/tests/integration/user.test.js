@@ -19,7 +19,7 @@ const pass = 'password1';
 const salt = bcrypt.genSaltSync(8);
 const hashedPassword = bcrypt.hashSync(pass, salt);
 describe('User routes', ()=>{
-/*
+
     describe('GET /v1/user', ()=>{
         beforeEach(async ()=>{ 
             await insertUsers([admin]);
@@ -46,7 +46,7 @@ describe('User routes', ()=>{
 
         });
     })
-*/
+
     describe('POST /v1/user', ()=>{
         let newUser;
         let newAdmin;
