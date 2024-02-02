@@ -1,15 +1,15 @@
 const express = require('express');
 const httpStatus = require('http-status');
-const routes = require('./routes/v1');
-const config = require('./config/config');
-const morgan = require('./config/morgan');
-const { errorConverter, errorHandler } = require('./middlewares/error');
-const ApiError = require('./utils/ApiError');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
+const routes = require('./routes/v1');
+const config = require('./config/config');
+const morgan = require('./config/morgan');
+const { errorConverter, errorHandler } = require('./middlewares/error');
+const ApiError = require('./utils/ApiError');
 const { jwtStrategy } = require('./config/passport');
 
 const app = express();
@@ -20,7 +20,7 @@ if (config.env !== 'test') {
 }
 
 app.use(passport.initialize());
-passport.use('jwt',jwtStrategy);
+passport.use('jwt', jwtStrategy);
 
 // set security HTTP headers
 app.use(helmet());

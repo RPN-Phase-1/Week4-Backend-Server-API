@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client')
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 const { deleteOrderItemById } = require('./orderItem.service');
 
@@ -10,7 +10,7 @@ const { deleteOrderItemById } = require('./orderItem.service');
  */
 const createOrder = async (orderBody) => {
   return prisma.order.create({
-    data: orderBody
+    data: orderBody,
   });
 };
 
@@ -31,9 +31,9 @@ const queryOrders = async (filter, options) => {
 const getOrderById = async (id) => {
   return prisma.order.findFirst({
     where: {
-      id: id
-    }
-  })
+      id,
+    },
+  });
 };
 
 /**
@@ -47,13 +47,13 @@ const updateOrderById = async (orderId, updateBody) => {
   if (!order) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
-  
+
   const updateOrder = await prisma.order.update({
     where: {
       id: orderId,
     },
-    data: updateBody
-  })
+    data: updateBody,
+  });
 
   return updateOrder;
 };
@@ -65,29 +65,28 @@ const updateOrderById = async (orderId, updateBody) => {
  */
 const deleteOrderById = async (orderId) => {
   const orderItems = await prisma.orderItem.findMany({
-    where:{
-      orderId:orderId
-    }
-  })
+    where: {
+      orderId,
+    },
+  });
   if (!orderItems || orderItems.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order items not found');
   }
 
-  for(const orderItem of orderItems){
-    await deleteOrderItemById(orderItem.id)
+  for (const orderItem of orderItems) {
+    await deleteOrderItemById(orderItem.id);
   }
-
 
   const deleteOrders = await prisma.order.deleteMany({
     where: {
-      id: orderId
+      id: orderId,
     },
-  })
+  });
 
   return deleteOrders;
 };
 
-const getAllOrder = async (skip=0, take=10) => {
+const getAllOrder = async (skip = 0, take = 10) => {
   const orders = await prisma.order.findMany({
     skip: parseInt(skip),
     take: parseInt(take),

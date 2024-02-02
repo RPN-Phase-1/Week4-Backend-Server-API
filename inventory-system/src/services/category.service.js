@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client')
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -9,7 +9,7 @@ const ApiError = require('../utils/ApiError');
  */
 const createCategory = async (categoryBody) => {
   return prisma.category.create({
-    data: categoryBody
+    data: categoryBody,
   });
 };
 
@@ -30,9 +30,9 @@ const queryCategorys = async (filter, options) => {
 const getCategoryById = async (id) => {
   return prisma.category.findFirst({
     where: {
-      id: id
-    }
-  })
+      id,
+    },
+  });
 };
 
 /**
@@ -46,13 +46,13 @@ const updateCategoryById = async (categoryId, updateBody) => {
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
-  
+
   const updateCategory = await prisma.category.update({
     where: {
       id: categoryId,
     },
-    data: updateBody
-  })
+    data: updateBody,
+  });
 
   return updateCategory;
 };
@@ -70,14 +70,14 @@ const deleteCategoryById = async (categoryId) => {
 
   const deleteCategorys = await prisma.category.deleteMany({
     where: {
-      id: categoryId
+      id: categoryId,
     },
-  })
+  });
 
   return deleteCategorys;
 };
 
-const getAllCategory = async (skip=0, take=10) => {
+const getAllCategory = async (skip = 0, take = 10) => {
   const categorys = await prisma.category.findMany({
     skip: parseInt(skip),
     take: parseInt(take),

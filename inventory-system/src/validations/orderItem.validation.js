@@ -19,14 +19,13 @@ const getOrderItem = {
 const updateOrderItem = {
   params: Joi.object().keys({
     orderItemId: Joi.required().custom(objectId),
-
   }),
   body: Joi.object()
     .keys({
-        orderId: Joi.string().custom(objectId),
-        productId: Joi.string().custom(objectId),
-        quantity: Joi.number().required(),
-        unitPrice: Joi.number().required(),
+      orderId: Joi.string().custom(objectId),
+      productId: Joi.string().custom(objectId),
+      quantity: Joi.number().required(),
+      unitPrice: Joi.number().required(),
     })
     .min(1),
 };

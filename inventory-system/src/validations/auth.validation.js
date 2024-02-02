@@ -6,7 +6,7 @@ const register = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
-    role:Joi.string().required()
+    role: Joi.string().required(),
   }),
 };
 
@@ -15,7 +15,7 @@ const login = {
     email: Joi.string().required(),
     password: Joi.string().required(),
   }),
-}
+};
 
 module.exports = {
   register,

@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client')
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -9,7 +9,7 @@ const ApiError = require('../utils/ApiError');
  */
 const createProduct = async (productBody) => {
   return prisma.product.create({
-    data: productBody
+    data: productBody,
   });
 };
 
@@ -30,12 +30,10 @@ const queryProducts = async (filter, options) => {
 const getProductById = async (id) => {
   return prisma.product.findFirst({
     where: {
-      id: id
-    }
-  })
+      id,
+    },
+  });
 };
-
-
 
 /**
  * Update product by id
@@ -48,13 +46,13 @@ const updateProductById = async (productId, updateBody) => {
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
-  
+
   const updateProduct = await prisma.product.update({
     where: {
       id: productId,
     },
-    data: updateBody
-  })
+    data: updateBody,
+  });
 
   return updateProduct;
 };
@@ -72,26 +70,26 @@ const deleteProductById = async (productId) => {
 
   const deleteProducts = await prisma.product.deleteMany({
     where: {
-      id: productId
+      id: productId,
     },
-  })
+  });
 
   return deleteProducts;
 };
 
-const getAllProducts = async(category,skip=0,take=10)=>{
-  let products = await prisma.product.findMany({
-    skip:parseInt(skip),
-    take:parseInt(take),
-    where:{
-      category:{
-        name:category
-      }
-    }
-  })
+const getAllProducts = async (category, skip = 0, take = 10) => {
+  const products = await prisma.product.findMany({
+    skip: parseInt(skip),
+    take: parseInt(take),
+    where: {
+      category: {
+        name: category,
+      },
+    },
+  });
 
-  return products
-}
+  return products;
+};
 
 module.exports = {
   createProduct,

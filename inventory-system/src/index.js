@@ -1,11 +1,11 @@
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
-const prisma = require('../prisma/client');
+const prisma = require('../prisma/index');
 
 let server;
 
-if(prisma){
+if (prisma) {
   logger.info('Connected to Database');
   server = app.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);

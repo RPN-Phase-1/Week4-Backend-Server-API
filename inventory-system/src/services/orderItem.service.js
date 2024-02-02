@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client')
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -8,75 +8,75 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<OrderItem>}
  */
 const createOrderItem = async (orderItemBody) => {
+  const currentProduct = await prisma.product.findUnique({
+    where: {
+      id: orderItemBody.productId,
+    },
+  });
 
-    
-    const currentProduct = await prisma.product.findUnique({
-        where:{
-            id: orderItemBody.productId,
-        },
-    })
+  const currentOrder = await prisma.order.findUnique({
+    where: {
+      id: orderItemBody.orderId,
+    },
+  });
 
-    const currentOrder = await prisma.order.findUnique({
-        where:{
-            id: orderItemBody.orderId,
-        },
-    })
+  if (!currentProduct) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
 
-    if(!currentProduct) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
-    }
+  if (!currentOrder) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  }
 
-    if(!currentOrder) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
-    }
+  // if (!currentProduct || !currentOrder) {
+  //   return {
+  //     success: false,
+  //     message: 'Product or Order not found',
+  //   };
+  // }
 
+  if (orderItemBody.quantity > currentProduct.quantityInStock) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient stock');
+  }
 
-    if(orderItemBody.quantity > currentProduct.quantityInStock){
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient stock');
-    }
+  const updatedProduct = await prisma.product.update({
+    where: {
+      id: orderItemBody.productId,
+    },
+    data: {
+      quantityInStock: currentProduct.quantityInStock - orderItemBody.quantity,
+    },
+  });
 
-    const updatedProduct = await prisma.product.update({
-        where: {
-          id: orderItemBody.productId,
-        },
-        data: {
-          quantityInStock: currentProduct.quantityInStock - orderItemBody.quantity,
-        },
-      });
-    
-    if(!updatedProduct) {
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update product stock');
-    }
+  if (!updatedProduct) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update product stock');
+  }
 
+  const totalPriceProduct = orderItemBody.quantity * orderItemBody.unitPrice;
+  const totalPriceOrder = totalPriceProduct + currentOrder.totalPrice;
 
-    const totalPriceProduct = orderItemBody.quantity * orderItemBody.unitPrice;
-    const totalPriceOrder = totalPriceProduct + currentOrder.totalPrice;
+  const updatedOrder = await prisma.order.update({
+    where: {
+      id: orderItemBody.orderId,
+    },
+    data: {
+      totalPrice: totalPriceOrder,
+    },
+  });
 
-    const updatedOrder = await prisma.order.update({
-        where:{
-            id: orderItemBody.orderId,
-        },
-        data:{
-            totalPrice: totalPriceOrder,
-        }
-    })
+  if (!updatedOrder) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update order total price');
+  }
 
-    if(!updatedOrder) {
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update order total price');
-    }
+  const createdOrderItem = await prisma.orderItem.create({
+    data: orderItemBody,
+  });
 
-    const createdOrderItem = await prisma.orderItem.create({
-        data: orderItemBody,
-    });
+  return createdOrderItem;
 
-    return createdOrderItem;
-
-
-
-
-//   return prisma.orderItem.create({
-//     data: orderItemBody
-//   });
+  //   return prisma.orderItem.create({
+  //     data: orderItemBody
+  //   });
 };
 
 /**
@@ -96,9 +96,9 @@ const queryOrderItems = async (filter, options) => {
 const getOrderItemById = async (id) => {
   return prisma.orderItem.findFirst({
     where: {
-      id: id
-    }
-  })
+      id,
+    },
+  });
 };
 
 /**
@@ -114,47 +114,42 @@ const updateOrderItemById = async (orderItemId, updateBody) => {
   }
 
   const currentProduct = await prisma.product.findUnique({
-    where:{
-      id: updateBody.productId
-    }
-  })
+    where: {
+      id: updateBody.productId,
+    },
+  });
 
   const currentOrder = await prisma.order.findUnique({
-    where:{
-      id: updateBody.orderId
-    }
-  })
+    where: {
+      id: updateBody.orderId,
+    },
+  });
 
-  if(!currentProduct) {
+  if (!currentProduct) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
-  if(!currentOrder) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  if (!currentOrder) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
 
-  if(updateBody.quantity > currentProduct.quantityInStock ){
+  if (updateBody.quantity > currentProduct.quantityInStock) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient stock');
   }
-
 
   const updatedQuantity = await prisma.product.update({
     where: {
       id: updateBody.productId,
     },
     data: {
-      quantityInStock: (orderItem.quantity+currentProduct.quantityInStock)-updateBody.quantity,
-      
-      
+      quantityInStock: orderItem.quantity + currentProduct.quantityInStock - updateBody.quantity,
     },
   });
 
-  if(!updatedQuantity){
+  if (!updatedQuantity) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update product stock');
   }
 
-
- 
   /* coret-coretan
   console.log("quantityinstocksaatini", currentProduct.quantityInStock)
   console.log("inputquantity", updateBody.quantity)
@@ -168,32 +163,27 @@ const updateOrderItemById = async (orderItemId, updateBody) => {
 
   */
 
+  const totalPriceOrder = updateBody.quantity * updateBody.unitPrice;
 
- 
-  const totalPriceOrder = updateBody.quantity*updateBody.unitPrice;
-  
   const updatedOrder = await prisma.order.update({
-    where:{
-        id: updateBody.orderId,
+    where: {
+      id: updateBody.orderId,
     },
-    data:{
-        totalPrice: totalPriceOrder,
-    }
-  })
+    data: {
+      totalPrice: totalPriceOrder,
+    },
+  });
 
-  if(!updatedOrder) {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update order total price');
+  if (!updatedOrder) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update order total price');
   }
 
-
-
-  
   const updatedOrderItem = await prisma.orderItem.update({
     where: {
       id: orderItemId,
     },
-    data: updateBody
-  })
+    data: updateBody,
+  });
 
   return updatedOrderItem;
 };
@@ -208,8 +198,8 @@ const deleteOrderItemById = async (orderItemId) => {
   if (!orderItem) {
     throw new ApiError(httpStatus.NOT_FOUND, 'orderItem not found');
   }
-  const productId = orderItem.productId;
-  const orderId = orderItem.orderId;
+  const { productId } = orderItem;
+  const { orderId } = orderItem;
 
   const updatedQuantity = await prisma.product.update({
     where: {
@@ -222,29 +212,27 @@ const deleteOrderItemById = async (orderItemId) => {
     },
   });
 
-  if(!updatedQuantity){
+  if (!updatedQuantity) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update product stock');
   }
 
-
-  const deletedProductPrice = orderItem.quantity * orderItem.unitPrice
+  const deletedProductPrice = orderItem.quantity * orderItem.unitPrice;
 
   const updatedTotalPrice = await prisma.order.update({
-    where:{
+    where: {
       id: orderId,
     },
-    data:{
-      totalPrice:{
-        decrement: deletedProductPrice
-      }
-    }
-  })
+    data: {
+      totalPrice: {
+        decrement: deletedProductPrice,
+      },
+    },
+  });
 
-  if(!updatedTotalPrice){
+  if (!updatedTotalPrice) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update total price order');
   }
 
-  
   const deletedOrderItems = await prisma.orderItem.deleteMany({
     where: {
       id: orderItemId,
@@ -252,17 +240,15 @@ const deleteOrderItemById = async (orderItemId) => {
   });
 
   return deletedOrderItems;
-
 };
 
-const getAllOrderItems = async (skip=0,take=10) => {
+const getAllOrderItems = async (skip = 0, take = 10) => {
   const orderItems = await prisma.orderItem.findMany({
-    skip:parseInt(skip),
-    take:parseInt(take),
+    skip: parseInt(skip),
+    take: parseInt(take),
   });
   return orderItems;
 };
-
 
 module.exports = {
   createOrderItem,

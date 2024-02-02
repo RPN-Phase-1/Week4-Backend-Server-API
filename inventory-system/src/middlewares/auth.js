@@ -12,7 +12,6 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
 };
 
 const auth = () => async (req, res, next) => {
-  
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject))(req, res, next);
   })
@@ -21,14 +20,13 @@ const auth = () => async (req, res, next) => {
 };
 
 const adminAuth = () => async (req, res, next) => {
-  
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject))(req, res, next);
   })
     .then(() => {
-      if(req.user.role==='admin'){
+      if (req.user.role === 'admin') {
         next();
-      }else{
+      } else {
         throw new ApiError(httpStatus.FORBIDDEN, 'You Are Not Admin');
       }
     })
@@ -36,6 +34,6 @@ const adminAuth = () => async (req, res, next) => {
 };
 
 module.exports = {
-  auth, 
+  auth,
   adminAuth,
 };

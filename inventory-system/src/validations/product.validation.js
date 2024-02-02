@@ -7,11 +7,10 @@ const createProduct = {
     price: Joi.number().required(),
     quantityInStock: Joi.number().required(),
     categoryId: Joi.string().custom(objectId),
-    userId:Joi.string().custom(objectId),
-    description:Joi.string().required()
+    userId: Joi.string().custom(objectId),
+    description: Joi.string().required(),
   }),
 };
-
 
 const getProduct = {
   params: Joi.object().keys({
@@ -19,12 +18,9 @@ const getProduct = {
   }),
 };
 
-
-
 const updateProduct = {
   params: Joi.object().keys({
     productId: Joi.required().custom(objectId),
-
   }),
   body: Joi.object()
     .keys({
@@ -32,8 +28,8 @@ const updateProduct = {
       price: Joi.number(),
       quantityInStock: Joi.number(),
       categoryId: Joi.string().custom(objectId),
-      userId:Joi.string().custom(objectId),
-      description:Joi.string()
+      userId: Joi.string().custom(objectId),
+      description: Joi.string(),
     })
     .min(1),
 };
@@ -47,7 +43,7 @@ const deleteProduct = {
 module.exports = {
   createProduct,
   getProduct,
- 
+
   updateProduct,
   deleteProduct,
 };

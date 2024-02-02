@@ -8,19 +8,19 @@ const createCategory = catchAsync(async (req, res) => {
 
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
-    message: "Create Category Success",
-    data: category
+    message: 'Create Category Success',
+    data: category,
   });
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  const {skip,take} = req.query
-  const result = await categoryService.getAllCategory(skip,take);
-  
+  const { skip, take } = req.query;
+  const result = await categoryService.getAllCategory(skip, take);
+
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Get Categorys Success",
-    data: result
+    message: 'Get Categorys Success',
+    data: result,
   });
 });
 
@@ -29,31 +29,31 @@ const getCategory = catchAsync(async (req, res) => {
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
-  
+
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Get Category Success",
-    data: category
+    message: 'Get Category Success',
+    data: category,
   });
 });
 
 const updateCategory = catchAsync(async (req, res) => {
   const category = await categoryService.updateCategoryById(req.params.categoryId, req.body);
-  
+
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Update Category Success",
-    data: category
+    message: 'Update Category Success',
+    data: category,
   });
 });
 
 const deleteCategory = catchAsync(async (req, res) => {
   await categoryService.deleteCategoryById(req.params.categoryId);
-  
+
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Delete Category Success",
-    data: null
+    message: 'Delete Category Success',
+    data: null,
   });
 });
 
