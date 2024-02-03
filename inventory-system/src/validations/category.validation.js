@@ -15,8 +15,8 @@ const getCategory = {
 
 const queryCategorys = {
   query: Joi.object().keys({
-    skip: Joi.number().integer().min(0),
-    take: Joi.number().integer().min(1),
+    page: Joi.number().integer().min(0),
+    size: Joi.number().integer().min(1),
     id: Joi.string().custom(objectId),
     name: Joi.string(),
     createdAt: Joi.date(),

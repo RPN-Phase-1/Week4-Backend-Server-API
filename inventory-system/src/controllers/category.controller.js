@@ -14,29 +14,35 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  // Object untuk menampung options dan orderBy yang akan dikirimkan menjadi parameter ke queryCategorys
   const whereOptions = {};
   const orderByOptions = {};
-  const skipTakeOptions = {};
+  let pageSizeOptions = {};
+
+  // where param
   ['id', 'name', 'createdAt', 'updatedAt'].forEach((param) => {
     if (req.query[param]) {
       whereOptions[param] = req.query[param];
     }
   });
-  if (req.query.skip) {
-    skipTakeOptions.skip = req.query.skip;
-  }
-  if (req.query.take) {
-    skipTakeOptions.take = req.query.take;
-  }
+
+  // orderBy param
   if (req.query.orderBy) {
     orderByOptions.orderBy = req.query.orderBy.split(':');
   }
-  
   const sortingOptions = req.query.orderBy ? { [orderByOptions.orderBy[0]]: orderByOptions.orderBy[1] } : undefined;
 
-  const category = await categoryService.queryCategorys(whereOptions, skipTakeOptions, sortingOptions);
-  if (!category) {
+  // skip & take param
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.size) || 10;
+  const skip = (page - 1) * pageSize;
+  pageSizeOptions = {
+    skip: skip,
+    take: pageSize,
+  };
+
+  const category = await categoryService.queryCategorys(whereOptions, pageSizeOptions, sortingOptions);
+
+  if (category.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
 
@@ -49,6 +55,7 @@ const getCategorys = catchAsync(async (req, res) => {
 
 const getCategoryById = catchAsync(async (req, res) => {
   const category = await categoryService.getCategoryById(req.params.categoryId);
+  console.log(category)
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
