@@ -21,14 +21,7 @@ const queryCategorys = {
     name: Joi.string(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
-    orderBy: Joi.string().valid(
-      'name:asc',
-      'name:desc',
-      'createdAt:asc',
-      'createdAt:desc',
-      'updatedAt:asc',
-      'updatedAt:desc'
-    ),
+    orderBy: Joi.string().valid('name:asc', 'name:desc'),
   }),
 };
 

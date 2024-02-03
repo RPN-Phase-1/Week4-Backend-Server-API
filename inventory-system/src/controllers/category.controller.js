@@ -19,7 +19,7 @@ const getCategorys = catchAsync(async (req, res) => {
   let pageSizeOptions = {};
 
   // where param
-  ['id', 'name', 'createdAt', 'updatedAt'].forEach((param) => {
+  ['id', 'name'].forEach((param) => {
     if (req.query[param]) {
       whereOptions[param] = req.query[param];
     }
@@ -55,7 +55,6 @@ const getCategorys = catchAsync(async (req, res) => {
 
 const getCategoryById = catchAsync(async (req, res) => {
   const category = await categoryService.getCategoryById(req.params.categoryId);
-  console.log(category)
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
