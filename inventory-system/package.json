@@ -11,17 +11,17 @@
         "node": ">=12.0.0"
     },
     "scripts": {
-      "start": "pm2 start ecosystem.config.json --no-daemon",
-      "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-      "lint": "eslint .",
-      "lint:fix": "eslint . --fix",
-      "prettier": "prettier --check **/*.js",
-      "prettier:fix": "prettier --write **/*.js",
-      "prepare": "husky install",
-      "test": "jest -i --colors --verbose --detectOpenHandles",
-      "test:watch": "jest -i --watchAll",
-      "coverage": "jest -i --coverage",
-      "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls"
+        "start": "pm2 start ecosystem.config.json --no-daemon",
+        "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "prettier": "prettier --check **/*.js",
+        "prettier:fix": "prettier --write **/*.js",
+        "prepare": "husky install",
+        "test": "jest -i --colors --verbose --detectOpenHandles",
+        "test:watch": "jest -i --watchAll",
+        "coverage": "jest -i --coverage",
+        "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls"
     },
     "keywords": [
         "node",
@@ -62,8 +62,8 @@
         "passport": "^0.4.0",
         "passport-jwt": "^4.0.0",
         "pm2": "^5.1.0",
-        "swagger-jsdoc": "^6.0.8",
-        "swagger-ui-express": "^4.1.6",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^4.6.3",
         "validator": "^13.0.0",
         "winston": "^3.2.1",
         "xss-clean": "^0.1.1"

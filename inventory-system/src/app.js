@@ -11,8 +11,12 @@ const morgan = require('./config/morgan');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 const { jwtStrategy } = require('./config/passport');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerOptions = require('./swaggerOption');
 
 const app = express();
+
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
@@ -47,6 +51,12 @@ app.get('/', (req, res) => {
 
 // v1 api routes
 app.use('/v1', routes);
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
 
 // send 404 error jika route tidak ada
 app.use((req, res, next) => {
