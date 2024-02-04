@@ -27,4 +27,52 @@ const getUserByEmail = async (email) => {
   });
 };
 
-module.exports = { createUser, getUserByEmail };
+const getAll = async (filter, options, sorting) => {
+  return prisma.user.findMany({
+    ...options,
+    where: filter,
+    orderBy: sorting,
+  });
+};
+
+const getId = async (id) => {
+  return prisma.user.findFirst({
+    where: {
+      id: id,
+    },
+  });
+};
+
+const update = async (id, update) => {
+  const user = await getId(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  update.password = bcrypt.hashSync(update.password, 8);
+  const updateUser = await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: update,
+  });
+
+  return updateUser;
+};
+
+const deleted = async (id) => {
+  const user = await getId(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const deleteUser = await prisma.user.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  return deleteUser;
+};
+
+module.exports = { createUser, getUserByEmail, getAll, getId, update, deleted };

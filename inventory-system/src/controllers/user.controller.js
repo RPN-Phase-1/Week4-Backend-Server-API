@@ -1,15 +1,15 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/apiError');
 const catchAsync = require('../utils/catchAsync');
-const { productService } = require('../services');
+const { userService } = require('../services');
 
 const create = catchAsync(async (req, res) => {
-  const product = await productService.create(req.body);
+  const user = await userService.createUser(req.body);
 
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
-    message: 'Create Product Success',
-    data: product,
+    message: 'Create User Success',
+    data: user,
   });
 });
 
@@ -19,7 +19,7 @@ const read = catchAsync(async (req, res) => {
   let pageSizeOptions = {};
 
   // where param
-  ['name', 'description', 'price', 'quantityInStock', 'categoryId', 'userId'].forEach((param) => {
+  ['name', 'role'].forEach((param) => {
     if (req.query[param]) {
       whereOptions[param] = req.query[param];
     }
@@ -40,50 +40,50 @@ const read = catchAsync(async (req, res) => {
     take: pageSize,
   };
 
-  const product = await productService.read(whereOptions, pageSizeOptions, sortingOptions);
+  const user = await userService.getAll(whereOptions, pageSizeOptions, sortingOptions);
 
-  if (product.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  if (user.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: 'Get Product Success',
-    data: product,
+    message: 'Get User Success',
+    data: user,
   });
 });
 
 const readId = catchAsync(async (req, res) => {
-  const product = await productService.readId(req.params.productId);
-  if (!product) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  const user = await userService.getId(req.params.userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: 'Get Product Success',
-    data: product,
+    message: 'Get User Success',
+    data: user,
   });
 });
 
 const update = catchAsync(async (req, res) => {
-  const product = await productService.update(req.params.productId, req.body);
+  const user = await userService.update(req.params.userId, req.body);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: 'Update Product Success',
-    data: product,
+    message: 'Update User Success',
+    data: user,
   });
 });
 
 const deleted = catchAsync(async (req, res) => {
-  await productService.deleted(req.params.productId);
+  await userService.deleted(req.params.userId);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: 'Delete Product Success',
+    message: 'Delete User Success',
     data: null,
   });
-});
+})
 
 module.exports = { create, read, readId, update, deleted };
