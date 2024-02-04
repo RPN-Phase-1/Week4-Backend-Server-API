@@ -40,4 +40,32 @@ const getAll = {
   }),
 };
 
-module.exports = { create, getAll };
+const getId = {
+  params: Joi.object().keys({
+    productId: Joi.string().custom(objectId),
+  }),
+};
+
+const update = {
+  params: Joi.object().keys({
+    productId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      name: Joi.string(),
+      description: Joi.string(),
+      price: Joi.number().precision(2).positive(),
+      quantityInStock: Joi.number(),
+      categoryId: Joi.string().custom(objectId),
+      userId: Joi.string().custom(objectId),
+    })
+    .min(1),
+};
+
+const deleted = {
+  params: Joi.object().keys({
+    productId: Joi.string().custom(objectId),
+  }),
+};
+
+module.exports = { create, getAll, getId, update, deleted };

@@ -11,4 +11,10 @@ router
   .post(auth(), validate(productValidation.create), productController.create)
   .get(auth(), validate(productValidation.getAll), productController.read);
 
+router
+  .route('/:productId')
+  .get(auth(), validate(productValidation.getId), productController.readId)
+  .put(auth(), validate(productValidation.update), productController.update)
+  .delete(auth(), validate(productValidation.deleted), productController.deleted);
+
 module.exports = router;

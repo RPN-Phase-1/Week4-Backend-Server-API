@@ -53,4 +53,37 @@ const read = catchAsync(async (req, res) => {
   });
 });
 
-module.exports = { create, read };
+const readId = catchAsync(async (req, res) => {
+  const product = await productService.readId(req.params.productId);
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Product Success',
+    data: product,
+  });
+});
+
+const update = catchAsync(async (req, res) => {
+  const product = await productService.update(req.params.productId, req.body);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Update Product Success',
+    data: product,
+  });
+});
+
+const deleted = catchAsync(async (req, res) => {
+  await productService.deleted(req.params.productId);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Delete Product Success',
+    data: null,
+  });
+});
+
+module.exports = { create, read, readId, update, deleted };

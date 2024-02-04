@@ -55,7 +55,7 @@ const updateCategoryById = async (categoryId, updateBody) => {
 
   const updateCategory = await prisma.category.update({
     where: {
-      id: id,
+      id: categoryId,
     },
     data: updateBody,
   });
