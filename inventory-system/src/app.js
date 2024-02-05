@@ -14,6 +14,8 @@ const { jwtStrategy } = require('./config/passport');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerOptions = require('./swaggerOption');
+const expressLayout = require('express-ejs-layouts');
+const path = require('path');
 
 const app = express();
 
@@ -45,7 +47,17 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+//static file
+app.use(express.static('public'));
+
+//template engine
+app.use(expressLayout);
+app.set('layout','layouts/main');
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 app.get('/', (req, res) => {
+  //res.render('index');
   res.send('hello world');
 });
 

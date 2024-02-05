@@ -43,6 +43,9 @@ const getAllUsers = async (skip = 0, take = 10) => {
 };
 
 const updateUserById = async (userId, updateBody) => {
+  if(updateBody.password){
+    updateBody.password = bcrypt.hashSync(updateBody.password, 8);
+  }
   const updateUser = await prisma.user.update({
     where: {
       id: userId,
