@@ -43,7 +43,7 @@ const getId = {
 
 const update = {
   params: Joi.object().keys({
-    productId: Joi.required().custom(objectId),
+    productId: Joi.string().custom(objectId),
   }),
   body: Joi.object()
     .keys({

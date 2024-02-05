@@ -2,9 +2,9 @@ const httpStatus = require('http-status');
 const prisma = require('../../prisma/client');
 const ApiError = require('../utils/apiError');
 
-const create = async (categoryBody) => {
+const create = async (productBody) => {
   return prisma.product.create({
-    data: categoryBody,
+    data: productBody,
   });
 };
 
