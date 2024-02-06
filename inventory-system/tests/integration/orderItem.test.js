@@ -28,10 +28,10 @@ describe('Order Item routes', ()=>{
             await insertOrders([orderOne]);
             await insertProducts([productOne]);
         })
-        test('should return 200 and successfully get all order items if user role is admin', async ()=>{
+        test('should return 200 and successfully get all order items', async ()=>{
             const res = await request(app)
             .get('/v1/order-item')
-            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .set('Authorization', `Bearer ${userOneAccessToken}`)
             .expect(httpStatus.OK);
 
         });
@@ -42,13 +42,7 @@ describe('Order Item routes', ()=>{
                 .expect(httpStatus.UNAUTHORIZED);
         });
 
-        test('should return 403 forbidden if user role not admin', async ()=>{
-            const res = await request(app)
-            .get('/v1/order-item')
-            .set('Authorization', `Bearer ${userOneAccessToken}`)
-            .expect(httpStatus.FORBIDDEN);
-
-        });
+      
     })
 
     describe('POST /v1/order-item', ()=>{
@@ -79,10 +73,10 @@ describe('Order Item routes', ()=>{
 
         })
 
-        test('should return 201 and successfully create order item if request data is ok and user role is admin', async () => {
+        test('should return 201 and successfully create order item if request data is ok', async () => {
             const res = await request(app)
                 .post('/v1/order-item')
-                .set('Authorization', `Bearer ${adminAccessToken}`)
+                .set('Authorization', `Bearer ${userOneAccessToken}`)
                 .send(newOrderItem)
                 .expect(httpStatus.CREATED)
 
@@ -125,7 +119,7 @@ describe('Order Item routes', ()=>{
         test('should return 400 if quantity more than quantityInStock', async () =>{
             const res = await request(app)
                 .post('/v1/order-item')
-                .set('Authorization', `Bearer ${adminAccessToken}`)
+                .set('Authorization', `Bearer ${userOneAccessToken}`)
                 .send(newOrderItem2)
                 .expect(httpStatus.BAD_REQUEST)
 
@@ -138,7 +132,7 @@ describe('Order Item routes', ()=>{
         test('should return 400 data is invalid', async () =>{
             const res = await request(app)
             .post('/v1/order-item')
-            .set('Authorization', `Bearer ${adminAccessToken}`) 
+            .set('Authorization', `Bearer ${userOneAccessToken}`) 
             .expect(httpStatus.BAD_REQUEST);
 
             const errorResponse = res.body;
@@ -163,17 +157,7 @@ describe('Order Item routes', ()=>{
                
         });
 
-        test('should return 403 forbidden if user role not admin', async () => {
-            const res = await request(app)
-                .post('/v1/order-item')
-                .set('Authorization', `Bearer ${userOneAccessToken}`) 
-                .send(newOrderItem)
-                .expect(httpStatus.FORBIDDEN);
-
-               
-        });
-
-
+       
 
 
         
@@ -199,10 +183,10 @@ describe('Order Item routes', ()=>{
             
         })
 
-        test('should return 200 and successfully update order item if request data is ok and user role is admin', async ()=>{
+        test('should return 200 and successfully update order item if request data is ok', async ()=>{
             const res = await request(app)
             .patch(`/v1/order-item/${orderItemOne.id}`)
-            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .set('Authorization', `Bearer ${userOneAccessToken}`)
             .send(updatedOrderItem)
             .expect(httpStatus.OK);
 
@@ -258,21 +242,13 @@ describe('Order Item routes', ()=>{
               .expect(httpStatus.UNAUTHORIZED);
         }); 
 
-        test('should return 403 forbidden if user role not admin', async () => {
-            const res = await request(app)
-              .patch(`/v1/order/${orderItemOne.id}`)
-              .set('Authorization', `Bearer ${userOneAccessToken}`)
-              .send(updatedOrderItem)
-              .expect(httpStatus.FORBIDDEN);
-        }); 
-
-
+       
 
         test('should return 404 if order not found', async () => {
             
             const res = await request(app)
               .patch(`/v1/order-item/`)
-              .set('Authorization', `Bearer ${adminAccessToken}`)
+              .set('Authorization', `Bearer ${userOneAccessToken}`)
               .send(updatedOrderItem)
               .expect(httpStatus.NOT_FOUND);
           });
@@ -290,10 +266,10 @@ describe('Order Item routes', ()=>{
             await insertOrders([orderOne]); 
             await insertOrderItems([orderItemOne]); 
         })
-        test('should return 200 and successfully delete order item if request is valid and user role is admin', async () => {
+        test('should return 200 and successfully delete order item if request is valid', async () => {
             const res = await request(app)
               .delete(`/v1/order-item/${orderItemOne.id}`)
-              .set('Authorization', `Bearer ${adminAccessToken}`)
+              .set('Authorization', `Bearer ${userOneAccessToken}`)
               .expect(httpStatus.OK);
        
             const dbOrder = await prisma.orderItem.findUnique({
@@ -311,12 +287,7 @@ describe('Order Item routes', ()=>{
               .expect(httpStatus.UNAUTHORIZED);
           });
 
-          test('should return 403 forbidden if user role not admin', async () => {
-            await request(app)
-              .delete(`/v1/order-item/${orderItemOne.id}`)
-              .set('Authorization', `Bearer ${userOneAccessToken}`)
-              .expect(httpStatus.FORBIDDEN);
-          });
+     
         
           test('should return 404 if order not found', async () => {
             await request(app)

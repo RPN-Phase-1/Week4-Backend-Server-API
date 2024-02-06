@@ -15,11 +15,10 @@ const { tokenTypes } = require('../../src/config/tokens');
 const { v4 } = require('uuid');
 const bcrypt = require('bcryptjs');
 
-const pass = 'password1';
-const salt = bcrypt.genSaltSync(8);
-const hashedPassword = bcrypt.hashSync(pass, salt);
+
 describe('User routes', ()=>{
 
+    
     describe('GET /v1/user', ()=>{
         beforeEach(async ()=>{ 
             await insertUsers([admin]);
@@ -52,14 +51,12 @@ describe('User routes', ()=>{
         let newAdmin;
        
         beforeEach(async ()=>{
-            await insertUsers([admin])
-            await insertUsers([userOne])
-            
+            await insertUsers([admin, userOne]) 
 
             newUser = {
                 name: faker.name.findName(),
                 email: faker.internet.email().toLowerCase(),
-                password: hashedPassword,
+                password: 'password1',
             }
           
             
@@ -72,39 +69,40 @@ describe('User routes', ()=>{
                 .send(newUser)
                 .expect(httpStatus.CREATED)
 
-            // const userData = res.body.data;
+            const userData = res.body.data;
            
+           // console.log(userData);
 
-            // expect(userData).toEqual({
-            //     id: expect.anything(),
-            //     name: newUser.name,
-            //     email: newUser.email,
-            //     password: hashedPassword,
-            //     role: "user",
-            //     isEmailVerified: false,
-            //     createdAt: expect.anything(),
-            //     updatedAt: expect.anything(),
-            // })
+            expect(userData).toEqual({
+                id: expect.anything(),
+                name: newUser.name,
+                email: newUser.email,
+                password: expect.anything(),
+                role: 'user',
+                isEmailVerified: false,
+                createdAt: expect.anything(),
+                updatedAt: expect.anything(),
+            })
 
-            // const dbUser = await prisma.user.findUnique({
-            //     where: {
-            //       id: userData.id,
-            //     },
-            //   });
+            const dbUser = await prisma.user.findUnique({
+                where: {
+                  id: userData.id,
+                },
+              });
         
-            //   expect(dbUser).toBeDefined();
+              expect(dbUser).toBeDefined();
 
         
-            //   expect(dbUser).toMatchObject({
-            //     id: expect.anything(),
-            //     name: newUser.name,
-            //     email: newUser.email,
-            //     password: newUser.password,
-            //     role: "user",
-            //     isEmailVerified: false,
-            //     createdAt: expect.anything(),
-            //     updatedAt: expect.anything(),
-            //   });
+              expect(dbUser).toMatchObject({
+                id: expect.anything(),
+                name: newUser.name,
+                email: newUser.email,
+                password: expect.anything(),
+                role: 'user',
+                isEmailVerified: false,
+                createdAt: expect.anything(),
+                updatedAt: expect.anything(),
+              });
           
           
         });
@@ -155,6 +153,8 @@ describe('User routes', ()=>{
 
     })
 
+ 
+
     describe('PATCH /v1/user/:userId', ()=>{
         let updatedUser;
         
@@ -167,17 +167,53 @@ describe('User routes', ()=>{
             updatedUser = {
                 name: faker.name.findName(),
                 email: faker.internet.email().toLowerCase(),
-                password: hashedPassword,
+                password: 'password123',
+                
             }
           
             
         })
-        test('should return 200 and successfully update order item if request data is ok and user role is admin', async ()=>{
+        test('should return 200 and successfully update user if request data is ok and user role is admin', async ()=>{
             const res = await request(app)
             .patch(`/v1/user/${userOne.id}`)
             .set('Authorization', `Bearer ${adminAccessToken}`)
             .send(updatedUser)
             .expect(httpStatus.OK);
+
+            const userData = res.body.data;
+           
+           // console.log(userData);
+
+            expect(userData).toMatchObject({
+                id: expect.anything(),
+                name: updatedUser.name,
+                email: updatedUser.email,
+                password: expect.anything(),
+                role: 'user',
+                isEmailVerified: false,
+                createdAt: expect.anything(),
+                updatedAt: expect.anything(),
+            })
+
+            // const dbUser = await prisma.user.findUnique({
+            //     where: {
+            //       id: userData.id,
+            //     },
+            //   });
+        
+            //   expect(dbUser).toBeDefined();
+
+        
+            //   expect(dbUser).toMatchObject({
+            //     id: expect.anything(),
+            //     name: updatedUser.name,
+            //     email: userOne.email,
+            //     password: expect.anything(),
+            //     role: userOne.role,
+            //     isEmailVerified: false,
+            //     createdAt: expect.anything(),
+            //     updatedAt: expect.anything(),
+            //   });
 
           
 
@@ -224,6 +260,8 @@ describe('User routes', ()=>{
           });
     })
 
+    
+    
     describe('DELETE /v1/user/:userId', ()=>{
         beforeEach(async ()=>{
             await insertUsers([admin]);
@@ -265,4 +303,6 @@ describe('User routes', ()=>{
               .expect(httpStatus.NOT_FOUND);
           });
     })
+
+    
 })

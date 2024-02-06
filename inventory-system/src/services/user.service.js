@@ -7,6 +7,7 @@ const prisma = require('../../prisma/index');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
+  
   userBody.password = bcrypt.hashSync(userBody.password, 8);
 
   return prisma.user.create({
