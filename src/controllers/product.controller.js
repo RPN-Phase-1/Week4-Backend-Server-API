@@ -1,7 +1,6 @@
 const httpStatus = require("http-status");
 const { productService } = require("../services");
 const catchAsync = require("../utils/catchAsync");
-const ApiError = require("../utils/ApiError");
 
 const createProduct = catchAsync(async (req, res) => {
   const product = await productService.createProduct(req.body);

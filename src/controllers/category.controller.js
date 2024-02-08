@@ -1,7 +1,7 @@
+const httpStatus = require("http-status");
 const { categoryService } = require("../services");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
-const httpStatus = require("http-status");
 
 const createCategory = catchAsync(async (req, res) => {
   const existingCategory = await categoryService.getCategoryByName(req.body.name);

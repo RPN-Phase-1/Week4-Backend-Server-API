@@ -65,7 +65,7 @@ const updateOrderItem = catchAsync(async (req, res) => {
 });
 
 const deleteOrderItem = catchAsync(async (req, res) => {
-  const orderItemUpdated = await orderItemService.deleteOrderItem(req.params.orderItemId);
+  await orderItemService.deleteOrderItem(req.params.orderItemId);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
