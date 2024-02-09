@@ -141,6 +141,41 @@ module.exports = router;
  *                  message: "Please authenticate"
  *                  stack: "Error: Please authenticate\n at"
  * /product/id:
+ *   get:
+ *     summary: get product by id
+ *     tags: [Product]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       '200':
+ *         description: Product Created
+ *         content:
+ *           application/json:
+ *             example:
+ *                 status: 200
+ *                 message: "Get Products Success"
+ *                 data:
+ *                  id: "5d3a5a9e-bd2b-4e9b-9cae-1e807f6ff8ec"
+ *                  name:  "baju kenjo"
+ *                  description: "baju keren merk kenjo"
+ *                  price: 100000
+ *                  quantityInStock: 25
+ *                  categoryId: "6c448130-6036-4535-acac-b7c2384e8a34"
+ *                  userId: "40490dd6-502a-4183-a595-a38616c2c477" 
+ *                  createdAt: "2024-02-03T13:55:35.124Z"
+ *                  updatedAt: "2024-02-03T13:55:35.124Z"
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *                  status: 401
+ *                  message: "Please authenticate"
+ *                  stack: "Error: Please authenticate\n at"
  *   patch:
  *     summary: Update a product
  *     tags: [Product]

@@ -111,6 +111,36 @@ module.exports = router;
  *                  message: "Please authenticate"
  *                  stack: "Error: Please authenticate\n at"
  * /category/id:
+ *   get:
+ *     summary: get category by id
+ *     tags: [Category]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Category'
+ *     responses:
+ *       '200':
+ *         description: Category Created
+ *         content:
+ *           application/json:
+ *             example:
+ *                 status: 200
+ *                 message: "Get Categorys Success"
+ *                 data:
+ *                  id: "234a1fa8-0d36-4d7b-a363-0c42fbfc4e9e"
+ *                  name: "Snack"
+ *                  createdAt: "2024-02-03T13:55:35.124Z"
+ *                  updatedAt: "2024-02-03T13:55:35.124Z"
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *                  status: 401
+ *                  message: "Please authenticate"
+ *                  stack: "Error: Please authenticate\n at"
  *   patch:
  *     summary: Update a category
  *     tags: [Category]

@@ -152,6 +152,48 @@ module.exports = router;
  *                  message: "You Are Not Admin"
  *                  stack: "Error: You Are Not Admin\n at"
  * /order/id:
+ *   get:
+ *     summary: get order by id
+ *     tags: [Order]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Order'
+ *     responses:
+ *       '200':
+ *         description: Order Created
+ *         content:
+ *           application/json:
+ *             example:
+ *                 status: 200
+ *                 message: "Get Orders Success"
+ *                 data:
+ *                  id: "9c170176-c8c2-4ead-8b78-a8356dba0316"
+ *                  date:  "2023-01-01T00:00:00.000Z"
+ *                  totalPrice: 0
+ *                  customerName: "asep"
+ *                  customerEmail: "asep@gmail.com"
+ *                  userId: "736edf9e-66c3-43de-b280-4ccda7a3d1ee" 
+ *                  createdAt: "2024-02-03T13:55:35.124Z"
+ *                  updatedAt: "2024-02-03T13:55:35.124Z"
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *                  status: 401
+ *                  message: "Please authenticate"
+ *                  stack: "Error: Please authenticate\n at"
+ *       '403':
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             example:
+ *                  status: 403
+ *                  message: "You Are Not Admin"
+ *                  stack: "Error: You Are Not Admin\n at" 
  *   patch:
  *     summary: Update a order
  *     tags: [Order]

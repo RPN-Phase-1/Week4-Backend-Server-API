@@ -129,6 +129,39 @@ module.exports = router;
  *                  message: "Please authenticate"
  *                  stack: "Error: Please authenticate\n at"
  * /order-item/id:
+ *   get:
+ *     summary: get orderitem by id
+ *     tags: [OrderItem]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/OrderItem'
+ *     responses:
+ *       '200':
+ *         description: OrderItem Created
+ *         content:
+ *           application/json:
+ *             example:
+ *                 status: 200
+ *                 message: "Get OrderItems Success"
+ *                 data:
+ *                  id: "9c170176-c8c2-4ead-8b78-a8356dba0316"
+ *                  orderId: "b347ed58-3b82-4b46-8eeb-3c65a519e0c4"
+ *                  productId: "a525a2ee-f460-4633-bcb1-c138c7916073"
+ *                  quantity: 3
+ *                  unitPrice: 100000
+ *                  createdAt: "2024-02-03T13:55:35.124Z"
+ *                  updatedAt: "2024-02-03T13:55:35.124Z"
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             example:
+ *                  status: 401
+ *                  message: "Please authenticate"
+ *                  stack: "Error: Please authenticate\n at"
  *   patch:
  *     summary: Update a orderitem
  *     tags: [OrderItem]
