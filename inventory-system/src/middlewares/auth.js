@@ -1,7 +1,7 @@
 const passport = require('passport');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
-const prisma = require('../prisma/client');
+const { prisma } = require('../../prisma');
 
 const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
   if (err || info || !user) {

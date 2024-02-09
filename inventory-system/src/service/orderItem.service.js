@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
-const ApiError = require('../../utils/ApiError');
+const { prisma } = require('../../prisma');
+const ApiError = require('../utils/ApiError');
 const productService = require('./product.service');
 const orderService = require('./order.service');
 

@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const catchAsync = require('../../utils/catchAsync');
+const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService } = require('../service');
-const ApiError = require('../../utils/ApiError');
+const ApiError = require('../utils/ApiError');
 
 const register = catchAsync(async (req, res) => {
   const existingUser = await userService.getUserByEmail(req.body.email);

@@ -1,6 +1,6 @@
 // const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
-const prisma = require('../../prisma/client');
+const { prisma } = require('../../prisma');
 // const ApiError = require('../../utils/ApiError');
 
 /**
@@ -54,9 +54,10 @@ const deleteUser = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  return prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { email },
   });
+  return user;
 };
 
 const getProductByUser = async (userId) => {

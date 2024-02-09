@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const config = require('../../config/config');
-const { tokenTypes } = require('../../config/tokens');
-const prisma = require('../../prisma/client');
+const config = require('../config/config');
+const { tokenTypes } = require('../config/tokens');
+const { prisma } = require('../../prisma');
 
 /**
  * Generate token

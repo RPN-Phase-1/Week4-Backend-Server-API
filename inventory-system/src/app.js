@@ -6,11 +6,11 @@ const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
 const router = require('./routes/v1');
-const config = require('../config/config');
-const morgan = require('../config/morgan');
-const { errorConverter, errorHandler } = require('../middlewares/error');
-const ApiError = require('../utils/ApiError');
-const { jwtStrategy } = require('../config/passport');
+const config = require('./config/config');
+const morgan = require('./config/morgan');
+const { errorConverter, errorHandler } = require('./middlewares/error');
+const ApiError = require('./utils/ApiError');
+const { jwtStrategy } = require('./config/passport');
 
 const app = express();
 
