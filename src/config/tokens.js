@@ -1,6 +1,6 @@
 const tokenTypes = {
   ACCESS: "access",
-  REFRESS: "refress",
+  REFRESH: "refresh",
   RESET_PASSWORD: "resetPassword",
   VERIFY_EMAIL: "verifyEmail",
 };

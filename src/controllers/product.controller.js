@@ -16,7 +16,7 @@ const getAllProducts = catchAsync(async (req, res) => {
   const { page, size } = req.query;
   const skip = page * size - size;
 
-  const products = await productService.getAllProducts(skip, parseInt(size));
+  const products = await productService.getAllProducts(skip, Number(size));
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

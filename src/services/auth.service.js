@@ -1,7 +1,7 @@
-const userService = require("./user.service");
 const bcrypt = require("bcrypt");
-const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
+const userService = require("./user.service");
+const ApiError = require("../utils/ApiError");
 
 const loginWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);

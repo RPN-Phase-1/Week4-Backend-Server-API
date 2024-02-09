@@ -15,7 +15,7 @@ const createOrder = catchAsync(async (req, res) => {
 const getAllOrders = catchAsync(async (req, res) => {
   const { page, size } = req.query;
   const skip = page * size - size;
-  const orders = await orderService.getAllOrders(skip, parseInt(size));
+  const orders = await orderService.getAllOrders(skip, Number(size));
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

@@ -1,25 +1,25 @@
-const prisma = require("../../prisma");
 const bcrypt = require("bcrypt");
-const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
+const prisma = require("../../prisma");
+const ApiError = require("../utils/ApiError");
 
 const createUser = async (userBody) => {
   const salt = bcrypt.genSaltSync(10);
   userBody.password = bcrypt.hashSync(userBody.password, salt);
 
-  return await prisma.user.create({
+  return prisma.user.create({
     data: userBody,
   });
 };
 
 const getUserByEmail = async (email) => {
-  return await prisma.user.findUnique({
+  return prisma.user.findUnique({
     where: { email },
   });
 };
 
 const getAllUsers = async (skip, take) => {
-  return await prisma.user.findMany({
+  return prisma.user.findMany({
     skip,
     take,
   });
@@ -47,7 +47,7 @@ const updateUser = async (userId, userBody) => {
     userBody.password = bcrypt.hashSync(userBody.password, salt);
   }
 
-  return await prisma.user.update({
+  return prisma.user.update({
     where: {
       id: userId,
     },
@@ -58,7 +58,7 @@ const updateUser = async (userId, userBody) => {
 const deleteUser = async (userId) => {
   await getUserById(userId);
 
-  return await prisma.user.delete({
+  return prisma.user.delete({
     where: {
       id: userId,
     },
@@ -68,7 +68,7 @@ const deleteUser = async (userId) => {
 const getOrderByUser = async (userId) => {
   await getUserById(userId);
 
-  return await prisma.order.findMany({
+  return prisma.order.findMany({
     where: {
       userId,
     },
@@ -78,7 +78,7 @@ const getOrderByUser = async (userId) => {
 const getProductByUser = async (userId) => {
   await getUserById(userId);
 
-  return await prisma.product.findMany({
+  return prisma.product.findMany({
     where: {
       userId,
     },

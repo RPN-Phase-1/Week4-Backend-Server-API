@@ -3,13 +3,13 @@ const prisma = require("../../prisma");
 const ApiError = require("../utils/ApiError");
 
 const createCategory = async (categoryName) => {
-  return await prisma.category.create({
+  return prisma.category.create({
     data: categoryName,
   });
 };
 
 const getAllCategories = async (skip, take) => {
-  return await prisma.category.findMany({
+  return prisma.category.findMany({
     skip,
     take,
   });
@@ -33,7 +33,7 @@ const updateCategory = async (categoryId, newCategory) => {
   const category = await getCategoryById(categoryId);
 
   if (category) {
-    return await prisma.category.update({
+    return prisma.category.update({
       where: {
         id: categoryId,
       },
@@ -46,7 +46,7 @@ const deleteCategory = async (categoryId) => {
   const category = await getCategoryById(categoryId);
 
   if (category) {
-    return await prisma.category.delete({
+    return prisma.category.delete({
       where: {
         id: categoryId,
       },

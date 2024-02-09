@@ -1,10 +1,10 @@
 const express = require("express");
-const authRouter = require("./auth.route.js");
-const userRouter = require("./user.route.js");
-const productRouter = require("./product.route.js");
-const categoryRouter = require("./category.route.js");
-const orderRouter = require("./order.route.js");
-const orderItemRouter = require("./orderItem.route.js");
+const authRouter = require("./auth.route");
+const userRouter = require("./user.route");
+const productRouter = require("./product.route");
+const categoryRouter = require("./category.route");
+const orderRouter = require("./order.route");
+const orderItemRouter = require("./orderItem.route");
 
 const router = express.Router();
 

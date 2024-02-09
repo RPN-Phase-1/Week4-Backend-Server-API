@@ -7,13 +7,13 @@ const createOrderItem = async (dataOrderItem) => {
   await orderService.getOrderById(dataOrderItem.orderId);
   await productService.getProductById(dataOrderItem.productId);
 
-  return await prisma.orderItem.create({
+  return prisma.orderItem.create({
     data: dataOrderItem,
   });
 };
 
 const getAllOrderItem = async (skip, take) => {
-  return await prisma.orderItem.findMany({
+  return prisma.orderItem.findMany({
     skip,
     take,
   });
@@ -39,7 +39,7 @@ const updateOrderItem = async (orderItemId, dataOrderItem) => {
   if (dataOrderItem.orderId) await orderService.getOrderById(dataOrderItem.orderId);
   if (dataOrderItem.productId) await productService.getProductById(dataOrderItem.productId);
 
-  return await prisma.orderItem.update({
+  return prisma.orderItem.update({
     where: {
       id: orderItemId,
     },
@@ -50,7 +50,7 @@ const updateOrderItem = async (orderItemId, dataOrderItem) => {
 const deleteOrderItem = async (orderItemId) => {
   await getOrderItemById(orderItemId);
 
-  return await prisma.orderItem.delete({
+  return prisma.orderItem.delete({
     where: {
       id: orderItemId,
     },

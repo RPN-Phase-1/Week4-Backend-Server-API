@@ -23,7 +23,7 @@ const getAllUsers = catchAsync(async (req, res) => {
   const { page, size } = req.query;
   const skip = page * size - size;
 
-  const users = await userService.getAllUsers(skip, parseInt(size));
+  const users = await userService.getAllUsers(skip, Number(size));
 
   res.status(httpStatus.OK).json({
     status: httpStatus.OK,

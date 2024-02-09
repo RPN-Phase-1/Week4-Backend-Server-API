@@ -23,7 +23,7 @@ const getAllCategories = catchAsync(async (req, res) => {
   const { page, size } = req.query;
   const skip = page * size - size;
 
-  const allCategories = await categoryService.getAllCategories(skip, parseInt(size));
+  const allCategories = await categoryService.getAllCategories(skip, Number(size));
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -43,7 +43,7 @@ const getCategoryById = catchAsync(async (req, res) => {
 });
 
 const updateCategory = catchAsync(async (req, res) => {
-  const categoryId = req.params.categoryId;
+  const { categoryId } = req.params;
   const updatedCategory = await categoryService.updateCategory(categoryId, req.body);
 
   res.status(httpStatus.OK).send({

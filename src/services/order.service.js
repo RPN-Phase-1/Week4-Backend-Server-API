@@ -4,13 +4,13 @@ const ApiError = require("../utils/ApiError");
 const userService = require("./user.service");
 
 const createOrder = async (dataOrder) => {
-  return await prisma.order.create({
+  return prisma.order.create({
     data: dataOrder,
   });
 };
 
 const getAllOrders = async (skip, take) => {
-  return await prisma.order.findMany({
+  return prisma.order.findMany({
     skip,
     take,
   });
@@ -34,7 +34,7 @@ const updateOrder = async (orderId, dataOrder) => {
   await getOrderById(orderId);
   if (dataOrder.userId) await userService.getUserById(dataOrder.userId);
 
-  return await prisma.order.update({
+  return prisma.order.update({
     where: {
       id: orderId,
     },
@@ -45,7 +45,7 @@ const updateOrder = async (orderId, dataOrder) => {
 const deleteOrder = async (orderId) => {
   await getOrderById(orderId);
 
-  return await prisma.order.delete({
+  return prisma.order.delete({
     where: {
       id: orderId,
     },
@@ -55,7 +55,7 @@ const deleteOrder = async (orderId) => {
 const getOrderItemByOrder = async (orderId) => {
   await getOrderById(orderId);
 
-  return await prisma.orderItem.findMany({
+  return prisma.orderItem.findMany({
     where: {
       orderId,
     },
