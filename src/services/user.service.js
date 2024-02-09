@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const bcrypt = require("bcrypt");
 const httpStatus = require("http-status");
 const prisma = require("../../prisma");

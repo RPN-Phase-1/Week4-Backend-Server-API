@@ -1,10 +1,12 @@
+/* eslint-disable no-multi-assign */
 const httpStatus = require("http-status");
 const { orderItemService, productService, orderService } = require("../services");
 const catchAsync = require("../utils/catchAsync");
 const ApiError = require("../utils/ApiError");
 
 const createOrderItem = catchAsync(async (req, res) => {
-  let { quantity, unitPrice, orderId, productId } = req.body;
+  const { quantity, orderId, productId } = req.body;
+  let { unitPrice } = req.body;
   const product = await productService.getProductById(productId);
 
   if (product.quantityInStock < quantity) {
