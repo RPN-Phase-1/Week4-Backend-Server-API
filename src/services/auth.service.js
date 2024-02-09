@@ -7,7 +7,7 @@ const loginWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
 
   if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Email not registered");
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email not registered");
   }
   const validatePassword = await bcrypt.compare(password, user.password);
 

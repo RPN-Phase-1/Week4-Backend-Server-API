@@ -2,6 +2,8 @@ const { PrismaClient } = require("@prisma/client");
 const { execSync } = require("child_process");
 const { join } = require("path");
 
+require("dotenv").config();
+
 const generateDatabaseUrl = () => {
   if (!process.env.DATABASE_URL) {
     throw new Error("please provide a database url");
@@ -9,7 +11,7 @@ const generateDatabaseUrl = () => {
 
   let url = process.env.DATABASE_URL;
 
-  url = url.replace("/railway", "testingDb");
+  url = url.replace("/railway", "/testingDb");
   return url;
 };
 
