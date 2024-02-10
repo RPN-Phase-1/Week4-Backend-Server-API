@@ -22,4 +22,25 @@ const login = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
-module.exports = { register, login };
+const refresh = catchAsync(async (req, res) => {
+  const token = await tokenService.refreshToken(req.body.token);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Refresh Token Success',
+    data: token,
+  });
+});
+
+const logout = catchAsync(async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  await tokenService.deleteToken(token);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    mesage: 'Logout Success',
+    data: null,
+  });
+});
+
+module.exports = { register, login, refresh, logout };

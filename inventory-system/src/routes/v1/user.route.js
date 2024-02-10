@@ -9,11 +9,11 @@ const router = express.Router();
 router
   .route('/')
   .post(auth(), validate(userValidation.create), userController.create)
-  .get(auth(), validate(userValidation.getAll), userController.read);
+  .get(auth(), validate(userValidation.getAll), userController.getAll);
 
 router
   .route('/:userId')
-  .get(auth(), validate(userValidation.getId), userController.readId)
+  .get(auth(), validate(userValidation.getId), userController.getId)
   .put(auth(), validate(userValidation.update), userController.update)
   .delete(auth(), validate(userValidation.deleted), userController.deleted);
 

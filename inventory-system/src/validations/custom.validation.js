@@ -15,4 +15,11 @@ const password = (value, helpers) => {
   return value;
 };
 
-module.exports = { objectId, password };
+const jwtToken = (value, helpers) => {
+  if (!value.match(/^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/gm)) {
+    return helpers.message('"{{#label}}" must be a valid JWT Token');
+  }
+  return value;
+};
+
+module.exports = { objectId, password, jwtToken };

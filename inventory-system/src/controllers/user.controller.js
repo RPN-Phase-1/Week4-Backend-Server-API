@@ -13,7 +13,7 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-const read = catchAsync(async (req, res) => {
+const getAll = catchAsync(async (req, res) => {
   const whereOptions = {};
   const orderByOptions = {};
   let pageSizeOptions = {};
@@ -39,7 +39,7 @@ const read = catchAsync(async (req, res) => {
     skip: skip,
     take: pageSize,
   };
-
+  
   const user = await userService.getAll(whereOptions, pageSizeOptions, sortingOptions);
 
   if (user.length === 0) {
@@ -53,7 +53,7 @@ const read = catchAsync(async (req, res) => {
   });
 });
 
-const readId = catchAsync(async (req, res) => {
+const getId = catchAsync(async (req, res) => {
   const user = await userService.getId(req.params.userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -86,4 +86,4 @@ const deleted = catchAsync(async (req, res) => {
   });
 })
 
-module.exports = { create, read, readId, update, deleted };
+module.exports = { create, getAll, getId, update, deleted };

@@ -1,8 +1,10 @@
+const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const config = require('../config/config');
 const { tokenTypes } = require('../config/tokens');
 const prisma = require('../../prisma/client');
+const ApiError = require('../utils/apiError');
 
 // Function untuk menghasilkan JWT token berdasarkan ID, waktu pembuatan, kadalursa, jenis token, dan secret key.
 /**
@@ -53,14 +55,15 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @param {string} type
  * @returns {Promise<Token>}
  */
-const verifyToken = async (token, type) => { // token: Token JWT yang akan di verifikasi. type: Jenis token harus sesuai untuk verifikasi
+const verifyToken = async (token, type) => {
+  // token: Token JWT yang akan di verifikasi. type: Jenis token harus sesuai untuk verifikasi
   const payload = jwt.verify(token, config.jwt.secret); // Verifikasi tanda tangan digital token dan expired time
   const tokenDoc = await prisma.token.findFirst({
     where: { token, type, userId: payload.sub, blacklisted: false },
   });
 
   if (!tokenDoc) {
-    throw new Error('Token not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
   }
   return tokenDoc;
 };
@@ -91,4 +94,58 @@ const generateAuthTokens = async (user) => {
   };
 };
 
-module.exports = { generateToken, saveToken, verifyToken, generateAuthTokens };
+const refreshToken = async (token) => {
+  const payload = jwt.verify(token, config.jwt.secret);
+  if (payload.type !== tokenTypes.REFRESH) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid token type');
+
+  const dbToken = await prisma.token.findFirst({
+    where: {
+      token: token,
+    },
+  });
+  if (!dbToken) throw new ApiError(httpStatus.NOT_FOUND, 'Refresh token not found');
+
+  const tokenExpires = moment(dbToken.expires).isBefore(moment());
+  if (tokenExpires) throw new ApiError(httpStatus.BAD_REQUEST, 'Refresh token is expired');
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: payload.sub,
+    },
+  });
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  // Delete old refresh token
+  await prisma.token.delete({
+    where: {
+      id: dbToken.id,
+    },
+  });
+
+  // Generate new access and refresh token
+  const newToken = generateAuthTokens(user);
+  return newToken;
+};
+
+const deleteToken = async (token) => {
+  const payload = jwt.verify(token, config.jwt.secret);
+  if (payload.type !== tokenTypes.ACCESS) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid token type');
+
+  const tokenDoc = await prisma.token.findFirst({
+    where: {
+      userId: payload.sub,
+    },
+  });
+  if (!tokenDoc) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
+  }
+
+  const deletingToken = prisma.token.delete({
+    where: {
+      id: tokenDoc.id,
+    },
+  });
+  return deletingToken;
+};
+
+module.exports = { generateToken, saveToken, verifyToken, generateAuthTokens, refreshToken, deleteToken };

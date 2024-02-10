@@ -27,6 +27,13 @@ const getUserByEmail = async (email) => {
   });
 };
 
+/**
+ * Get all user
+ * @param {Object} filter
+ * @param {Object} options
+ * @param {Object} sorting
+ * @returns {Promise<User[]>}
+ */
 const getAll = async (filter, options, sorting) => {
   return prisma.user.findMany({
     ...options,
