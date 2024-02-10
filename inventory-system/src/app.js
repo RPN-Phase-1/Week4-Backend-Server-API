@@ -6,6 +6,7 @@ const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
 const routes = require('./routes/v1');
+const routesWeb = require('./routes/web');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { errorConverter, errorHandler } = require('./middlewares/error');
@@ -48,21 +49,30 @@ app.use(cors());
 app.options('*', cors());
 
 //static file
-app.use(express.static('public'));
+const publicPath = path.join(__dirname, 'public');
+app.use(express.static(publicPath));
 
 //template engine
 app.use(expressLayout);
-app.set('layout','layouts/main');
+app.set('layout','./layouts/main');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
-  res.render('index');
- // res.send('hello world');
+
+  const locals={
+    title: 'Inventory-System',
+    description: 'Inventory-System Web App'
+  }
+  res.render('index', locals);
+ // res.send('hello world');  
 });
 
 // v1 api routes
 app.use('/v1', routes);
+
+// web routes
+app.use('/web', routesWeb);
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
