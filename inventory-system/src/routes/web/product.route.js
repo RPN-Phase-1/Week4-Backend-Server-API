@@ -1,66 +1,91 @@
 const express = require('express');
 const { auth } = require('../../middlewares/auth');
-
 const validate = require('../../middlewares/validate');
-const categoryValidation = require('../../validations/category.validation');
-const categoryController = require('../../controllers/api/category.controller');
+const productValidation = require('../../validations/product.validation');
+const productController = require('../../controllers/product.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth(), validate(categoryValidation.createCategory), categoryController.createCategory)
-  .get(auth(), categoryController.getCategorys);
+  .post(auth(), validate(productValidation.createProduct), productController.createProduct)
+  .get(auth(), productController.getProducts);
 
 router
-  .route('/:categoryId')
-  .get(auth(), validate(categoryValidation.getCategory), categoryController.getCategory)
-  .patch(auth(), validate(categoryValidation.updateCategory), categoryController.updateCategory)
-  .delete(auth(), validate(categoryValidation.deleteCategory), categoryController.deleteCategory);
+  .route('/:productId')
+  .get(auth(), validate(productValidation.getProduct), productController.getProduct)
+  .patch(auth(), validate(productValidation.updateProduct), productController.updateProduct)
+  .delete(auth(), validate(productValidation.deleteProduct), productController.deleteProduct);
 
 module.exports = router;
+
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     Category:
+ *     Product:
  *       type: object
  *       required:
  *         - name
+ *         - description
+ *         - price
+ *         - quantityInStock
+ *         - categoryId
+ *         - userId
  *       properties:
  *         name:
  *           type: string
- *           description: The name of category
+ *           description: The name of product
+ *         description:
+ *           type: string
+ *           description: The description of product
+ *         price:
+ *           type: float
+ *           description: The price of product
+ *         quantityInStock:
+ *           type: int
+ *           description: The quantityInStock of product
+ *         categoryId:
+ *           type: uuid
+ *           description: The category of product
+ *         userId:
+ *           type: uuid
+ *           description: The user who input the product
  */
 
 
 /**
  * @swagger
  * tags:
- *   name: Category
- *   description: The Category managing API
- * /category:
+ *   name: Product
+ *   description: The Product managing API
+ * /product:
  *   post:
- *     summary: Create a new category
- *     tags: [Category]
+ *     summary: Create a new product
+ *     tags: [Product]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             $ref: '#/components/schemas/product'
  *     responses:
  *       '201':
- *         description: Category Created
+ *         description: Product Created
  *         content:
  *           application/json:
  *             example:
  *                 status: 201
- *                 message: "Create Category Success"
+ *                 message: "Create Product Success"
  *                 data: 
- *                  id: "234a1fa8-0d36-4d7b-a363-0c42fbfc4e9e"
- *                  name: "Snack"
+ *                  id: "5d3a5a9e-bd2b-4e9b-9cae-1e807f6ff8ec"
+ *                  name:  "baju kenjo"
+ *                  description: "baju keren merk kenjo"
+ *                  price: 100000
+ *                  quantityInStock: 25
+ *                  categoryId: "6c448130-6036-4535-acac-b7c2384e8a34"
+ *                  userId: "40490dd6-502a-4183-a595-a38616c2c477" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '400':
@@ -69,8 +94,8 @@ module.exports = router;
  *           application/json:
  *             example:
  *                  status: 400
- *                  message: "\"name\" is required"
- *                  stack: "Error: \"name\" is required\n at"
+ *                  message: "\"name\" is required, \"price\" is required, \"quantityInStock\" is required, \"description\" is required"
+ *                  stack: "Error: \"name\" is required, \"price\" is required, \"quantityInStock\" is required, \"description\" is required\n at"
  *       '401':
  *         description: Unauthorized
  *         content:
@@ -81,25 +106,30 @@ module.exports = router;
  *                  stack: "Error: Please authenticate\n at"
  *
  *   get:
- *     summary: get all category
- *     tags: [Category]
+ *     summary: get all product
+ *     tags: [Product]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       '200':
- *         description: Category Created
+ *         description: Product Created
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Get Categorys Success"
+ *                 message: "Get Products Success"
  *                 data:
- *                  id: "234a1fa8-0d36-4d7b-a363-0c42fbfc4e9e"
- *                  name: "Snack"
+ *                  id: "5d3a5a9e-bd2b-4e9b-9cae-1e807f6ff8ec"
+ *                  name:  "baju kenjo"
+ *                  description: "baju keren merk kenjo"
+ *                  price: 100000
+ *                  quantityInStock: 25
+ *                  categoryId: "6c448130-6036-4535-acac-b7c2384e8a34"
+ *                  userId: "40490dd6-502a-4183-a595-a38616c2c477" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '401':
@@ -110,27 +140,32 @@ module.exports = router;
  *                  status: 401
  *                  message: "Please authenticate"
  *                  stack: "Error: Please authenticate\n at"
- * /category/id:
+ * /product/id:
  *   get:
- *     summary: get category by id
- *     tags: [Category]
+ *     summary: get product by id
+ *     tags: [Product]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       '200':
- *         description: Category Created
+ *         description: Product Created
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Get Categorys Success"
+ *                 message: "Get Products Success"
  *                 data:
- *                  id: "234a1fa8-0d36-4d7b-a363-0c42fbfc4e9e"
- *                  name: "Snack"
+ *                  id: "5d3a5a9e-bd2b-4e9b-9cae-1e807f6ff8ec"
+ *                  name:  "baju kenjo"
+ *                  description: "baju keren merk kenjo"
+ *                  price: 100000
+ *                  quantityInStock: 25
+ *                  categoryId: "6c448130-6036-4535-acac-b7c2384e8a34"
+ *                  userId: "40490dd6-502a-4183-a595-a38616c2c477" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '401':
@@ -142,25 +177,30 @@ module.exports = router;
  *                  message: "Please authenticate"
  *                  stack: "Error: Please authenticate\n at"
  *   patch:
- *     summary: Update a category
- *     tags: [Category]
+ *     summary: Update a product
+ *     tags: [Product]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       '200':
- *         description: Category Updated
+ *         description: Product Updated
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Update Category Success"
+ *                 message: "Update Product Success"
  *                 data:
- *                  id: "bb810c6c-3a16-4b2d-b1bf-765ab102af06"
- *                  name: "Shirt"
+ *                  id: "5d3a5a9e-bd2b-4e9b-9cae-1e807f6ff8ec"
+ *                  name:  "baju polo"
+ *                  description: "baju keren merk polo"
+ *                  price: 2500
+ *                  quantityInStock: 30
+ *                  categoryId: "6c448130-6036-4535-acac-b7c2384e8a34"
+ *                  userId: "40490dd6-502a-4183-a595-a38616c2c477" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '400':
@@ -188,22 +228,22 @@ module.exports = router;
  *                 message: "Not found"
  *                 stack: "Error: Not found\n at"
  *   delete:
- *     summary: Delete a category
- *     tags: [Category]
+ *     summary: Delete a product
+ *     tags: [Product]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Category'
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       '200':
- *         description: Category Updated
+ *         description: Product Updated
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Delete Category Success"
+ *                 message: "Delete Product Success"
  *                 data: null        
  *       '401':
  *         description: Unauthorized
@@ -222,8 +262,4 @@ module.exports = router;
  *                 message: "Not found"
  *                 stack: "Error: Not found\n at"
  */
-
-
-
-
 

@@ -1,76 +1,87 @@
 const express = require('express');
-const { adminAuth } = require('../../middlewares/auth');
+const { auth, adminAuth } = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/api/user.controller');
+const orderValidation = require('../../validations/order.validation');
+const orderController = require('../../controllers/order.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(adminAuth(), validate(userValidation.createUser), userController.createUser)
-  .get(adminAuth(), userController.getUsers);
+  .post(adminAuth(), validate(orderValidation.createOrder), orderController.createOrder)
+  .get(adminAuth(), orderController.getOrders);
 
 router
-  .route('/:userId')
-  .get(adminAuth(), validate(userValidation.getUser), userController.getUser)
-  .patch(adminAuth(), validate(userValidation.updateUser), userController.updateUser)
-  .delete(adminAuth(), validate(userValidation.deleteUser), userController.deleteUser);
+  .route('/:orderId')
+  .get(adminAuth(), validate(orderValidation.getOrder), orderController.getOrder)
+  .patch(adminAuth(), validate(orderValidation.updateOrder), orderController.updateOrder)
+  .delete(adminAuth(), validate(orderValidation.deleteOrder), orderController.deleteOrder);
 
 module.exports = router;
+
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     User:
+ *     Order:
  *       type: object
  *       required:
  *         - name
- *         - email
- *         - password
+ *         - description
+ *         - price
+ *         - quantityInStock
+ *         - categoryId
+ *         - userId
  *       properties:
- *         name:
+ *         totalPrice:
+ *           type: float
+ *           description: The total price of order
+ *         date:
+ *           type: date
+ *           description: The date of order
+ *         customerName:
+ *           type: float
+ *           description: The customer name of order
+ *         customerEmail:
  *           type: string
- *           description: The email of user
- *         email:
- *           type: string
- *           description: The email of user
- *         password:
- *           type: string
- *           description: The password of user
+ *           description: The customer email of order
+ *         userId:
+ *           type: uuid
+ *           description: The user who input the order
  */
 
 
 /**
  * @swagger
  * tags:
- *   name: User
- *   description: The User managing API
- * /user:
+ *   name: Order
+ *   description: The Order managing API
+ * /order:
  *   post:
- *     summary: Create a new user
- *     tags: [User]
+ *     summary: Create a new order
+ *     tags: [Order]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/user'
+ *             $ref: '#/components/schemas/order'
  *     responses:
  *       '201':
- *         description: User Created
+ *         description: Order Created
  *         content:
  *           application/json:
  *             example:
  *                 status: 201
- *                 message: "Create User Success"
+ *                 message: "Create Order Success"
  *                 data: 
- *                  id: "614d234a-b1a8-4759-ab12-9bfe9f225200"
- *                  name: "qqq"
- *                  email: "qqq@gmail.com"
- *                  password: "$2a$08$1abTnb3Z8Q6ZN1oE1zzEseTQimJS6gfjUkpwdihx1HTsNtVGVN9Jy"
- *                  role: "user"
+ *                  id: "9c170176-c8c2-4ead-8b78-a8356dba0316"
+ *                  date:  "2023-01-01T00:00:00.000Z"
+ *                  totalPrice: 0
+ *                  customerName: "asep"
+ *                  customerEmail: "asep@gmail.com"
+ *                  userId: "736edf9e-66c3-43de-b280-4ccda7a3d1ee" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '400':
@@ -79,8 +90,8 @@ module.exports = router;
  *           application/json:
  *             example:
  *                  status: 400
- *                  message: "\"email\" is required, \"password\" is required, \"name\" is required"
- *                  stack: "Error: \"email\" is required, \"password\" is required, \"name\" is required\n at" 
+ *                  message: "\"date\" is required, \"totalPrice\" is required, \"customerName\" is required, \"customerEmail\" is required"
+ *                  stack: "Error: \"date\" is required, \"totalPrice\" is required, \"customerName\" is required, \"customerEmail\" is required\n at"
  *       '401':
  *         description: Unauthorized
  *         content:
@@ -99,28 +110,29 @@ module.exports = router;
  *                  stack: "Error: You Are Not Admin\n at"
  *
  *   get:
- *     summary: get all user
- *     tags: [User]
+ *     summary: get all order
+ *     tags: [Order]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/Order'
  *     responses:
  *       '200':
- *         description: User Created
+ *         description: Order Created
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Get Users Success"
+ *                 message: "Get Orders Success"
  *                 data:
- *                  id: "614d234a-b1a8-4759-ab12-9bfe9f225200"
- *                  name: "qqq"
- *                  email: "qqq@gmail.com"
- *                  password: "$2a$08$1abTnb3Z8Q6ZN1oE1zzEseTQimJS6gfjUkpwdihx1HTsNtVGVN9Jy"
- *                  role: "user"
+ *                  id: "9c170176-c8c2-4ead-8b78-a8356dba0316"
+ *                  date:  "2023-01-01T00:00:00.000Z"
+ *                  totalPrice: 0
+ *                  customerName: "asep"
+ *                  customerEmail: "asep@gmail.com"
+ *                  userId: "736edf9e-66c3-43de-b280-4ccda7a3d1ee" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '401':
@@ -139,30 +151,31 @@ module.exports = router;
  *                  status: 403
  *                  message: "You Are Not Admin"
  *                  stack: "Error: You Are Not Admin\n at"
- * /user/id:
+ * /order/id:
  *   get:
- *     summary: get user by id
- *     tags: [User]
+ *     summary: get order by id
+ *     tags: [Order]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/Order'
  *     responses:
  *       '200':
- *         description: User Created
+ *         description: Order Created
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Get User Success"
+ *                 message: "Get Orders Success"
  *                 data:
- *                  id: "614d234a-b1a8-4759-ab12-9bfe9f225200"
- *                  name: "qqq"
- *                  email: "qqq@gmail.com"
- *                  password: "$2a$08$1abTnb3Z8Q6ZN1oE1zzEseTQimJS6gfjUkpwdihx1HTsNtVGVN9Jy"
- *                  role: "user"
+ *                  id: "9c170176-c8c2-4ead-8b78-a8356dba0316"
+ *                  date:  "2023-01-01T00:00:00.000Z"
+ *                  totalPrice: 0
+ *                  customerName: "asep"
+ *                  customerEmail: "asep@gmail.com"
+ *                  userId: "736edf9e-66c3-43de-b280-4ccda7a3d1ee" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '401':
@@ -180,30 +193,32 @@ module.exports = router;
  *             example:
  *                  status: 403
  *                  message: "You Are Not Admin"
- *                  stack: "Error: You Are Not Admin\n at"
+ *                  stack: "Error: You Are Not Admin\n at" 
  *   patch:
- *     summary: Update a user
- *     tags: [User]
+ *     summary: Update a order
+ *     tags: [Order]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/Order'
  *     responses:
  *       '200':
- *         description: User Updated
+ *         description: Order Updated
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Update User Success"
+ *                 message: "Update Order Success"
  *                 data:
- *                  id: "614d234a-b1a8-4759-ab12-9bfe9f225200"
- *                  name: "rrr"
- *                  email: "rrr@gmail.com"
- *                  password: "$2a$08$1abTnb3Z8Q6ZN1oE1zzEseTQimJS6gfjUkpwdihx1HTsNtVGVN9Jy"
- *                  role: "user"
+ *                  id: "5d3a5a9e-bd2b-4e9b-9cae-1e807f6ff8ec"
+ *                  name:  "baju pololo"
+ *                  description: "baju keren merk pololo"
+ *                  price: 250000
+ *                  quantityInStock: 35
+ *                  categoryId: "6c448130-6036-4535-acac-b7c2384e8a34"
+ *                  userId: "40490dd6-502a-4183-a595-a38616c2c477" 
  *                  createdAt: "2024-02-03T13:55:35.124Z"
  *                  updatedAt: "2024-02-03T13:55:35.124Z"
  *       '400':
@@ -239,22 +254,22 @@ module.exports = router;
  *                 message: "Not found"
  *                 stack: "Error: Not found\n at"
  *   delete:
- *     summary: Delete a user
- *     tags: [User]
+ *     summary: Delete a order
+ *     tags: [Order]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/Order'
  *     responses:
  *       '200':
- *         description: User Updated
+ *         description: Order Updated
  *         content:
  *           application/json:
  *             example:
  *                 status: 200
- *                 message: "Delete User Success"
+ *                 message: "Delete Order Success"
  *                 data: null        
  *       '401':
  *         description: Unauthorized
@@ -281,4 +296,6 @@ module.exports = router;
  *                 message: "Not found"
  *                 stack: "Error: Not found\n at"
  */
+
+
 

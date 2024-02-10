@@ -2,7 +2,7 @@ const express = require('express');
 const { adminAuth, auth } = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const orderItemValidation = require('../../validations/orderItem.validation');
-const orderItemController = require('../../controllers/orderItem.controller');
+const orderItemController = require('../../controllers/api/orderItem.controller');
 
 const router = express.Router();
 
