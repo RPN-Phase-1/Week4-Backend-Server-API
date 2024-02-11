@@ -14,8 +14,8 @@ const createProduct = {
 
 const getAllProducts = {
   query: Joi.object().keys({
-    page: Joi.number().required(),
-    size: Joi.number().required(),
+    page: Joi.number().required().min(1),
+    size: Joi.number().required().min(0),
   }),
 };
 

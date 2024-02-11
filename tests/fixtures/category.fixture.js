@@ -1,6 +1,7 @@
 const faker = require("faker");
-const prisma = require("../../prisma");
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { v4 } = require("uuid");
+const prisma = require("../../prisma");
 
 const categoryOne = {
   id: v4(),
