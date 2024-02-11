@@ -4,7 +4,7 @@ const { objectId } = require('./custom.validation');
 const create = {
   body: Joi.object().keys({
     date: Joi.date().required(),
-    totalPrice: Joi.number().precision(2).positive().required(),
+    totalPrice: Joi.number().precision(2).positive().allow(0),
     customerName: Joi.string().required(),
     customerEmail: Joi.string().email().required(),
     userId: Joi.string().custom(objectId).required(),

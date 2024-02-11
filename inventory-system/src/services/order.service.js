@@ -3,13 +3,20 @@ const prisma = require('../../prisma/client');
 const ApiError = require('../utils/apiError');
 
 const create = async (orderBody) => {
-  return prisma.order.create({
+  const user = await prisma.user.findFirst({
+    where: {
+      id: orderBody.userId,
+    },
+  });
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'userId not found');
+
+  return prisma.orders.create({
     data: orderBody,
   });
 };
 
 const getAll = async (filter, options, sorting) => {
-  return prisma.order.findMany({
+  return prisma.orders.findMany({
     ...options,
     where: filter,
     orderBy: sorting,
@@ -17,7 +24,7 @@ const getAll = async (filter, options, sorting) => {
 };
 
 const getId = async (id) => {
-  return prisma.order.findFirst({
+  return prisma.orders.findFirst({
     where: {
       id: id,
     },
@@ -30,7 +37,7 @@ const update = async (id, update) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
 
-  const updateOrder = await prisma.order.update({
+  const updateOrder = await prisma.orders.update({
     where: {
       id: id,
     },
@@ -46,7 +53,7 @@ const deleted = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
 
-  const deleteOrder = await prisma.order.delete({
+  const deleteOrder = await prisma.orders.delete({
     where: {
       id: id,
     },

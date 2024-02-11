@@ -21,7 +21,7 @@ model User {
   isEmailVerified Boolean      @default(false)
   tokens          Token[]
   products        Product[]
-  orders          Order[]
+  orders          Orders[]
 }
 
 model Token {
@@ -59,7 +59,7 @@ model Category {
   updatedAt       DateTime     @updatedAt
 }
 
-model Order {
+model Orders {
   id          String     @id @default(uuid())
   date        DateTime
   totalPrice  Float
@@ -75,7 +75,7 @@ model Order {
 model OrderItem {
   id         String    @id @default(uuid())
   orderId    String
-  order      Order     @relation(fields: [orderId], references: [id])
+  orders      Orders     @relation(fields: [orderId], references: [id])
   productId  String
   product    Product   @relation(fields: [productId], references: [id])
   quantity   Int

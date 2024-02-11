@@ -91,7 +91,7 @@ const getProducts = async (filter, options, sorting) => {
 };
 
 const getOrders = async (filter, options, sorting) => {
-  return prisma.order.findMany({
+  return prisma.orders.findMany({
     ...options,
     where: filter,
     orderBy: sorting,

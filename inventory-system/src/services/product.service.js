@@ -3,6 +3,20 @@ const prisma = require('../../prisma/client');
 const ApiError = require('../utils/apiError');
 
 const create = async (productBody) => {
+  const category = await prisma.category.findFirst({
+    where: {
+      id: productBody.categoryId,
+    },
+  });
+  if (!category) throw new ApiError(httpStatus.NOT_FOUND, 'categoryId not found');
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: productBody.userId,
+    },
+  });
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'userId not found');
+
   return prisma.product.create({
     data: productBody,
   });

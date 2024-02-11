@@ -6,7 +6,6 @@ const create = {
     orderId: Joi.string().custom(objectId).required(),
     productId: Joi.string().custom(objectId).required(),
     quantity: Joi.number().required(),
-    unitPrice: Joi.number().precision(2).positive().required(),
   }),
 };
 
