@@ -9,8 +9,8 @@ const createCategory = {
 
 const getAllCategories = {
   query: Joi.object().keys({
-    page: Joi.number().required(),
-    size: Joi.number().required(),
+    page: Joi.number().required().min(1),
+    size: Joi.number().required().min(0),
   }),
 };
 
@@ -24,9 +24,11 @@ const updateCategory = {
   params: Joi.object().keys({
     categoryId: Joi.string().required().custom(objectId),
   }),
-  body: Joi.object().keys({
-    name: Joi.string().required(),
-  }),
+  body: Joi.object()
+    .keys({
+      name: Joi.string(),
+    })
+    .min(1),
 };
 
 const deleteCategory = {
