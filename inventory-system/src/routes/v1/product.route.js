@@ -7,6 +7,10 @@ const productController = require('../../controllers/product.controller');
 const router = express.Router();
 
 router
+  .route('/category-search')
+  .get(auth(), validate(productValidation.getProductByCategory), productController.getProductByCategory);
+
+router
   .route('/')
   .post(auth(), validate(productValidation.create), productController.create)
   .get(auth(), validate(productValidation.getAll), productController.read);

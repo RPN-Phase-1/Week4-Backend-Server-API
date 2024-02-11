@@ -16,6 +16,7 @@ const create = async (orderItemBody) => {
     },
   });
   if (!order) throw new ApiError(httpStatus.NOT_FOUND, 'orderId not found');
+  if (order.totalPrice > 0) throw new ApiError(httpStatus.BAD_REQUEST, "Order's totalPrice has been filled");
 
   if (orderItemBody.quantity > product.quantityInStock) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Order quantity exceeds available stock');
@@ -24,7 +25,7 @@ const create = async (orderItemBody) => {
 
   // Update totalPrice in Orders and quantityInStock in Product
   const orderTotalPrice = orderItemBody.quantity * product.price;
-  const productQuantityStock = product.quantityInStock - orderItemBody.quantity
+  const productQuantityStock = product.quantityInStock - orderItemBody.quantity;
   const ordersUpdate = await prisma.orders.update({
     where: {
       id: orderItemBody.orderId,
@@ -35,12 +36,12 @@ const create = async (orderItemBody) => {
   });
   const productUpdate = await prisma.product.update({
     where: {
-      id: orderItemBody.productId
-    }, 
+      id: orderItemBody.productId,
+    },
     data: {
-      quantityInStock: productQuantityStock
-    }
-  })
+      quantityInStock: productQuantityStock,
+    },
+  });
 
   return prisma.orderItem.create({
     data: orderItemBody,

@@ -63,4 +63,13 @@ const deleted = {
   }),
 };
 
-module.exports = { create, getAll, getId, update, deleted };
+const getProductByCategory = {
+  query: Joi.object().keys({
+    page: Joi.number().integer().min(0),
+    size: Joi.number().integer().min(1),
+    category: Joi.string(),
+    orderBy: Joi.string().valid('category:asc', 'category:desc'),
+  }),
+};
+
+module.exports = { create, getAll, getId, update, deleted, getProductByCategory };

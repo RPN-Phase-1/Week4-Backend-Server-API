@@ -69,4 +69,21 @@ const deleted = async (id) => {
   return deleteProduct;
 };
 
-module.exports = { create, read, readId, update, deleted };
+const getProductByCategory = async (filter, options, sorting) => {
+  const category = await prisma.category.findFirst({
+    where: {
+      name: filter.category,
+    },
+  });
+  if (!category) throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+
+  return prisma.product.findMany({
+    ...options,
+    where: {
+      categoryId: category.id,
+    },
+    orderBy: sorting,
+  });
+};
+
+module.exports = { create, read, readId, update, deleted, getProductByCategory };

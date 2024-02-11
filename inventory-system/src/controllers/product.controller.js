@@ -86,4 +86,39 @@ const deleted = catchAsync(async (req, res) => {
   });
 });
 
-module.exports = { create, read, readId, update, deleted };
+const getProductByCategory = catchAsync(async (req, res) => {
+  const whereOptions = {};
+  const orderByOptions = {};
+  let pageSizeOptions = {};
+
+  whereOptions.category = req.query.category;
+
+  // orderBy param
+  if (req.query.orderBy) {
+    orderByOptions.orderBy = req.query.orderBy.split(':');
+  }
+  const sortingOptions = req.query.orderBy ? { [orderByOptions.orderBy[0]]: orderByOptions.orderBy[1] } : undefined;
+
+  // skip & take param
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.size) || 10;
+  const skip = (page - 1) * pageSize;
+  pageSizeOptions = {
+    skip: skip,
+    take: pageSize,
+  };
+
+  const product = await productService.getProductByCategory(whereOptions, pageSizeOptions, sortingOptions);
+
+  if (product.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Product by Category Success',
+    data: product,
+  });
+});
+
+module.exports = { create, read, readId, update, deleted, getProductByCategory };
