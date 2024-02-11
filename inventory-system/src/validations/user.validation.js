@@ -47,4 +47,53 @@ const deleted = {
   }),
 };
 
-module.exports = { create, getAll, getId, update, deleted };
+const getProducts = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+  query: Joi.object().keys({
+    page: Joi.number().integer().min(0),
+    size: Joi.number().integer().min(1),
+    name: Joi.string(),
+    description: Joi.string(),
+    price: Joi.number().precision(2).positive(),
+    quantityInStock: Joi.number(),
+    categoryId: Joi.string().custom(objectId),
+    orderBy: Joi.string().valid(
+      'name:asc',
+      'name:desc',
+      'description:asc',
+      'description:desc',
+      'price:asc',
+      'price:desc',
+      'quantityInStock:asc',
+      'quantityInStock:desc'
+    ),
+  }),
+};
+
+const getOrders = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+  query: Joi.object().keys({
+    page: Joi.number().integer().min(0),
+    size: Joi.number().integer().min(1),
+    date: Joi.date(),
+    totalPrice: Joi.number().precision(2).positive(),
+    customerName: Joi.string(),
+    customerEmail: Joi.string().email(),
+    orderBy: Joi.string().valid(
+      'date:asc',
+      'date:desc',
+      'totalPrice:asc',
+      'totalPrice:desc',
+      'customerName:asc',
+      'customerName:desc',
+      'customerEmail:asc',
+      'customerEmail:desc'
+    ),
+  }),
+};
+
+module.exports = { create, getAll, getId, update, deleted, getProducts, getOrders };

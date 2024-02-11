@@ -82,4 +82,20 @@ const deleted = async (id) => {
   return deleteUser;
 };
 
-module.exports = { createUser, getUserByEmail, getAll, getId, update, deleted };
+const getProducts = async (filter, options, sorting) => {
+  return prisma.product.findMany({
+    ...options,
+    where: filter,
+    orderBy: sorting,
+  });
+};
+
+const getOrders = async (filter, options, sorting) => {
+  return prisma.order.findMany({
+    ...options,
+    where: filter,
+    orderBy: sorting,
+  });
+};
+
+module.exports = { createUser, getUserByEmail, getAll, getId, update, deleted, getProducts, getOrders };

@@ -17,4 +17,7 @@ router
   .put(auth(), validate(userValidation.update), userController.update)
   .delete(auth(), validate(userValidation.deleted), userController.deleted);
 
+router.route('/:userId/products').get(auth(), validate(userValidation.getProducts), userController.getProducts);
+router.route('/:userId/orders').get(auth(), validate(userValidation.getOrders), userController.getOrders);
+
 module.exports = router;
