@@ -6,7 +6,6 @@ const ApiError = require("../utils/ApiError");
 
 const createOrderItem = catchAsync(async (req, res) => {
   const { quantity, orderId, productId } = req.body;
-  let { unitPrice } = req.body;
   const product = await productService.getProductById(productId);
 
   if (product.quantityInStock < quantity) {
@@ -14,18 +13,15 @@ const createOrderItem = catchAsync(async (req, res) => {
   }
 
   // update quantityInStock in product
-  const newQuantityInStock = (product.quantityInStock -= quantity);
+  const newQuantityInStock = product.quantityInStock - quantity;
   await productService.updateProduct(product.id, { quantityInStock: newQuantityInStock });
-
-  // count unitPrice
-  unitPrice = quantity * product.price;
 
   // update totalPrice in Order
   const order = await orderService.getOrderById(orderId);
-  const newTotalPrice = order.totalPrice + unitPrice;
+  const newTotalPrice = order.totalPrice + quantity * product.price;
   await orderService.updateOrder(orderId, { totalPrice: newTotalPrice });
 
-  const orderItem = await orderItemService.createOrderItem({ ...req.body, unitPrice });
+  const orderItem = await orderItemService.createOrderItem({ ...req.body, unitPrice: quantity * product.price });
 
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
@@ -57,7 +53,33 @@ const getOrderItemById = catchAsync(async (req, res) => {
 });
 
 const updateOrderItem = catchAsync(async (req, res) => {
-  const orderItemUpdated = await orderItemService.updateOrderItem(req.params.orderItemId, req.body);
+  const { quantity } = req.body;
+  let orderItemUpdated;
+  if (quantity) {
+    const orderItem = await orderItemService.getOrderItemById(req.params.orderItemId);
+    const product = await productService.getProductById(orderItem.productId);
+    if (product.quantityInStock < quantity) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Insufficient product stock");
+    }
+
+    // update quantityInStock in product
+    const newQuantityInStock = product.quantityInStock + orderItem.quantity - quantity;
+    await productService.updateProduct(product.id, { quantityInStock: newQuantityInStock });
+
+    const newUnitPrice = quantity * product.price;
+
+    // update totalPrice in Order
+    const order = await orderService.getOrderById(orderItem.orderId);
+    const newTotalPrice = order.totalPrice - orderItem.unitPrice + newUnitPrice;
+    await orderService.updateOrder(order.id, { totalPrice: newTotalPrice });
+    orderItemUpdated = await orderItemService.updateOrderItem(req.params.orderItemId, {
+      ...req.body,
+      unitPrice: newUnitPrice,
+    });
+  } else {
+    // if quantity not updated
+    orderItemUpdated = await orderItemService.updateOrderItem(req.params.orderItemId, req.body);
+  }
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

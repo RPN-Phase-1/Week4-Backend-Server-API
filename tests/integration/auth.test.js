@@ -191,7 +191,7 @@ describe("Auth Middleware", () => {
   it("should call next with unauthorized error if access token is expires", async () => {
     await insertUsers([userOne]);
     const expires = moment().subtract(1, "minutes");
-    const accessToken = await tokenService.generateToken(userOne.id, expires, tokenTypes.access);
+    const accessToken = await tokenService.generateToken(userOne.id, expires, tokenTypes.ACCESS);
     const req = httpMocks.createRequest({ headers: { Authorization: `Bearer ${accessToken}` } });
     const res = httpMocks.createResponse();
     const next = jest.fn();

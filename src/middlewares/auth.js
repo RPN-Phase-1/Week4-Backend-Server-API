@@ -3,7 +3,7 @@ const passport = require("passport");
 const ApiError = require("../utils/ApiError");
 
 const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
-  if ((err, !user, info)) {
+  if (err || !user || info) {
     reject(new ApiError(httpStatus.UNAUTHORIZED, "Please Authenticate"));
   }
 
