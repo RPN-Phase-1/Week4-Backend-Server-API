@@ -41,10 +41,4 @@ const update = {
     .min(1),
 };
 
-const deleted = {
-  params: Joi.object().keys({
-    orderItemId: Joi.string().custom(objectId),
-  }),
-};
-
-module.exports = { create, getAll, getId, update, deleted };
+module.exports = { create, getAll, getId, update };

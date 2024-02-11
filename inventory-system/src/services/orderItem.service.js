@@ -16,7 +16,6 @@ const create = async (orderItemBody) => {
     },
   });
   if (!order) throw new ApiError(httpStatus.NOT_FOUND, 'orderId not found');
-  if (order.totalPrice > 0) throw new ApiError(httpStatus.BAD_REQUEST, "Order's totalPrice has been filled");
 
   if (orderItemBody.quantity > product.quantityInStock) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Order quantity exceeds available stock');
@@ -24,7 +23,7 @@ const create = async (orderItemBody) => {
   orderItemBody.unitPrice = product.price;
 
   // Update totalPrice in Orders and quantityInStock in Product
-  const orderTotalPrice = orderItemBody.quantity * product.price;
+  const orderTotalPrice = orderItemBody.quantity * product.price + order.totalPrice;
   const productQuantityStock = product.quantityInStock - orderItemBody.quantity;
   const ordersUpdate = await prisma.orders.update({
     where: {
@@ -80,19 +79,4 @@ const update = async (id, update) => {
   return updateOrderItem;
 };
 
-const deleted = async (id) => {
-  const orderItem = await getId(id);
-  if (!orderItem) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Order Item not found');
-  }
-
-  const deleteOrderItem = await prisma.orderItem.delete({
-    where: {
-      id: id,
-    },
-  });
-
-  return deleteOrderItem;
-};
-
-module.exports = { create, getAll, getId, update, deleted };
+module.exports = { create, getAll, getId, update };
