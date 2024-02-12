@@ -36,14 +36,6 @@ const productThree = {
 };
 
 const insertProducts = async (arrProducts) => {
-  await prisma.user.createMany({
-    data: [userOne, userTwo, userThree],
-    skipDuplicates: true,
-  });
-  await prisma.category.createMany({
-    data: [categoryOne, categoryTwo, categoryThree],
-    skipDuplicates: true,
-  });
   await prisma.product.createMany({
     data: arrProducts,
     skipDuplicates: true,

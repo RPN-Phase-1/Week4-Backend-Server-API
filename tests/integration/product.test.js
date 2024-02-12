@@ -3,7 +3,7 @@ const httpStatus = require("http-status");
 const faker = require("faker");
 const { productOne, productTwo, productThree, insertProducts } = require("../fixtures/product.fixture");
 const { userOne, userTwo, userThree, insertUsers } = require("../fixtures/user.fixture");
-const { categoryOne, categoryTwo, insertCategories } = require("../fixtures/category.fixture");
+const { categoryOne, categoryTwo, insertCategories, categoryThree } = require("../fixtures/category.fixture");
 const { userOneAccessToken } = require("../fixtures/token.fixture");
 const app = require("../../src/app");
 const prisma = require("../../prisma");
@@ -128,7 +128,8 @@ describe("Product Routes", () => {
 
   describe("GET /v1/product", () => {
     beforeEach(async () => {
-      await insertUsers([userOne]);
+      await insertUsers([userOne, userTwo, userThree]);
+      await insertCategories([categoryOne, categoryTwo, categoryThree]);
       await insertProducts([productOne, productTwo, productThree]);
     });
 
@@ -180,6 +181,7 @@ describe("Product Routes", () => {
   describe("GET /v1/product/:productId", () => {
     beforeEach(async () => {
       await insertUsers([userOne]);
+      await insertCategories([categoryOne]);
       await insertProducts([productOne]);
     });
 
@@ -227,6 +229,7 @@ describe("Product Routes", () => {
     let updatedProduct;
     beforeEach(async () => {
       await insertUsers([userOne]);
+      await insertCategories([categoryOne]);
       await insertProducts([productOne]);
 
       updatedProduct = {
@@ -305,11 +308,44 @@ describe("Product Routes", () => {
         .send(updatedProduct)
         .expect(httpStatus.NOT_FOUND);
     });
+
+    it("should return 400 error if price or quantityInStock in less than 0", async () => {
+      updatedProduct.price = -1;
+      updatedProduct.quantityInStock = -1;
+      await request(app)
+        .post("/v1/product")
+        .set("Authorization", `Bearer ${userOneAccessToken}`)
+        .send(updatedProduct)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    it("should return 400 error if userId or categoryId is invalid UUID", async () => {
+      updatedProduct.userId = "invalidUUID";
+      updatedProduct.categoryId = "invalidUUID";
+
+      await request(app)
+        .post("/v1/product")
+        .set("Authorization", `Bearer ${userOneAccessToken}`)
+        .send(updatedProduct)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    it("should return 404 error if userId or categoryId is not found", async () => {
+      updatedProduct.userId = userThree.id;
+      updatedProduct.categoryId = categoryTwo.id;
+
+      await request(app)
+        .post("/v1/product")
+        .set("Authorization", `Bearer ${userOneAccessToken}`)
+        .send(updatedProduct)
+        .expect(httpStatus.NOT_FOUND);
+    });
   });
 
   describe("DELETE /v1/product/:productId", () => {
     beforeEach(async () => {
       await insertUsers([userOne]);
+      await insertCategories([categoryOne]);
       await insertProducts([productOne]);
     });
 
@@ -325,7 +361,7 @@ describe("Product Routes", () => {
         data: null,
       });
 
-      const productDb = await prisma.user.findUnique({
+      const productDb = await prisma.product.findUnique({
         where: {
           id: productOne.id,
         },
