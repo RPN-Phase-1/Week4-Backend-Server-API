@@ -1,8 +1,16 @@
 const httpStatus = require("http-status");
-const { orderService } = require("../services");
+const { orderService, userService } = require("../services");
 const catchAsync = require("../utils/catchAsync");
+const ApiError = require("../utils/ApiError");
 
 const createOrder = catchAsync(async (req, res) => {
+  const { userId } = req.body;
+  const user = await userService.getUserById(userId);
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "user not found");
+  }
+
   const order = await orderService.createOrder(req.body);
 
   res.status(httpStatus.CREATED).send({
@@ -45,12 +53,12 @@ const updateOrder = catchAsync(async (req, res) => {
 });
 
 const deleteOrder = catchAsync(async (req, res) => {
-  const order = await orderService.deleteOrder(req.params.orderId);
+  await orderService.deleteOrder(req.params.orderId);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: "Successfully delete order",
-    data: order,
+    data: null,
   });
 });
 
