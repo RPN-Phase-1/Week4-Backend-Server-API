@@ -26,6 +26,15 @@ const userTwo = {
   isEmailVerified: false,
 };
 
+const userThree = {
+  id: v4(),
+  name: faker.name.findName(),
+  email: faker.internet.email().toLowerCase(),
+  password,
+  role: "user",
+  isEmailVerified: false,
+};
+
 const admin = {
   id: v4(),
   name: faker.name.findName(),
@@ -33,12 +42,6 @@ const admin = {
   password,
   role: "admin",
   isEmailVerified: false,
-};
-
-const newUser = {
-  name: faker.name.findName(),
-  email: faker.internet.email().toLowerCase(),
-  password,
 };
 
 const insertUsers = async (arrUsers) => {
@@ -53,7 +56,7 @@ const insertUsers = async (arrUsers) => {
 module.exports = {
   userOne,
   userTwo,
+  userThree,
   admin,
-  newUser,
   insertUsers,
 };
