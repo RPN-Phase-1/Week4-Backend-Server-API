@@ -4,9 +4,24 @@ const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
 const { render } = require('../app');
 
+
+
 const viewCategory = catchAsync(async (req, res)=>{
   const messages = await req.flash('info');
-  res.render('./category/view', {messages});
+  let { page, limit } = req.query;
+  
+  // Set default values jika page dan limit tidak diberikan atau tidak valid
+  page = parseInt(page) || 1;
+  limit = parseInt(limit) || 10;
+  
+  const skip = (page - 1) * limit; // Calculate the value of skip based on page and limit
+
+    // Get total count of categories
+  const totalCount = await categoryService.getCategoryCount();
+  const lastPage = Math.ceil(totalCount / limit);
+
+  const categorys = await categoryService.getAllCategory(skip, limit);
+  res.render('./category/view', {messages, categorys, page, limit, lastPage});
 })
 
 const addCategory = catchAsync(async (req, res)=>{

@@ -99,18 +99,17 @@ app.get('/', (req, res) => {
  // res.send('hello world');  
 });
 
-//Handle 404
-// app.get('*', (req,res)=>{
-//   res.status(404).render('404');
-// })
-
-
-
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+
+
+//Handle 404
+app.get('*', (req,res)=>{
+  res.status(404).render('404');
+})
 
 
 // send 404 error jika route tidak ada

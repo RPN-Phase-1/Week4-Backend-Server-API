@@ -85,10 +85,16 @@ const getAllCategory = async (skip = 0, take = 10) => {
   return categorys;
 };
 
+const getCategoryCount = async () => {
+  const count = await prisma.category.count();
+  return count;
+};
+
 module.exports = {
   createCategory,
   queryCategorys,
   getCategoryById,
+  getCategoryCount,
   getAllCategory,
   updateCategoryById,
   deleteCategoryById,
