@@ -291,6 +291,40 @@ describe("User Routes", () => {
         .send(updatedUser)
         .expect(httpStatus.NOT_FOUND);
     });
+
+    it("should return 400 error if email is invalid", async () => {
+      updatedUser.email = "invalidEmail";
+
+      await request(app)
+        .post("/v1/user")
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(updatedUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    it("should return 400 error if password length is less than 8 characters", async () => {
+      updatedUser.password = "abcd1";
+      await request(app)
+        .post("/v1/user")
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(updatedUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    it("should return 400 error if password not contain both letters and numbers", async () => {
+      updatedUser.password = "testingaja";
+      await request(app)
+        .post("/v1/user")
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(updatedUser)
+        .expect(httpStatus.BAD_REQUEST);
+
+      updatedUser.password = "1111111111";
+      await request(app)
+        .post("/v1/user")
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(updatedUser)
+        .expect(httpStatus.BAD_REQUEST);
+    });
   });
 
   describe("DELETE /v1/user/:userId", () => {
