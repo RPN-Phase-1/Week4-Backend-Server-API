@@ -1,15 +1,22 @@
 const request = require("supertest");
 const httpStatus = require("http-status");
-const { userOne, insertUsers, newUser, admin, userTwo } = require("../fixtures/user.fixture");
+const { userOne, insertUsers, admin, userTwo } = require("../fixtures/user.fixture");
 const { adminAccessToken } = require("../fixtures/token.fixture");
 const app = require("../../src/app");
 const prisma = require("../../prisma");
 
 describe("User Routes", () => {
   describe("POST /v1/user", () => {
+    let newUser;
     beforeEach(async () => {
       await insertUsers([admin]);
+      newUser = {
+        name: "new user name",
+        email: "newUser@gmail.com",
+        password: "newUser12345",
+      };
     });
+
     it("should return 201 and successfully create user if request is ok", async () => {
       const res = await request(app)
         .post("/v1/user")
@@ -53,19 +60,22 @@ describe("User Routes", () => {
       });
     });
 
-    it("should return 400 error if input body is not allowed", async () => {
-      const wrongBodyUser = {
-        name: "user1",
-        email: "user1@gmail.com",
-        password: "user12345",
-        role: "admin",
-        age: 9,
-      };
-
+    it("should return a 400 error if the request body has missing or extra properties", async () => {
+      // missing properties
+      delete newUser.email;
       await request(app)
         .post("/v1/user")
         .set("Authorization", `Bearer ${adminAccessToken}`)
-        .send(wrongBodyUser)
+        .send(newUser)
+        .expect(httpStatus.BAD_REQUEST);
+
+      // extra properties
+      newUser.age = 9;
+      newUser.address = "indonesia";
+      await request(app)
+        .post("/v1/user")
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(newUser)
         .expect(httpStatus.BAD_REQUEST);
     });
 
@@ -206,16 +216,16 @@ describe("User Routes", () => {
     });
   });
 
-  describe("PUT /v1/category/:categoryId", () => {
+  describe("PUT /v1/user/:userId", () => {
+    let updatedUser;
     beforeEach(async () => {
       await insertUsers([admin, userOne]);
+      updatedUser = {
+        name: "updated user",
+        email: "updateEmail@gmail.com",
+        password: "update12345",
+      };
     });
-
-    const updatedUser = {
-      name: "updated user",
-      email: "updateEmail@gmail.com",
-      password: "update12345",
-    };
 
     it("should return 200 and successfully update user if request is ok", async () => {
       const res = await request(app)

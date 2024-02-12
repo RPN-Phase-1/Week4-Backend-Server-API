@@ -8,14 +8,14 @@ const { categoryOne, insertCategories, categoryTwo, categoryThree } = require(".
 
 describe("Category Routes", () => {
   describe("POST /v1/category", () => {
+    let newCategory;
     beforeEach(async () => {
       await insertUsers([userOne]);
-    });
-    it("should return 201 and successfully create category if request is ok", async () => {
-      const newCategory = {
+      newCategory = {
         name: "newCategory",
       };
-
+    });
+    it("should return 201 and successfully create category if request is ok", async () => {
       const res = await request(app)
         .post("/v1/category")
         .set("Authorization", `Bearer ${userOneAccessToken}`)
@@ -50,9 +50,7 @@ describe("Category Routes", () => {
     it("should return 400 error if category name is already taken", async () => {
       await insertCategories([categoryOne]);
 
-      const newCategory = {
-        name: categoryOne.name,
-      };
+      newCategory.name = categoryOne.name;
 
       const res = await request(app)
         .post("/v1/category")
@@ -158,14 +156,15 @@ describe("Category Routes", () => {
   });
 
   describe("PUT /v1/category/:categoryId", () => {
+    let newCategory;
     beforeEach(async () => {
       await insertUsers([userOne]);
       await insertCategories([categoryOne]);
-    });
 
-    const newCategory = {
-      name: "newCategoryName",
-    };
+      newCategory = {
+        name: "newCategoryName",
+      };
+    });
 
     it("should return 200 and successfully update category if request is ok", async () => {
       const res = await request(app)

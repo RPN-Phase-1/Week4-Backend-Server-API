@@ -2,7 +2,7 @@ const request = require("supertest");
 const httpStatus = require("http-status");
 const httpMocks = require("node-mocks-http");
 const moment = require("moment");
-const { userOne, insertUsers, newUser } = require("../fixtures/user.fixture");
+const { userOne, insertUsers } = require("../fixtures/user.fixture");
 const { userOneAccessToken } = require("../fixtures/token.fixture");
 const app = require("../../src/app");
 const prisma = require("../../prisma");
@@ -14,6 +14,14 @@ const config = require("../../src/config/config");
 
 describe("Auth Routes", () => {
   describe("POST /v1/auth/register", () => {
+    let newUser;
+    beforeEach(async () => {
+      newUser = {
+        name: "newUser",
+        email: "newUser@gmail.com",
+        password: "newUser12345",
+      };
+    });
     it("should return 201 and successfully register user if request data is ok", async () => {
       const res = await request(app).post("/v1/auth/register").send(newUser).expect(httpStatus.CREATED);
 
@@ -84,14 +92,16 @@ describe("Auth Routes", () => {
   });
 
   describe("POST /v1/auth/login", () => {
+    let loginCredencial;
+
     beforeEach(async () => {
       await insertUsers([userOne]);
-    });
-    it("should return 200 and login user if email and password match", async () => {
-      const loginCredencial = {
+      loginCredencial = {
         email: userOne.email,
         password: userOne.password,
       };
+    });
+    it("should return 200 and login user if email and password match", async () => {
       const res = await request(app).post("/v1/auth/login").send(loginCredencial).expect(httpStatus.OK);
 
       const userData = res.body.userLogin;
@@ -114,19 +124,13 @@ describe("Auth Routes", () => {
     });
 
     it("should return 400 if email is not register", async () => {
-      const loginCredencial = {
-        email: "wrongEmail@gmail.com",
-        password: userOne.password,
-      };
+      loginCredencial.email = "wrongEmail@gmail.com";
 
       await request(app).post("/v1/auth/login").send(loginCredencial).expect(httpStatus.BAD_REQUEST);
     });
 
     it("should return 401 if password is wrong", async () => {
-      const loginCredencial = {
-        email: userOne.email,
-        password: "wrongpassword1",
-      };
+      loginCredencial.password = "wrongpassword1";
 
       await request(app).post("/v1/auth/login").send(loginCredencial).expect(httpStatus.UNAUTHORIZED);
     });
