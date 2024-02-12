@@ -116,7 +116,7 @@ module.exports = router;
  *             $ref: '#/components/schemas/Product'
  *     responses:
  *       '200':
- *         description: Product Created
+ *         description: Product Get
  *         content:
  *           application/json:
  *             example:
@@ -261,5 +261,33 @@ module.exports = router;
  *                 status: 404
  *                 message: "Not found"
  *                 stack: "Error: Not found\n at"
+ * /product?category={categoryName}:
+ *   get:
+ *     summary: get product by category name
+ *     tags: [Product]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       '200':
+ *         description: Product Get
+ *         content:
+ *           application/json:
+ *             example:
+ *                 status: 200
+ *                 message: "Get Products Success"
+ *                 data:
+ *                  id: "3f676865-c2df-4d31-8480-9fa236fe135e"
+ *                  name:  "tas kulit buaya"
+ *                  description: "tas keren dari kulit buaya"
+ *                  price: 100000
+ *                  quantityInStock: 100
+ *                  categoryId: "8c57b821-02c2-4b1e-aa20-dab5c5b7ac1e"
+ *                  userId: "1ca476cc-6c88-49a0-a41f-2be36e0822a2" 
+ *                  createdAt: "2024-02-03T13:55:35.124Z"
+ *                  updatedAt: "2024-02-03T13:55:35.124Z"
  */
 

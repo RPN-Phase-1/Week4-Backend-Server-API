@@ -2,6 +2,31 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
+const { render } = require('../app');
+
+const viewCategory = catchAsync(async (req, res)=>{
+  const messages = await req.flash('info');
+  res.render('./category/view', {messages});
+})
+
+const addCategory = catchAsync(async (req, res)=>{
+  res.render('./category/add');
+})
+
+const postCategory = catchAsync(async (req, res)=>{
+  try{
+      await categoryService.createCategory(req.body);
+      await req.flash('info', 'New category has been added!');
+      res.redirect('/category');
+
+  }
+  catch(error){
+      console.log(error);
+  }
+  
+})
+
+
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body);
@@ -11,6 +36,7 @@ const createCategory = catchAsync(async (req, res) => {
     message: 'Create Category Success',
     data: category,
   });
+
 });
 
 const getCategorys = catchAsync(async (req, res) => {
@@ -23,6 +49,9 @@ const getCategorys = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+
+
 
 const getCategory = catchAsync(async (req, res) => {
   const category = await categoryService.getCategoryById(req.params.categoryId);
@@ -58,6 +87,9 @@ const deleteCategory = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  viewCategory,
+  addCategory,
+  postCategory,
   createCategory,
   getCategorys,
   getCategory,

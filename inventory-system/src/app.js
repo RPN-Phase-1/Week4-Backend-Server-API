@@ -6,7 +6,7 @@ const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
 const routes = require('./routes/v1');
-const routesWeb = require('./routes/web');
+const routesWeb = require('./routes');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { errorConverter, errorHandler } = require('./middlewares/error');
@@ -16,6 +16,8 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerOptions = require('./swaggerOption');
 const expressLayout = require('express-ejs-layouts');
+const flash = require('express-flash');
+const session = require('express-session');
 const path = require('path');
 
 const app = express();
@@ -52,12 +54,41 @@ app.options('*', cors());
 const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
+//express session
+app.use(
+  session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      // secure: true, // becareful set this option, check here: https://www.npmjs.com/package/express-session#cookiesecure. In local, if you set this to true, you won't receive flash as you are using `http` in local, but http is not secure
+    },
+  })
+);
+
+//flash message
+app.use(
+  flash({
+    sessionKeyName: 'express-flash-message',
+   
+  })
+);
+
 //template engine
 app.use(expressLayout);
 app.set('layout','./layouts/main');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// v1 api routes
+app.use('/v1', routes);
+
+// web routes
+app.use('/', routesWeb);
+
+
+//Homepage
 app.get('/', (req, res) => {
 
   const locals={
@@ -68,11 +99,13 @@ app.get('/', (req, res) => {
  // res.send('hello world');  
 });
 
-// v1 api routes
-app.use('/v1', routes);
+//Handle 404
+// app.get('*', (req,res)=>{
+//   res.status(404).render('404');
+// })
 
-// web routes
-app.use('/web', routesWeb);
+
+
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
