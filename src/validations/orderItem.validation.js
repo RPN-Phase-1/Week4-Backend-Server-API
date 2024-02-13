@@ -28,7 +28,6 @@ const updateOrderItem = {
   }),
   body: Joi.object()
     .keys({
-      orderId: Joi.string().custom(objectId),
       productId: Joi.string().custom(objectId),
       quantity: Joi.number().min(1),
     })

@@ -36,7 +36,6 @@ const getOrderItemById = async (orderItemId) => {
 const updateOrderItem = async (orderItemId, dataOrderItem) => {
   await getOrderItemById(orderItemId);
 
-  if (dataOrderItem.orderId) await orderService.getOrderById(dataOrderItem.orderId);
   if (dataOrderItem.productId) await productService.getProductById(dataOrderItem.productId);
 
   return prisma.orderItem.update({

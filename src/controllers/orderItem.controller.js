@@ -53,33 +53,49 @@ const getOrderItemById = catchAsync(async (req, res) => {
 });
 
 const updateOrderItem = catchAsync(async (req, res) => {
-  const { quantity } = req.body;
-  let orderItemUpdated;
-  if (quantity) {
-    const orderItem = await orderItemService.getOrderItemById(req.params.orderItemId);
-    const product = await productService.getProductById(orderItem.productId);
-    if (product.quantityInStock < quantity) {
+  const { orderItemId } = req.params;
+  const { productId, quantity } = req.body;
+
+  const orderItem = await orderItemService.getOrderItemById(orderItemId);
+  const order = await orderService.getOrderById(orderItem.orderId);
+  const oldProduct = await productService.getProductById(orderItem.productId);
+
+  let newUnitPrice;
+  let newTotalPrice;
+
+  if (productId) {
+    const restoreQuantityInStock = oldProduct.quantityInStock + orderItem.quantity;
+    await productService.updateProduct(orderItem.productId, { ...oldProduct, quantityInStock: restoreQuantityInStock });
+
+    const newProduct = await productService.getProductById(productId);
+
+    if (newProduct.quantityInStock < (quantity || orderItem.quantity)) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Insufficient product stock");
     }
 
-    // update quantityInStock in product
-    const newQuantityInStock = product.quantityInStock + orderItem.quantity - quantity;
-    await productService.updateProduct(product.id, { quantityInStock: newQuantityInStock });
+    newUnitPrice = newProduct.price * (quantity || orderItem.quantity);
+    const newQuantityInStock = newProduct.quantityInStock - (quantity || orderItem.quantity);
+    await productService.updateProduct(productId, { ...newProduct, quantityInStock: newQuantityInStock });
 
-    const newUnitPrice = quantity * product.price;
+    newTotalPrice = order.totalPrice - orderItem.unitPrice + newUnitPrice;
+  } else if (quantity && !productId) {
+    if (oldProduct.quantityInStock < quantity) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Insufficient product stock");
+    }
 
-    // update totalPrice in Order
-    const order = await orderService.getOrderById(orderItem.orderId);
-    const newTotalPrice = order.totalPrice - orderItem.unitPrice + newUnitPrice;
-    await orderService.updateOrder(order.id, { totalPrice: newTotalPrice });
-    orderItemUpdated = await orderItemService.updateOrderItem(req.params.orderItemId, {
-      ...req.body,
-      unitPrice: newUnitPrice,
-    });
-  } else {
-    // if quantity not updated
-    orderItemUpdated = await orderItemService.updateOrderItem(req.params.orderItemId, req.body);
+    const newQuantityInStock = oldProduct.quantityInStock + orderItem.quantity - quantity;
+    await productService.updateProduct(oldProduct.id, { quantityInStock: newQuantityInStock });
+
+    newUnitPrice = oldProduct.price * quantity;
+    newTotalPrice = order.totalPrice - orderItem.unitPrice + newUnitPrice;
   }
+
+  await orderService.updateOrder(order.id, { totalPrice: newTotalPrice });
+
+  const orderItemUpdated = await orderItemService.updateOrderItem(orderItemId, {
+    ...req.body,
+    unitPrice: newUnitPrice,
+  });
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
