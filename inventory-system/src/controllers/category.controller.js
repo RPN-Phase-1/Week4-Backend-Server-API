@@ -3,6 +3,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
 const { render } = require('../app');
+const prisma = require('../../prisma');
 
 
 
@@ -41,6 +42,24 @@ const postCategory = catchAsync(async (req, res)=>{
   
 })
 
+const detailCategory = catchAsync(async (req, res) => {
+  try {
+    const category = await categoryService.getCategoryById(req.params.categoryId);
+    // Memeriksa apakah category adalah array atau objek tunggal
+    if (Array.isArray(category)) {
+      // Jika category adalah array, kirimkan langsung ke template
+      res.render('./category/detail', { category });
+    } else if (typeof category === 'object' && category !== null) {
+      // Jika category adalah objek tunggal, kirimkan sebagai array satu elemen
+      res.render('./category/detail', { category: [category] });
+    } else {
+      throw new Error("Invalid category data");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 
 const createCategory = catchAsync(async (req, res) => {
@@ -105,6 +124,7 @@ module.exports = {
   viewCategory,
   addCategory,
   postCategory,
+  detailCategory,
   createCategory,
   getCategorys,
   getCategory,

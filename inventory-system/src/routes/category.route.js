@@ -23,10 +23,11 @@ router
     categoryController.postCategory)
 
 router
-  .route('get/:categoryId')
+  .route('/detail/:categoryId')
   .get(
     //auth(), 
-        validate(categoryValidation.getCategory), categoryController.getCategory)
+       // validate(categoryValidation.getCategory),
+         categoryController.detailCategory)
        
 
 router
