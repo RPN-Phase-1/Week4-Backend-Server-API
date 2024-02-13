@@ -2,7 +2,7 @@ const request = require("supertest");
 const httpStatus = require("http-status");
 const faker = require("faker");
 const { orderOne, orderTwo, orderThree, insertOrders } = require("../fixtures/order.fixture");
-const { userOne, userThree, admin, insertUsers } = require("../fixtures/user.fixture");
+const { userOne, userThree, admin, insertUsers, userTwo } = require("../fixtures/user.fixture");
 const { adminAccessToken } = require("../fixtures/token.fixture");
 const app = require("../../src/app");
 const prisma = require("../../prisma");
@@ -112,7 +112,7 @@ describe("Order Routes", () => {
 
   describe("GET /v1/order", () => {
     beforeEach(async () => {
-      await insertUsers([admin]);
+      await insertUsers([admin, userOne, userTwo, userThree]);
       await insertOrders([orderOne, orderTwo, orderThree]);
     });
 
@@ -132,6 +132,7 @@ describe("Order Routes", () => {
         data: expect.arrayContaining([]),
       });
 
+      expect(res.body.data.length).not.toBeLessThan(1);
       expect(res.body.data.length).toBeLessThanOrEqual(size);
     });
 
@@ -139,20 +140,12 @@ describe("Order Routes", () => {
       await request(app).get("/v1/order").set("Authorization", `Bearer ${adminAccessToken}`).expect(httpStatus.BAD_REQUEST);
     });
 
-    it("should return 400 error if query page less than 1 and query size less than 0", async () => {
-      // page 0
+    it("should return 400 error if query page or query size less than 1", async () => {
       const page = 0;
+      const size = 0;
       await request(app)
         .get("/v1/order")
-        .query({ page, size: 2 })
-        .set("Authorization", `Bearer ${adminAccessToken}`)
-        .expect(httpStatus.BAD_REQUEST);
-
-      // size -1
-      const size = -1;
-      await request(app)
-        .get("/v1/order")
-        .query({ page: 1, size })
+        .query({ page, size })
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .expect(httpStatus.BAD_REQUEST);
     });

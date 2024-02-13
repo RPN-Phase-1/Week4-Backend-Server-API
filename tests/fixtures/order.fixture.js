@@ -9,6 +9,7 @@ const orderOne = {
   customerName: faker.name.findName(),
   customerEmail: faker.internet.email().toLowerCase(),
   userId: userOne.id,
+  totalPrice: 0,
 };
 
 const orderTwo = {
@@ -16,6 +17,7 @@ const orderTwo = {
   customerName: faker.name.findName(),
   customerEmail: faker.internet.email().toLowerCase(),
   userId: userTwo.id,
+  totalPrice: 0,
 };
 
 const orderThree = {
@@ -23,6 +25,7 @@ const orderThree = {
   customerName: faker.name.findName(),
   customerEmail: faker.internet.email().toLowerCase(),
   userId: userThree.id,
+  totalPrice: 0,
 };
 
 const insertOrders = async (arrOrders) => {

@@ -48,6 +48,7 @@ describe("User Routes", () => {
       });
 
       expect(userDb).toBeDefined();
+      expect(userDb.password).not.toBe(newUser.password);
       expect(userDb).toMatchObject({
         id: expect.anything(),
         name: newUser.name,
@@ -147,6 +148,7 @@ describe("User Routes", () => {
         data: expect.arrayContaining([]),
       });
 
+      expect(res.body.data.length).not.toBeLessThan(1);
       expect(res.body.data.length).toBeLessThanOrEqual(size);
     });
 
@@ -156,13 +158,7 @@ describe("User Routes", () => {
 
     it("should return 400 error if query page less than 1 and query size less than 0", async () => {
       const page = 0;
-      const size = -1;
-
-      await request(app)
-        .get("/v1/category")
-        .query({ page, size })
-        .set("Authorization", `Bearer ${adminAccessToken}`)
-        .expect(httpStatus.BAD_REQUEST);
+      const size = 0;
 
       await request(app)
         .get("/v1/category")

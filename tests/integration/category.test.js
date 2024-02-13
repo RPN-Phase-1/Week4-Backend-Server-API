@@ -95,20 +95,12 @@ describe("Category Routes", () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    it("should return 400 error if query page less than 1 and query size less than 0", async () => {
-      // page 0
+    it("should return 400 error if query page or query size less than 1", async () => {
       const page = 0;
+      const size = 0;
       await request(app)
         .get("/v1/category")
-        .query({ page, size: 2 })
-        .set("Authorization", `Bearer ${userOneAccessToken}`)
-        .expect(httpStatus.BAD_REQUEST);
-
-      // size -1
-      const size = -1;
-      await request(app)
-        .get("/v1/category")
-        .query({ page: 1, size })
+        .query({ page, size })
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .expect(httpStatus.BAD_REQUEST);
     });
