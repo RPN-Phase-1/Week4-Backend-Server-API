@@ -12,7 +12,7 @@ const createOrderItem = {
 const getAllOrderItems = {
   query: Joi.object().keys({
     page: Joi.number().required().min(1),
-    size: Joi.number().required().min(0),
+    size: Joi.number().required().min(1),
   }),
 };
 
