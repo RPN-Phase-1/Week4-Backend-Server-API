@@ -61,6 +61,40 @@ const detailCategory = catchAsync(async (req, res) => {
   }
 });
 
+const editCategory = catchAsync(async (req, res)=>{
+  try {
+    const category = await categoryService.getCategoryById(req.params.categoryId);
+    // Memeriksa apakah category adalah array atau objek tunggal
+    if (Array.isArray(category)) {
+      // Jika category adalah array, kirimkan langsung ke template
+      res.render('./category/edit', { category });
+    } else if (typeof category === 'object' && category !== null) {
+      // Jika category adalah objek tunggal, kirimkan sebagai array satu elemen
+      res.render('./category/edit', { category: [category] });
+    } else {
+      throw new Error("Invalid category data");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
+const updateCategory = catchAsync(async (req, res) => {
+  const category = await categoryService.updateCategoryById(req.params.categoryId, req.body);
+  res.redirect(`/category/edit/${req.params.categoryId}`);
+});
+
+const deleteCategory = catchAsync(async (req, res) => {
+  await categoryService.deleteCategoryById(req.params.categoryId);
+  res.redirect('/category');
+});
+
+const searchCategory = catchAsync(async (req, res) => {
+    const { name } = req.query;
+    const category = await categoryService.getCategoryByName(name);
+    res.render('./category/search', {category})
+})
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body);
@@ -100,31 +134,17 @@ const getCategory = catchAsync(async (req, res) => {
   });
 });
 
-const updateCategory = catchAsync(async (req, res) => {
-  const category = await categoryService.updateCategoryById(req.params.categoryId, req.body);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
-    message: 'Update Category Success',
-    data: category,
-  });
-});
 
-const deleteCategory = catchAsync(async (req, res) => {
-  await categoryService.deleteCategoryById(req.params.categoryId);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
-    message: 'Delete Category Success',
-    data: null,
-  });
-});
 
 module.exports = {
   viewCategory,
   addCategory,
   postCategory,
   detailCategory,
+  editCategory,
+  searchCategory,
   createCategory,
   getCategorys,
   getCategory,

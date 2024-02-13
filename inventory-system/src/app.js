@@ -18,6 +18,7 @@ const swaggerOptions = require('./swaggerOption');
 const expressLayout = require('express-ejs-layouts');
 const flash = require('express-flash');
 const session = require('express-session');
+const methodOverride = require('method-override');
 const path = require('path');
 
 const app = express();
@@ -49,6 +50,8 @@ app.use(compression());
 // enable cors
 app.use(cors());
 app.options('*', cors());
+
+app.use(methodOverride('_method'));
 
 //static file
 const publicPath = path.join(__dirname, 'public');
@@ -105,17 +108,19 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
-
 //Handle 404
 app.get('*', (req,res)=>{
   res.status(404).render('404');
 })
 
 
+
 // send 404 error jika route tidak ada
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
+
+
 
 // convert error jadi Instance API Error jika ada error yang tidak ketangkap
 app.use(errorConverter);

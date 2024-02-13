@@ -1,7 +1,7 @@
 <% category.forEach(element =>{ %>
     
     <div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Detail Category</h1>
+        <h1 class="h2">Detail Category: <%= element.name  %></h1>
   
            
     </div>
@@ -12,7 +12,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                       <li class="breadcrumb-item"><a href="/category">Category</a></li>
-                      <li class="breadcrumb-item active">Detail Category</li>
+                      <li class="breadcrumb-item active"><%= element.name  %></li>
                     </ol>
                   </nav>
             </div>

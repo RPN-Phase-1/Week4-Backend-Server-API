@@ -1,5 +1,11 @@
 <div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Category</h1>
+    <div class="border border-dark">
+        <form class="nav col-12 col-md-auto flex-fill mb-2 justify-content-center mb-md-0" role="search" method="GET" action="/category/search">
+            <input type="search" name="name" class="form-control form-control-light w-100 rounded-0 border-0" placeholder="Search..." aria-label="Search">
+        </form>
+        
+    </div>
     <div class="btn-toolbar mb-2 mb-md 0">
         <div class="btn-group me 2">
             <a href="/category/add" class="btn btn-sm btn-outline-secondary">+ New Category</a>
@@ -40,16 +46,43 @@
                             </a>
 
                             <form action="/category/edit/<%= element.id %>?_method=DELETE" method="POST" class="position-relative">
-                                <button type="submit" class="btn btn-danger btn-small">
+                                <button type="button" class="btn btn-danger btn-small" data-bs-toggle="modal" 
+                                id="deleteButton" data-bs-target="#deleteModal<%= element.id %>">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
                            
+                            
 
 
                         </div>
                     </td>
                 </tr>
+                <div class="modal fade" id="deleteModal<%= element.id %>"  tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="modal-title">You are about to remove a category record.</div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    This will remove the category record of <b class="fw-bold"><%= element.name %></b><br/>
+                                    Are you sure?
+                                </p>
+                            </div>
+                
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                
+                                <form action="/category/edit/<%= element.id %>?_method=DELETE" method="POST" class="position-relative">
+                                    <button type="submit" class="btn btn-primary">Yes, remove category</button>
+                                </form>
+                            </div>
+                
+                        </div>
+                    </div>
+                  </div>  
             <% }) %>
             
         </tbody>
@@ -92,3 +125,9 @@
 
     </nav>
 <% } %>
+
+
+
+
+  
+

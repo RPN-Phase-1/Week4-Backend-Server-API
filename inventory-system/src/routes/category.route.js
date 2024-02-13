@@ -28,13 +28,21 @@ router
     //auth(), 
        // validate(categoryValidation.getCategory),
          categoryController.detailCategory)
-       
 
 router
-  .route('/add')
-  .post(
-    //auth(), 
-        validate(categoryValidation.createCategory), categoryController.createCategory)
+  .route('/edit/:categoryId')
+  .get(categoryController.editCategory)
+  .patch(categoryController.updateCategory)
+  .delete(categoryController.deleteCategory)
+
+router
+  .route('/search')
+  .get(categoryController.searchCategory)
+// router
+//   .route('/add')
+//   .post(
+//     //auth(), 
+//         validate(categoryValidation.createCategory), categoryController.createCategory)
 
 router
   .route('/edit/:categoryId')

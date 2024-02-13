@@ -90,11 +90,22 @@ const getCategoryCount = async () => {
   return count;
 };
 
+const getCategoryByName = async (name) => {
+  return prisma.category.findMany({
+    where: {
+      name: {
+        contains: name,
+      },
+    },
+  });
+};
+
 module.exports = {
   createCategory,
   queryCategorys,
   getCategoryById,
   getCategoryCount,
+  getCategoryByName,
   getAllCategory,
   updateCategoryById,
   deleteCategoryById,
