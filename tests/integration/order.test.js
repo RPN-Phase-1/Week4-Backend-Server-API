@@ -277,7 +277,7 @@ describe("Order Routes", () => {
       updatedOrder.customerEmail = "invalidEmail";
 
       await request(app)
-        .post("/v1/order")
+        .put(`/v1/order/${orderOne.id}`)
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .send(updatedOrder)
         .expect(httpStatus.BAD_REQUEST);
@@ -287,7 +287,7 @@ describe("Order Routes", () => {
       updatedOrder.userId = "invalidUUID";
 
       await request(app)
-        .post("/v1/order")
+        .put(`/v1/order/${orderOne.id}`)
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .send(updatedOrder)
         .expect(httpStatus.BAD_REQUEST);
@@ -297,7 +297,7 @@ describe("Order Routes", () => {
       updatedOrder.userId = userThree.id;
 
       await request(app)
-        .post("/v1/order")
+        .put(`/v1/order/${orderOne.id}`)
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .send(updatedOrder)
         .expect(httpStatus.NOT_FOUND);
