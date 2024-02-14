@@ -6,6 +6,9 @@ const { userOne, userThree, admin, insertUsers, userTwo } = require("../fixtures
 const { adminAccessToken } = require("../fixtures/token.fixture");
 const app = require("../../src/app");
 const prisma = require("../../prisma");
+const { insertCategories, categoryOne } = require("../fixtures/category.fixture");
+const { insertProducts, productOne } = require("../fixtures/product.fixture");
+const { insertOrderItems, orderItemOne } = require("../fixtures/orderItem.fixture");
 
 describe("Order Routes", () => {
   describe("POST /v1/order", () => {
@@ -341,6 +344,43 @@ describe("Order Routes", () => {
     it("should return 404 error if orderId is not found", async () => {
       await request(app)
         .delete(`/v1/order/${orderTwo.id}`)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .expect(httpStatus.NOT_FOUND);
+    });
+  });
+
+  describe("GET /v1/order/orderItemId/order-items", () => {
+    beforeEach(async () => {
+      await insertUsers([admin, userOne]);
+      await insertOrders([orderOne]);
+      await insertCategories([categoryOne]);
+      await insertProducts([productOne]);
+      await insertOrderItems([orderItemOne]);
+    });
+
+    it("should return 200 and successfuly get order item by order if request is ok", async () => {
+      const res = await request(app)
+        .get(`/v1/order/${orderOne.id}/order-items`)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        status: httpStatus.OK,
+        message: expect.any(String),
+        data: expect.arrayContaining([]),
+      });
+    });
+
+    it("should return 400 error if orderId is invalid UUID", async () => {
+      await request(app)
+        .get(`/v1/order/invalidOrderId/order-items`)
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    it("should return 404 error if orderId is not found", async () => {
+      await request(app)
+        .get(`/v1/order/${orderTwo.id}/order-items`)
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .expect(httpStatus.NOT_FOUND);
     });
