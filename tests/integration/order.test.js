@@ -349,7 +349,7 @@ describe("Order Routes", () => {
     });
   });
 
-  describe("GET /v1/order/orderItemId/order-items", () => {
+  describe("GET /v1/order/:orderItemId/order-items", () => {
     beforeEach(async () => {
       await insertUsers([admin, userOne]);
       await insertOrders([orderOne]);

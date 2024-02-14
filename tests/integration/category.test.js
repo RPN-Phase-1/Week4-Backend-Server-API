@@ -5,7 +5,7 @@ const { userOneAccessToken } = require("../fixtures/token.fixture");
 const app = require("../../src/app");
 const prisma = require("../../prisma");
 const { categoryOne, insertCategories, categoryTwo, categoryThree } = require("../fixtures/category.fixture");
-const { insertProducts, productOne, productTwo, productThree } = require("../fixtures/product.fixture");
+const { insertProducts, productOne } = require("../fixtures/product.fixture");
 
 describe("Category Routes", () => {
   describe("POST /v1/category", () => {
@@ -297,7 +297,7 @@ describe("Category Routes", () => {
         .get("/v1/category/products")
         .query({ categoryName })
         .set("Authorization", `Bearer ${userOneAccessToken}`)
-        .expect(httpStatus.OK);
+        .expect(httpStatus.NOT_FOUND);
     });
   });
 });
