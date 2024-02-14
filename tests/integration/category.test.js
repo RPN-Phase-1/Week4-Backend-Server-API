@@ -5,6 +5,7 @@ const { userOneAccessToken } = require("../fixtures/token.fixture");
 const app = require("../../src/app");
 const prisma = require("../../prisma");
 const { categoryOne, insertCategories, categoryTwo, categoryThree } = require("../fixtures/category.fixture");
+const { insertProducts, productOne, productTwo, productThree } = require("../fixtures/product.fixture");
 
 describe("Category Routes", () => {
   describe("POST /v1/category", () => {
@@ -256,6 +257,47 @@ describe("Category Routes", () => {
         .delete(`/v1/category/${categoryTwo.id}`)
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .expect(httpStatus.NOT_FOUND);
+    });
+  });
+
+  describe("GET /v1/category/products", () => {
+    let categoryName;
+    beforeEach(async () => {
+      await insertUsers([userOne]);
+
+      await insertCategories([categoryOne]);
+      await insertProducts([productOne]);
+      categoryName = categoryOne.name;
+    });
+
+    it("should return 200 and successfully get all product by categories if request is ok", async () => {
+      const res = await request(app)
+        .get("/v1/category/products")
+        .query({ categoryName })
+        .set("Authorization", `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        status: httpStatus.OK,
+        message: expect.any(String),
+        data: expect.arrayContaining([]),
+      });
+    });
+
+    it("should return 400 error if the categoryName does not exist", async () => {
+      await request(app)
+        .get("/v1/category/products")
+        .set("Authorization", `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    it("should return 404 error if category is not found", async () => {
+      categoryName = categoryTwo.name;
+      await request(app)
+        .get("/v1/category/products")
+        .query({ categoryName })
+        .set("Authorization", `Bearer ${userOneAccessToken}`)
+        .expect(httpStatus.OK);
     });
   });
 });
