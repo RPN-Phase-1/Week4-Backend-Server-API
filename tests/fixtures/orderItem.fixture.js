@@ -18,7 +18,6 @@ const orderItemTwo = {
   orderId: orderTwo.id,
   productId: productTwo.id,
   quantity: faker.datatype.number({ min: 1, max: 20 }),
-  unitPrice: this.quantity * productTwo.price,
 };
 orderItemTwo.unitPrice = orderItemTwo.quantity * productTwo.price;
 
@@ -27,11 +26,23 @@ const orderItemThree = {
   orderId: orderThree.id,
   productId: productThree.id,
   quantity: faker.datatype.number({ min: 1, max: 20 }),
-  unitPrice: this.quantity * productThree.price,
 };
 orderItemThree.unitPrice = orderItemThree.quantity * productThree.price;
 
 const insertOrderItems = async (arrOrderItems) => {
+  await Promise.all(
+    arrOrderItems.map(async (orderItem) => {
+      await prisma.product.update({
+        where: { id: orderItem.productId },
+        data: { quantityInStock: { decrement: orderItem.quantity } },
+      });
+      await prisma.order.update({
+        where: { id: orderItem.orderId },
+        data: { totalPrice: { increment: orderItem.unitPrice } },
+      });
+    })
+  );
+
   await prisma.orderItem.createMany({
     data: arrOrderItems,
     skipDuplicates: true,
