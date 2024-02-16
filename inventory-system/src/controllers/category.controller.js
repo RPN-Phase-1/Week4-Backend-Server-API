@@ -96,6 +96,10 @@ const searchCategory = catchAsync(async (req, res) => {
     res.render('./category/search', {category})
 })
 
+
+
+//controller sebelumnya
+
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body);
 

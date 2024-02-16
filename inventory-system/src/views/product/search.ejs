@@ -5,28 +5,36 @@
   </div>
   
 <div class="table-responsive">
-    <% if (category.length > 0) { %>
+    <% if (product.length > 0) { %>
 
       <table class="table table-striped table-sm">
         <thead>
           <tr>
             <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Description</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-          <% category.forEach(element => { %>
+          <% product.forEach(element => { %>
             <tr class="align-middle">
               <td><%= element.name %></td>
+              <td><%= element.category.name %></td>
+              <td><%= element.price %></td>
+              <td><%= element.quantityInStock %></td>
+              <td><%= element.description %></td>
               <td>
   
                 <div class="d-flex flex-row justify-content-end gap-2">
   
-                  <a href="/category/detail/<%= element.id %>" type="button" class="btn btn-primary btn-small">
+                  <a href="/product/detail/<%= element.id %>" type="button" class="btn btn-primary btn-small">
                     <i class="bi bi-eye"></i>
                   </a>
     
-                  <a href="/category/edit/<%= element.id %>" type="button" class="btn btn-warning btn-small">
+                  <a href="/product/edit/<%= element.id %>" type="button" class="btn btn-warning btn-small">
                     <i class="bi bi-pencil"></i>
                   </a>
     
@@ -45,12 +53,12 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <div class="modal-title">You are about to remove a category record.</div>
+                            <div class="modal-title">You are about to remove a product record.</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <p>
-                                This will remove the category record of <b class="fw-bold"><%= element.name %></b><br/>
+                                This will remove the product record of <b class="fw-bold"><%= element.name %></b><br/>
                                 Are you sure?
                             </p>
                         </div>
@@ -58,8 +66,8 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             
-                            <form action="/category/edit/<%= element.id %>?_method=DELETE" method="POST" class="position-relative">
-                                <button type="submit" class="btn btn-primary">Yes, remove category</button>
+                            <form action="/product/edit/<%= element.id %>?_method=DELETE" method="POST" class="position-relative">
+                                <button type="submit" class="btn btn-primary">Yes, remove product</button>
                             </form>
                         </div>
             

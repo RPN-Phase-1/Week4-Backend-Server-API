@@ -44,16 +44,16 @@ router
 //     //auth(), 
 //         validate(categoryValidation.createCategory), categoryController.createCategory)
 
-router
-  .route('/edit/:categoryId')
-  .patch(
-     //auth(), 
-       validate(categoryValidation.updateCategory), categoryController.updateCategory)
+// router
+//   .route('/edit/:categoryId')
+//   .patch(
+//      //auth(), 
+//        validate(categoryValidation.updateCategory), categoryController.updateCategory)
 
-router
-  .route('/delete/:categoryId')
-  .delete(
-    //auth(), 
-       validate(categoryValidation.deleteCategory), categoryController.deleteCategory);
+// router
+//   .route('/delete/:categoryId')
+//   .delete(
+//     //auth(), 
+//        validate(categoryValidation.deleteCategory), categoryController.deleteCategory);
 
 module.exports = router;

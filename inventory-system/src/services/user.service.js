@@ -67,6 +67,12 @@ const deleteUserById = async (userId) => {
   return deleteUser;
 };
 
+const queryUsers = async (filter, options) => {
+  const users = await prisma.user.findMany();
+
+  return users;
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -74,4 +80,5 @@ module.exports = {
   getAllUsers,
   updateUserById,
   deleteUserById,
+  queryUsers,
 };

@@ -9,7 +9,11 @@ const ApiError = require('../utils/ApiError');
  */
 const createProduct = async (productBody) => {
   return prisma.product.create({
-    data: productBody,
+    data: {
+      ...productBody,
+      quantityInStock: parseInt(productBody.quantityInStock),
+      price: parseFloat(productBody.price)
+    }
   });
 };
 
@@ -32,6 +36,10 @@ const getProductById = async (id) => {
     where: {
       id,
     },
+    include:{
+      category:true,
+      user:true
+    }
   });
 };
 
@@ -51,7 +59,10 @@ const updateProductById = async (productId, updateBody) => {
     where: {
       id: productId,
     },
-    data: updateBody,
+    data: {
+      ...updateBody,
+      quantityInStock: parseInt(updateBody.quantityInStock),
+      price: parseFloat(updateBody.price)},
   });
 
   return updateProduct;
@@ -77,7 +88,20 @@ const deleteProductById = async (productId) => {
   return deleteProducts;
 };
 
-const getAllProducts = async (category, skip = 0, take = 10) => {
+const getAllProducts = async (skip = 0, take = 10) => {
+  const products = await prisma.product.findMany({
+    include:{
+      category:true,
+      user:true
+    },
+    skip: parseInt(skip),
+    take: parseInt(take),
+  });
+
+  return products;
+};
+
+const searchProductByCategory = async (category, skip = 0, take = 10) => {
   const products = await prisma.product.findMany({
     skip: parseInt(skip),
     take: parseInt(take),
@@ -91,6 +115,24 @@ const getAllProducts = async (category, skip = 0, take = 10) => {
   return products;
 };
 
+const getProductCount = async () => {
+  const count = await prisma.product.count();
+  return count;
+};
+
+const getProductByName = async (name) => {
+  return prisma.product.findMany({
+    where: {
+      name: {
+        contains: name,
+      },
+    },
+    include:{
+      category:true,
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   queryProducts,
@@ -98,4 +140,7 @@ module.exports = {
   getAllProducts,
   updateProductById,
   deleteProductById,
+  getProductCount,
+  searchProductByCategory,
+  getProductByName
 };
