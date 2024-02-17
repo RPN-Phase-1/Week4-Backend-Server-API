@@ -3,6 +3,13 @@ const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService } = require('../services');
 const ApiError = require('../utils/ApiError');
 
+
+const registerView = catchAsync(async(req, res)=>{
+
+  res.render('./auth/register', {layout:false})
+
+})
+
 const register = catchAsync(async (req, res) => {
   const existingUser = await userService.getUserByEmail(req.body.email);
 
@@ -15,14 +22,22 @@ const register = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ userCreated, tokens });
 });
 
+const loginView = catchAsync(async(req, res)=>{
+
+  res.render('./auth/login', {layout:false})
+
+})
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  res.render('./views/index',{ user, tokens });
 });
 
 module.exports = {
+  loginView,
+  registerView,
   register,
   login,
+  
 };

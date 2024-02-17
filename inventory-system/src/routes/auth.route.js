@@ -7,7 +7,14 @@ const authController = require('../controllers/auth.controller');
 
 const router = express.Router();
 
-router.post('/register', validate(authValidation.register), authController.register);
-router.post('/login', validate(authValidation.login), authController.login);
+router
+    .route('/register')
+    .get(authController.registerView)
+    .post(validate(authValidation.register), authController.register);
+
+router
+   .route('/login')
+   .get(authController.loginView)
+   .post(validate(authValidation.login), authController.login);
 
 module.exports = router;
