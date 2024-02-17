@@ -10,7 +10,10 @@ const { deleteOrderItemById } = require('./orderItem.service');
  */
 const createOrder = async (orderBody) => {
   return prisma.order.create({
-    data: orderBody,
+    data: {
+      ...orderBody,
+      totalPrice: parseFloat(orderBody.totalPrice),
+      date: new Date(orderBody.date).toISOString()},
   });
 };
 
@@ -30,6 +33,9 @@ const queryOrders = async (filter, options) => {
  */
 const getOrderById = async (id) => {
   return prisma.order.findFirst({
+    include:{
+      user:true
+    },
     where: {
       id,
     },
@@ -52,7 +58,11 @@ const updateOrderById = async (orderId, updateBody) => {
     where: {
       id: orderId,
     },
-    data: updateBody,
+    data: {
+      ...updateBody,
+      date: new Date(updateBody.date).toISOString(),
+      totalPrice: parseFloat(updateBody.totalPrice)
+    },
   });
 
   return updateOrder;
@@ -69,9 +79,9 @@ const deleteOrderById = async (orderId) => {
       orderId,
     },
   });
-  if (!orderItems || orderItems.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Order items not found');
-  }
+  // if (!orderItems || orderItems.length === 0) {
+  //   throw new ApiError(httpStatus.NOT_FOUND, 'Order items not found');
+  // }
 
   for (const orderItem of orderItems) {
     await deleteOrderItemById(orderItem.id);
@@ -88,11 +98,32 @@ const deleteOrderById = async (orderId) => {
 
 const getAllOrder = async (skip = 0, take = 10) => {
   const orders = await prisma.order.findMany({
+    include:{
+      user:true
+    },
     skip: parseInt(skip),
     take: parseInt(take),
   });
   return orders;
 };
+
+const getOrderCount = async () => {
+  const count = await prisma.order.count();
+  return count;
+};
+
+const getOrderByCustomerName = async (customerName) =>{
+  return prisma.order.findMany({
+    where: {
+      customerName: {
+        contains: customerName,
+      },
+    },
+    include:{
+      user:true,
+    }
+  });
+}
 
 module.exports = {
   createOrder,
@@ -101,4 +132,6 @@ module.exports = {
   getAllOrder,
   updateOrderById,
   deleteOrderById,
+  getOrderCount,
+  getOrderByCustomerName
 };

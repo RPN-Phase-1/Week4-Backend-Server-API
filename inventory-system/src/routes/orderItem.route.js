@@ -8,22 +8,46 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(
-    //auth(),
-     validate(orderItemValidation.createOrderItem), orderItemController.createOrderItem)
-  .get(
-    //auth(),
-     orderItemController.getOrderItems);
+  .get(orderItemController.viewOrderItem);
 
 router
-  .route('/:orderItemId')
-  .get(
-    //auth(),
-     validate(orderItemValidation.getOrderItem), orderItemController.getOrderItem)
-  .patch(
-    //auth(),
-     validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem)
-  .delete(//auth(),
-   validate(orderItemValidation.deleteOrderItem), orderItemController.deleteOrderItem);
+  .route('/add')
+  .get(orderItemController.addOrderItem)
+  .post(orderItemController.postOrderItem);
+
+router
+  .route('/detail/:orderItemId')
+  .get(orderItemController.detailOrderItem);
+
+  router
+  .route('/edit/:orderItemId')
+  .get(orderItemController.editOrderItem)
+  .patch(orderItemController.updateOrderItem)
+  .delete(orderItemController.deleteOrderItem)
+
+  router
+  .route('/search')
+  .get(orderItemController.searchOrderItem)
+
+
+// router
+//   .route('/')
+//   .post(
+//     //auth(),
+//      validate(orderItemValidation.createOrderItem), orderItemController.createOrderItem)
+//   .get(
+//     //auth(),
+//      orderItemController.getOrderItems);
+
+// router
+//   .route('/:orderItemId')
+//   .get(
+//     //auth(),
+//      validate(orderItemValidation.getOrderItem), orderItemController.getOrderItem)
+//   .patch(
+//     //auth(),
+//      validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem)
+//   .delete(//auth(),
+//    validate(orderItemValidation.deleteOrderItem), orderItemController.deleteOrderItem);
 
 module.exports = router;

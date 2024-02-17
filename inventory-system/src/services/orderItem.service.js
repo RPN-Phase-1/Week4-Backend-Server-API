@@ -69,7 +69,10 @@ const createOrderItem = async (orderItemBody) => {
   }
 
   const createdOrderItem = await prisma.orderItem.create({
-    data: orderItemBody,
+    data: {
+      ...orderItemBody,
+      quantity: parseInt(orderItemBody.quantity),
+      unitPrice: parseFloat(orderItemBody.unitPrice)},
   });
 
   return createdOrderItem;
@@ -95,6 +98,10 @@ const queryOrderItems = async (filter, options) => {
  */
 const getOrderItemById = async (id) => {
   return prisma.orderItem.findFirst({
+    include:{
+      order:true,
+      product:true,
+    },
     where: {
       id,
     },
@@ -182,7 +189,10 @@ const updateOrderItemById = async (orderItemId, updateBody) => {
     where: {
       id: orderItemId,
     },
-    data: updateBody,
+    data: {
+      ...updateBody,
+      quantity: parseInt(updateBody.quantity),
+      unitPrice: parseFloat(updateBody.unitPrice)},
   });
 
   return updatedOrderItem;
@@ -244,11 +254,35 @@ const deleteOrderItemById = async (orderItemId) => {
 
 const getAllOrderItems = async (skip = 0, take = 10) => {
   const orderItems = await prisma.orderItem.findMany({
+    include:{
+      order:true,
+      product:true,
+    },
     skip: parseInt(skip),
     take: parseInt(take),
   });
   return orderItems;
 };
+
+const getOrderItemCount = async () => {
+  const count = await prisma.orderItem.count();
+  return count;
+};
+
+const getOrderItemByName = async (name) =>{
+  return prisma.orderItem.findMany({
+    where: {
+      id: {
+        contains: name,
+      },
+    },
+    include:{
+      order:true,
+      product:true
+    }
+  });
+}
+
 
 module.exports = {
   createOrderItem,
@@ -257,4 +291,6 @@ module.exports = {
   getAllOrderItems,
   updateOrderItemById,
   deleteOrderItemById,
+  getOrderItemCount,
+  getOrderItemByName
 };

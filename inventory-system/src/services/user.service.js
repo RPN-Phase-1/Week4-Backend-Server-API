@@ -73,6 +73,21 @@ const queryUsers = async (filter, options) => {
   return users;
 };
 
+const getUserCount = async () =>{
+  const count = await prisma.user.count();
+  return count;
+}
+
+const getUserByName = async (name) => {
+  return prisma.user.findMany({
+    where: {
+      name: {
+        contains:name
+      },
+    },
+  });
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -81,4 +96,6 @@ module.exports = {
   updateUserById,
   deleteUserById,
   queryUsers,
+  getUserCount,
+  getUserByName,
 };
