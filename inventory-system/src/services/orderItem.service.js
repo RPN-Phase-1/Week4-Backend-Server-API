@@ -69,6 +69,69 @@ const update = async (id, update) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order Item not found');
   }
 
+  // Update quantityInStock in Product table & price in Order table
+  const product = await prisma.product.findFirst({
+    where: {
+      id: orderItem.productId,
+    },
+  });
+  const order = await prisma.orders.findFirst({
+    where: {
+      id: orderItem.orderId,
+    },
+  });
+
+  const quantityUpdate = update.quantity || 0;
+  const quantityNow = orderItem.quantity;
+  let quantityTotal = quantityUpdate - quantityNow;
+  // quantityInStock in Product table
+  const quantityProduct = product.quantityInStock;
+  // Logic to handle quantityInStock value
+  if (quantityUpdate > 0) {
+    if (quantityProduct > quantityUpdate) {
+      if (quantityTotal <= 0) {
+        // If quantity decreasing
+        quantityTotal = Math.abs(quantityTotal);
+        const updateProduct = await prisma.product.update({
+          where: {
+            id: orderItem.productId,
+          },
+          data: {
+            quantityInStock: quantityProduct + quantityTotal,
+          },
+        });
+        const updateOrder = await prisma.orders.update({
+          where: {
+            id: orderItem.orderId,
+          },
+          data: {
+            totalPrice: order.totalPrice - orderItem.unitPrice * quantityTotal,
+          },
+        });
+      } else {
+        // If quantity increasing
+        const updateProduct = await prisma.product.update({
+          where: {
+            id: orderItem.productId,
+          },
+          data: {
+            quantityInStock: quantityProduct - quantityTotal,
+          },
+        });
+        const updateOrder = await prisma.orders.update({
+          where: {
+            id: orderItem.orderId,
+          },
+          data: {
+            totalPrice: order.totalPrice + orderItem.unitPrice * quantityTotal,
+          },
+        });
+      }
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Order quantity exceeds available stock');
+    }
+  }
+
   const updateOrderItem = await prisma.orderItem.update({
     where: {
       id: id,
@@ -79,4 +142,44 @@ const update = async (id, update) => {
   return updateOrderItem;
 };
 
-module.exports = { create, getAll, getId, update };
+const deleted = async (id) => {
+  const orderItem = await getId(id);
+  if (!orderItem) throw new ApiError(httpStatus.NOT_FOUND, 'Order Item not found');
+
+  const product = await prisma.product.findFirst({
+    where: {
+      id: orderItem.productId,
+    },
+  });
+  const order = await prisma.orders.findFirst({
+    where: {
+      id: orderItem.orderId,
+    },
+  });
+
+  const updateProduct = await prisma.product.update({
+    where: {
+      id: orderItem.productId,
+    },
+    data: {
+      quantityInStock: product.quantityInStock + orderItem.quantity,
+    },
+  });
+  const updateOrder = await prisma.orders.update({
+    where: {
+      id: orderItem.orderId,
+    },
+    data: {
+      totalPrice: order.totalPrice - orderItem.quantity * orderItem.unitPrice,
+    },
+  });
+
+  const deleteOrderItem = await prisma.orderItem.delete({
+    where: {
+      id: id,
+    },
+  });
+  return deleteOrderItem;
+};
+
+module.exports = { create, getAll, getId, update, deleted };

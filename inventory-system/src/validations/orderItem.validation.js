@@ -5,7 +5,7 @@ const create = {
   body: Joi.object().keys({
     orderId: Joi.string().custom(objectId).required(),
     productId: Joi.string().custom(objectId).required(),
-    quantity: Joi.number().required(),
+    quantity: Joi.number().positive().allow(0).required(),
   }),
 };
 
@@ -15,7 +15,7 @@ const getAll = {
     size: Joi.number().integer().min(1),
     orderId: Joi.string().custom(objectId),
     productId: Joi.string().custom(objectId),
-    quantity: Joi.number(),
+    quantity: Joi.number().positive().allow(0),
     unitPrice: Joi.number().precision(2).positive(),
     orderBy: Joi.string().valid('quantity:asc', 'quantity:desc', 'unitPrice:asc', 'unitPrice:desc'),
   }),
@@ -35,10 +35,16 @@ const update = {
     .keys({
       orderId: Joi.string().custom(objectId),
       productId: Joi.string().custom(objectId),
-      quantity: Joi.number(),
+      quantity: Joi.number().positive().allow(0),
       unitPrice: Joi.number().precision(2).positive(),
     })
     .min(1),
 };
 
-module.exports = { create, getAll, getId, update };
+const deleted = {
+  params: Joi.object().keys({
+    orderItemId: Joi.string().custom(objectId),
+  }),
+};
+
+module.exports = { create, getAll, getId, update, deleted };
