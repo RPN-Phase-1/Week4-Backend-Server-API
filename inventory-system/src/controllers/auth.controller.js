@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService } = require('../services');
 const ApiError = require('../utils/ApiError');
+const { loginUser } = require('../services/auth.service');
 
 
 const registerView = catchAsync(async(req, res)=>{
@@ -31,7 +32,7 @@ const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.render('./views/index',{ user, tokens });
+  res.render('index',{ user, tokens });
 });
 
 module.exports = {

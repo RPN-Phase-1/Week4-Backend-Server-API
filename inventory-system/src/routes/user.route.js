@@ -3,31 +3,32 @@ const { adminAuth } = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
 const userValidation = require('../validations/user.validation');
 const userController = require('../controllers/user.controller');
+const { adminRoleLocal } = require('../middlewares/checkAuth');
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(userController.viewUser);
+  .get(adminRoleLocal,userController.viewUser);
 
 router
   .route('/add')
-  .get(userController.addUser)
-  .post(validate(userValidation.createUser), userController.postUser)
+  .get(adminRoleLocal,userController.addUser)
+  .post(adminRoleLocal,validate(userValidation.createUser), userController.postUser)
 
 router
   .route('/detail/:userId')
-  .get(userController.detailUser)
+  .get(adminRoleLocal,userController.detailUser)
 
 router
   .route('/edit/:userId')
-  .get(userController.editUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser)
+  .get(adminRoleLocal,userController.editUser)
+  .patch(adminRoleLocal,userController.updateUser)
+  .delete(adminRoleLocal,userController.deleteUser)
 
 router
   .route('/search')
-  .get(userController.searchUser)
+  .get(adminRoleLocal,userController.searchUser)
 
 
 // router

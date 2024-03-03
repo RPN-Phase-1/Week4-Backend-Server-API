@@ -4,28 +4,29 @@ const { auth } = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
 const categoryValidation = require('../validations/category.validation');
 const categoryController = require('../controllers/category.controller');
+const { checkAuthenticate } = require('../middlewares/checkAuth');
 
 const router = express.Router();
 
 router
   .route('/')
   .get(
-    //auth(), 
+    checkAuthenticate, 
         categoryController.viewCategory);
 
 router
   .route('/add')
   .get(
-    //auth(),
+    checkAuthenticate, 
         categoryController.addCategory)
   .post(
-    //auth(),
+    checkAuthenticate, 
     categoryController.postCategory)
 
 router
   .route('/detail/:categoryId')
   .get(
-    //auth(), 
+    checkAuthenticate,  
        // validate(categoryValidation.getCategory),
          categoryController.detailCategory)
 

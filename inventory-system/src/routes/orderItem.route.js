@@ -3,31 +3,32 @@ const { adminAuth, auth } = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
 const orderItemValidation = require('../validations/orderItem.validation');
 const orderItemController = require('../controllers/orderItem.controller');
+const { checkAuthenticate } = require('../middlewares/checkAuth');
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(orderItemController.viewOrderItem);
+  .get(checkAuthenticate, orderItemController.viewOrderItem);
 
 router
   .route('/add')
-  .get(orderItemController.addOrderItem)
-  .post(orderItemController.postOrderItem);
+  .get(checkAuthenticate, orderItemController.addOrderItem)
+  .post(checkAuthenticate, orderItemController.postOrderItem);
 
 router
   .route('/detail/:orderItemId')
-  .get(orderItemController.detailOrderItem);
+  .get(checkAuthenticate, orderItemController.detailOrderItem);
 
   router
   .route('/edit/:orderItemId')
-  .get(orderItemController.editOrderItem)
-  .patch(orderItemController.updateOrderItem)
-  .delete(orderItemController.deleteOrderItem)
+  .get(checkAuthenticate, orderItemController.editOrderItem)
+  .patch(checkAuthenticate, orderItemController.updateOrderItem)
+  .delete(checkAuthenticate, orderItemController.deleteOrderItem)
 
   router
   .route('/search')
-  .get(orderItemController.searchOrderItem)
+  .get(checkAuthenticate, orderItemController.searchOrderItem)
 
 
 // router

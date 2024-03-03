@@ -4,6 +4,7 @@ const validate = require('../middlewares/validate');
 const productValidation = require('../validations/product.validation');
 const productController = require('../controllers/product.controller');
 const { category } = require('../../prisma');
+const { checkAuthenticate } = require('../middlewares/checkAuth');
 
 const router = express.Router();
 
@@ -11,31 +12,31 @@ const router = express.Router();
 router
   .route('/')
   .get(
-    //auth(), 
+    checkAuthenticate, 
         productController.viewProduct);
 
 router
   .route('/add')
   .get(
-    //auth(),
+    checkAuthenticate, 
         productController.addProduct)
   .post(
-    //auth(),
+    checkAuthenticate, 
     productController.postProduct)
 
 router
   .route('/detail/:productId')
-  .get(productController.detailProduct)
+  .get(checkAuthenticate, productController.detailProduct)
 
 router
   .route('/edit/:productId')
-  .get(productController.editProduct)
-  .patch(productController.updateProduct)
-  .delete(productController.deleteProduct)
+  .get(checkAuthenticate, productController.editProduct)
+  .patch(checkAuthenticate, productController.updateProduct)
+  .delete(checkAuthenticate, productController.deleteProduct)
 
 router
   .route('/search')
-  .get(productController.searchProduct)
+  .get(checkAuthenticate, productController.searchProduct)
 
 
 // router

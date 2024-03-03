@@ -9,13 +9,16 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+    <% if (messages.error) { %>
+        <%= messages.error %>
+      <% } %>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">Login</div>
                     <div class="card-body">
-                        <form action="/login" method="POST">
+                        <form id="loginForm" action="/auth/login" method="POST">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
@@ -38,5 +41,6 @@
     
     <script src="/js/popper.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <!-- <script src="/js/login.js"></script> -->
 </body>
 </html>
