@@ -1,6 +1,0 @@
-DATABASE_URL="mysql://root@localhost:3307/inventory_system"
-PORT=3000
-JWT_SECRET=thisisasamplesecret
-JWT_ACCESS_EXPIRATION_MINUTES=30
-JWT_REFRESH_EXPIRATION_DAYS=30
-

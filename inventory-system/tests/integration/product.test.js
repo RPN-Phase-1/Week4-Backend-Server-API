@@ -138,7 +138,7 @@ describe('Product routes', ()=>{
         let updatedProduct;
         beforeEach(async ()=>{
             await insertUsers([userOne]);
-            await insertCategorys([categoryTwo]);
+            await insertCategorys([categoryOne,categoryTwo]);
             await insertProducts([productOne]); 
 
             updatedProduct = {
@@ -159,7 +159,7 @@ describe('Product routes', ()=>{
             .expect(httpStatus.OK);
 
             const productData = res.body.data;
-
+            
             expect(productData).toEqual({
               id: productOne.id,
               name: updatedProduct.name,
@@ -230,7 +230,7 @@ describe('Product routes', ()=>{
     describe('DELETE /v1/product/:productId', ()=>{
         beforeEach(async ()=>{
             await insertUsers([userOne]);
-            await insertCategorys([categoryTwo]);
+            await insertCategorys([categoryOne]);
             await insertProducts([productOne]); 
         });
         
