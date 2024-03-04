@@ -25,11 +25,11 @@ Set the environment variables that can be found and modified in the `.env` file.
 PORT=3000
 
 # URL of Database
-DATABASE_URL="mysql://root:wFTbLxbCquKXIxDFfLwx@containers-us-west-174.railway.app:5858/railway?connect_timeout=300"
+DATABASE_URL="mysql://root:6edHe64B2a21E4G24342HaehFF3F3FG4@monorail.proxy.rlwy.net:33430/railway"
 
 # JWT
 # JWT secret key
-JWT_SECRET=thisisasamplesecret
+JWT_SECRET="testing"
 # Number of minutes after which an access token expires
 JWT_ACCESS_EXPIRATION_MINUTES=30
 # Number of days after which a refresh token expires
