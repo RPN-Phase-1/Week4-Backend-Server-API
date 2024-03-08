@@ -4,11 +4,13 @@ const helmet = require('helmet');
 const compression = require('compression');
 const xss = require('xss-clean');
 const cors = require('cors');
-const config = require('./src/config/config');
-const morgan = require('./src/config/morgan');
-const { errorConverter, errorHandler } = require('./src/middlewares/error');
-const ApiError = require('./src/utils/apiError');
-// const router = require('./src/routes');
+const passport = require('passport');
+const { jwtStrategy } = require('./config/passport');
+const config = require('./config/config');
+const morgan = require('./config/morgan');
+const { errorConverter, errorHandler } = require('./middlewares/error');
+const ApiError = require('./utils/apiError');
+const router = require('./routes/v1');
 
 const app = express();
 if (config.env !== 'test') {
@@ -23,14 +25,19 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(xss());
 
-app.use(compression);
+// app.use(compression);
 
 app.use(cors());
 app.options('*', cors());
 
+app.use(passport.initialize());
+passport.use('jwt', jwtStrategy);
+
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
+
+app.use('/v1', router);
 
 // app.use(router);
 app.use((req, res, next) => {

@@ -1,7 +1,7 @@
 const app = require('./app');
-const prisma = require('./prisma/prisma');
-const logger = require('./src/config/logger');
-const config = require('./src/config/config');
+const prisma = require('../prisma/client');
+const logger = require('./config/logger');
+const config = require('./config/config');
 
 let server;
 
