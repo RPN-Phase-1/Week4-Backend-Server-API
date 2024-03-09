@@ -1,12 +1,13 @@
 const httpStatus = require('http-status');
 const { orderService } = require('../services');
 const catchAsync = require('../utils/catchAsync');
+const ApiError = require(`../utils/ApiError`);
 
 const getAll = catchAsync(async (req, res) => {
-  const { id, page, size } = req.query;
+  const { page, size, name } = req.query;
 
   const filter = {
-    contains: id,
+    contains: name,
   };
 
   const options = {
@@ -25,6 +26,10 @@ const getAll = catchAsync(async (req, res) => {
 
 const getOrder = catchAsync(async (req, res) => {
   const order = await orderService.getOrderById(req.params.orderId);
+
+  if ( !order || order.length == 0 ) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found')
+  }
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -49,15 +54,15 @@ const remove = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Delete Order Success',
-    data: null,
+    data: order,
   });
 });
 
 const create = catchAsync(async (req, res) => {
   const order = await orderService.createOrder(req.body);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(httpStatus.CREATED).send({
+    status: httpStatus.CREATED,
     message: 'Create Order Success',
     data: order,
   });

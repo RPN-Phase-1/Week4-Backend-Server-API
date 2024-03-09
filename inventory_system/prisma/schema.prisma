@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -58,7 +59,7 @@ model Category {
 
 model Order {
   id          String     @id @default(uuid())
-  date        DateTime
+  date        DateTime   @default(now())
   totalPrice  Float
   customerName String
   customerEmail String

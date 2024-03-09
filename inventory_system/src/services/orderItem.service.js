@@ -30,7 +30,7 @@ const createOrderItem = async (reqBody) => {
     data: reqBody,
   });
 
-  const totalPrice = await prisma.order.update({
+  await prisma.order.update({
     where: {
       id: reqBody.orderId,
     },
@@ -45,7 +45,7 @@ const createOrderItem = async (reqBody) => {
     },
   });
 
-  const updateQuantiyProudct = await prisma.product.update({
+  await prisma.product.update({
     where: {
       id: reqBody.productId,
     },
@@ -58,14 +58,14 @@ const createOrderItem = async (reqBody) => {
 };
 
 const updateOrderItem = async (orderItemId, updateBody) => {
-  const orderItem = prisma.orderItem.update({
+  const orderItem = await prisma.orderItem.update({
     where: {
       id: orderItemId,
     },
     data: updateBody,
   });
 
-  const totalPrice = await prisma.order.update({
+  await prisma.order.update({
     where: {
       id: updateBody.orderId,
     },
@@ -80,7 +80,7 @@ const updateOrderItem = async (orderItemId, updateBody) => {
     },
   });
 
-  const updateQuantiyProudct = await prisma.product.update({
+  await prisma.product.update({
     where: {
       id: updateBody.productId,
     },
@@ -95,7 +95,22 @@ const updateOrderItem = async (orderItemId, updateBody) => {
 const deleteOrderItem = async (orderItemId) => {
   const orderItem = await getOrderItemById(orderItemId);
 
-  if (!orderItem) throw new ApiError(httpStatus.NOT_FOUND, 'Order Item not found');
+  if (!orderItem || orderItem.length == 0) throw new ApiError(httpStatus.NOT_FOUND, 'Order Item not found');
+
+  const jumlahBarang = await prisma.product.findUnique({
+    where: {
+      id: orderItem.productId,
+    },
+  });
+
+  await prisma.product.update({
+    where: {
+      id: orderItem.productId,
+    },
+    data: {
+      quantityInStock: jumlahBarang.quantityInStock + orderItem.quantity,
+    },
+  });
 
   return prisma.orderItem.deleteMany({
     where: {

@@ -5,6 +5,23 @@ const logger = require('../config/logger');
 const ApiError = require('../utils/ApiError');
 
 const errorConverter = (err, req, res, next) => {
+  const handlePrismaError = (err) => {
+    switch (err.code) {
+      case 'P2002':
+        // handling duplicate key errors
+        return new ApiError(400, `Duplicate field value: ${err.meta.target}`, false, err.stack);
+      case 'P2014':
+        // handling invalid id errors
+        return new ApiError(400, `Invalid ID: ${err.meta.target}`, false, err.stack);
+      case 'P2003':
+        // handling invalid data errors
+        return new ApiError(400, `Invalid input data: ${err.meta.target}`, false, err.stack);
+      default:
+        // handling all other errors
+        return new ApiError(500, `Something went wrong: ${err.message}`, false, err.stack);
+    }
+  };
+
   let error = err;
   if (!(error instanceof ApiError)) {
     // if error from axios or http request
@@ -26,23 +43,6 @@ const errorConverter = (err, req, res, next) => {
     }
   }
   next(error);
-};
-
-const handlePrismaError = (err) => {
-  switch (err.code) {
-    case 'P2002':
-      // handling duplicate key errors
-      return new ApiError(400, `Duplicate field value: ${err.meta.target}`, false, err.stack);
-    case 'P2014':
-      // handling invalid id errors
-      return new ApiError(400, `Invalid ID: ${err.meta.target}`, false, err.stack);
-    case 'P2003':
-      // handling invalid data errors
-      return new ApiError(400, `Invalid input data: ${err.meta.target}`, false, err.stack);
-    default:
-      // handling all other errors
-      return new ApiError(500, `Something went wrong: ${err.message}`, false, err.stack);
-  }
 };
 
 // eslint-disable-next-line no-unused-vars

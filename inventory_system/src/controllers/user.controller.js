@@ -17,7 +17,7 @@ const getUsers = catchAsync(async (req, res) => {
 
   const user = await userService.getUser(options, filter);
 
-  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  if (!user || user.length == 0) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -26,8 +26,9 @@ const getUsers = catchAsync(async (req, res) => {
   });
 });
 
-const getUserByEmail = catchAsync(async (req, res) => {
-  const user = await userService.getUserByEmail(req.params.email);
+const UserByEmail = catchAsync(async (req, res) => {
+  const { email } = req.params;
+  const user = await userService.getUserByEmail(email);
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -44,7 +45,7 @@ const getOrderAndProduct = catchAsync(async (req, res) => {
   const { name } = req.params;
   const user = await userService.getOrderAndProductByUser(name);
 
-  if (!user) {
+  if (!user || user.length == 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
@@ -56,7 +57,7 @@ const getOrderAndProduct = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  getUserByEmail,
+  UserByEmail,
   getUsers,
   getOrderAndProduct,
 };

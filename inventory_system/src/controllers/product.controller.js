@@ -60,7 +60,7 @@ const deleteProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Delete Product Success',
-    data: null,
+    data: product,
   });
 });
 

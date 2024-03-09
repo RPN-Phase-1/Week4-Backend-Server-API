@@ -12,6 +12,7 @@ const getOrders = async (options, filter) => {
     include: {
       orderItems: true,
     },
+    contains: filter.contains,
   };
 
   const orders = await prisma.order.findMany(options);
@@ -38,7 +39,7 @@ const updateOrder = async (orderId, updateBody) => {
 
 const deleteOrder = async (orderId) => {
   const order = await getOrderById(orderId);
-  if (!order) throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  if (!order || order.length == 0) throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
 
   return prisma.order.deleteMany({
     where: {

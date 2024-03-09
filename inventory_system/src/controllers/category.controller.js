@@ -5,12 +5,7 @@ const { categoryService } = require('../services');
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body);
-
-  res.status(httpStatus.CREATED).send({
-    status: httpStatus.CREATED,
-    message: 'Create Category Success',
-    data: category,
-  });
+  res.status(httpStatus.CREATED).send({ data: category });
 });
 
 const getCategorys = catchAsync(async (req, res) => {
@@ -18,21 +13,18 @@ const getCategorys = catchAsync(async (req, res) => {
   const filter = {
     contains: search,
     orderBy: {
-      name: sort
-    }
+      name: sort,
+    },
   };
-
   const options = {
     skip: page,
     take: size,
   };
-
   const result = await categoryService.queryCategorys(options, filter);
 
-  if (!result) {
+  if (!result || result.length == 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
-
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Get Categorys Success',
@@ -45,31 +37,28 @@ const getCategory = catchAsync(async (req, res) => {
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
-
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Get Category Success',
-    data: category,
+    data: category
   });
 });
 
 const updateCategory = catchAsync(async (req, res) => {
   const category = await categoryService.updateCategoryById(req.params.categoryId, req.body);
-
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Update Category Success',
-    data: category,
+    data: category
   });
 });
 
 const deleteCategory = catchAsync(async (req, res) => {
   await categoryService.deleteCategoryById(req.params.categoryId);
-
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Delete Category Success',
-    data: null,
+    data: null
   });
 });
 
@@ -78,5 +67,5 @@ module.exports = {
   getCategorys,
   getCategory,
   updateCategory,
-  deleteCategory,
+  deleteCategory
 };

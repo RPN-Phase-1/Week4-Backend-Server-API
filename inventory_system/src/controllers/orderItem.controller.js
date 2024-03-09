@@ -17,7 +17,7 @@ const queryOrderItems = catchAsync(async (req, res) => {
 
   const orderItem = await orderItemService.getOrderItems(options, filter);
 
-  if (!orderItem) throw new ApiError(httpStatus.NOT_FOUND, 'Order Items not found');
+  if (!orderItem || orderItem.length == 0) throw new ApiError(httpStatus.NOT_FOUND, 'Order Items not found');
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
@@ -39,8 +39,8 @@ const getOrderItem = catchAsync(async (req, res) => {
 const create = catchAsync(async (req, res) => {
   const orderItem = await orderItemService.createOrderItem(req.body);
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
+  res.status(httpStatus.CREATED).send({
+    status: httpStatus.CREATED,
     message: 'Create Order Item Success',
     data: orderItem,
   });
@@ -62,7 +62,7 @@ const remove = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Delete Order Item Success',
-    data: null,
+    data: orderItem,
   });
 });
 

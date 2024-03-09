@@ -26,11 +26,11 @@ const queryCategorys = async (options, filter) => {
     take: size,
     where: {
       name: {
-        contains: filter.contains
+        contains: filter.contains,
       },
     },
     orderBy: {
-      name: filter.orderBy.name || 'asc'
+      name: filter.orderBy.name || 'asc',
     },
     include: {
       products: true,
@@ -62,7 +62,7 @@ const getCategoryById = async (id) => {
  */
 const updateCategoryById = async (categoryId, updateBody) => {
   const category = await getCategoryById(categoryId);
-  if (!category) {
+  if (!category || category.length == 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
 

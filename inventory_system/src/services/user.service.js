@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const prisma = require('../../prisma/client');
 
 /**
@@ -20,7 +20,7 @@ const createUser = async (userBody) => {
  */
 const getUserByEmail = async (email) => {
   return prisma.user.findUnique({
-    where: { email },
+    where: {email},
   });
 };
 

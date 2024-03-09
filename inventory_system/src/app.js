@@ -11,7 +11,9 @@ const ApiError = require('./utils/ApiError');
 const morgan = require('./config/morgan');
 const { jwtStrategy } = require('./config/passport');
 const router = require('./routes/v1');
-
+// const swaggerJsDoc = require('swagger-jsdoc');
+const json = require('../swagger.json');
+const swaggerUI = require(`swagger-ui-express`);
 const app = express();
 
 if (config.env !== 'test') {
@@ -40,6 +42,9 @@ app.use(compression());
 // enable cors
 app.use(cors());
 app.options('*', cors());
+
+// const swaggerDocs = swaggerJsDoc(json);
+app.use('/v1/docs', swaggerUI.serve, swaggerUI.setup(json))
 
 app.get('/', (req, res) => {
   res.send('hello world');
