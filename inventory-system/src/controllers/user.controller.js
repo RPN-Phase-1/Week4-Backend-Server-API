@@ -45,9 +45,19 @@ const deleteUser = catchAsync(async (req, res) => {
   });
 });
 
+const getProductByUser = catchAsync(async (req, res) => {
+  const result = await userService.getProductByUser(req.params.userId);
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Product By User Success!',
+    data: result,
+  });
+});
+
 module.exports = {
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
+  getProductByUser,
 };

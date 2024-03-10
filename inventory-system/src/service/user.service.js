@@ -27,6 +27,9 @@ const getUserById = async (userId) => {
       id: userId,
     },
   });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
 
   return user;
 };
@@ -59,6 +62,15 @@ const deleteUser = async (userId) => {
   return result;
 };
 
+const getProductByUser = async (userId) => {
+  const user = await getUserById(userId);
+  const result = await prisma.product.findMany({
+    where: { userId: userId },
+  });
+
+  return result;
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -66,4 +78,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  getProductByUser,
 };

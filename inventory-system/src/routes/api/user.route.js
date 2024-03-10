@@ -9,4 +9,6 @@ router.route('/').get(userController.getAllUsers);
 
 router.route('/:userId').get(userController.getUserById).patch(userController.updateUser).delete(userController.deleteUser);
 
+router.route('/:userId/products').get(userController.getProductByUser);
+
 module.exports = router;
