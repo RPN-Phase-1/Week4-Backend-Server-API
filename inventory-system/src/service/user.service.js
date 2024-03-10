@@ -71,6 +71,14 @@ const getProductByUser = async (userId) => {
   return result;
 };
 
+const getOrderByUser = async (userId) => {
+  const target = getUserById(userId);
+  const result = await prisma.order.findMany({
+    where: { userId: userId },
+  });
+  return result;
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -79,4 +87,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getProductByUser,
+  getOrderByUser,
 };

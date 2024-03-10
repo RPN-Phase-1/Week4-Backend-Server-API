@@ -54,10 +54,20 @@ const getProductByUser = catchAsync(async (req, res) => {
   });
 });
 
+const getOrderByUser = catchAsync(async (req, res) => {
+  const result = await userService.getOrderByUser(req.params.userId);
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Order By User Success!',
+    data: result,
+  });
+});
+
 module.exports = {
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
   getProductByUser,
+  getOrderByUser,
 };

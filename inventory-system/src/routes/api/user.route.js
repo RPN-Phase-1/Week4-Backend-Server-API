@@ -11,4 +11,6 @@ router.route('/:userId').get(userController.getUserById).patch(userController.up
 
 router.route('/:userId/products').get(userController.getProductByUser);
 
+router.route('/:userId/orders').get(userController.getOrderByUser);
+
 module.exports = router;
