@@ -4,16 +4,21 @@ const ApiError = require('../utils/apiError');
 
 const createOrderItem = async (orderItemBody) => {
   const { productId, quantity } = orderItemBody;
-  const result = await prisma.orderItem.create({
-    data: orderItemBody,
-  });
 
   const product = await prisma.product.findFirst({
     where: { id: productId },
   });
 
+  if (quantity > product.quantityInStock) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient stock for the selected product');
+  }
+
+  const result = await prisma.orderItem.create({
+    data: orderItemBody,
+  });
+
   const newQuantity = product.quantityInStock - quantity;
-  const updateProduct = await prisma.product.update({
+  await prisma.product.update({
     where: { id: productId },
     data: { quantityInStock: newQuantity },
   });
