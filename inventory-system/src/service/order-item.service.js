@@ -3,9 +3,21 @@ const prisma = require('../../prisma/client');
 const ApiError = require('../utils/apiError');
 
 const createOrderItem = async (orderItemBody) => {
+  const { productId, quantity } = orderItemBody;
   const result = await prisma.orderItem.create({
     data: orderItemBody,
   });
+
+  const product = await prisma.product.findFirst({
+    where: { id: productId },
+  });
+
+  const newQuantity = product.quantityInStock - quantity;
+  const updateProduct = await prisma.product.update({
+    where: { id: productId },
+    data: { quantityInStock: newQuantity },
+  });
+
   return result;
 };
 
