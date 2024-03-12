@@ -8,8 +8,10 @@ const createCategory = async (categoryBody) => {
   });
 };
 
-const queryCategorys = async (filter, options) => {
-  const categorys = await prisma.category.findMany();
+const queryCategorys = async (option) => {
+  const categorys = await prisma.category.findMany({
+    ...option,
+  });
   return categorys;
 };
 

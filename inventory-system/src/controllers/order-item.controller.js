@@ -13,7 +13,15 @@ const createOrderItem = catchAsync(async (req, res) => {
 });
 
 const getOrderItem = catchAsync(async (req, res) => {
-  const result = await orderItemService.getOrderItem();
+  const filter = {
+    gt: parseInt(req.query.quantityGreaterThan, 10) || undefined,
+    lt: parseInt(req.query.quantityLowerThan, 10) || undefined,
+  };
+  const option = {
+    skip: parseInt(req.query.skip, 10) || 0,
+    take: parseInt(req.query.take, 10) || 10,
+  };
+  const result = await orderItemService.getOrderItem(filter, option);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.CREATED,

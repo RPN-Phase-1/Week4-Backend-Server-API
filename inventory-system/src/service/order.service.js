@@ -9,8 +9,11 @@ const createOrder = async (orderBody) => {
   return result;
 };
 
-const getProduct = async () => {
-  const result = await prisma.order.findMany();
+const getProduct = async (where, option) => {
+  const result = await prisma.order.findMany({
+    where,
+    ...option,
+  });
   return result;
 };
 

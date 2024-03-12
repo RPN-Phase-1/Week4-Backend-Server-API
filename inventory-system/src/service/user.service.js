@@ -17,8 +17,11 @@ const getUserByEmail = async (email) => {
   });
 };
 
-const getAllUsers = async () => {
-  return prisma.user.findMany();
+const getAllUsers = async (where, option) => {
+  return prisma.user.findMany({
+    where,
+    ...option,
+  });
 };
 
 const getUserById = async (userId) => {

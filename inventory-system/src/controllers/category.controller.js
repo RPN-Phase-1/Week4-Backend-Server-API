@@ -14,7 +14,12 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  const result = await categoryService.queryCategorys();
+  const option = {
+    skip: parseInt(req.query.skip, 10) || 0,
+    take: parseInt(req.query.take, 10) || 10,
+  };
+
+  const result = await categoryService.queryCategorys(option);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

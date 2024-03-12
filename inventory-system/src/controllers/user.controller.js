@@ -4,7 +4,14 @@ const { userService } = require('../service/index');
 const ApiError = require('../utils/apiError');
 
 const getAllUsers = catchAsync(async (req, res) => {
-  const result = await userService.getAllUsers();
+  const filter = {
+    role: req.query.role,
+  };
+  const option = {
+    skip: parseInt(req.query.skip, 10) || 0,
+    take: parseInt(req.query.take, 10) || 10,
+  };
+  const result = await userService.getAllUsers(filter, option);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

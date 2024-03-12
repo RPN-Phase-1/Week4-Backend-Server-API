@@ -13,7 +13,17 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getProduct = catchAsync(async (req, res) => {
-  const result = await productService.getProduct();
+  const filter = {
+    name: req.query.name,
+    price: parseInt(req.query.price, 10) || undefined,
+  };
+
+  const option = {
+    skip: parseInt(req.query.skip, 10) || 0,
+    take: parseInt(req.query.take, 10) || 10,
+  };
+
+  const result = await productService.getProduct(filter, option);
   res.status(httpStatus.OK).send({
     status: httpStatus.CREATED,
     message: 'Get Product Success',

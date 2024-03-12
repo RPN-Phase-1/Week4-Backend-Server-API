@@ -10,8 +10,11 @@ const createProduct = async (productBody) => {
   return product;
 };
 
-const getProduct = async () => {
-  const result = await prisma.product.findMany();
+const getProduct = async (where, option) => {
+  const result = await prisma.product.findMany({
+    where,
+    ...option,
+  });
   return result;
 };
 
