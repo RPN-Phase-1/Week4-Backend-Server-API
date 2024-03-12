@@ -10,9 +10,22 @@ const createProduct = async (productBody) => {
   return product;
 };
 
-const getProduct = async (where, option) => {
+const getProduct = async (filter, category, option) => {
   const result = await prisma.product.findMany({
-    where,
+    where: {
+      ...filter,
+      category: {
+        name: category,
+      },
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
     ...option,
   });
   return result;
