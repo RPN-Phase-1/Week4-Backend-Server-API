@@ -1,14 +1,20 @@
 const express = require('express');
 const productController = require('../../controllers/product.controller');
 const { auth } = require('../../middlewares/auth');
+const validate = require('../../middlewares/validate');
+const { productValidation } = require('../../validations/index');
 
 const router = express.Router();
 
-router.route('/').post(auth(), productController.createProduct).get(auth(), productController.getProduct);
+router
+  .route('/')
+  .post(auth(), validate(productValidation.createProduct), productController.createProduct)
+  .get(auth(), productController.getProduct);
+
 router
   .route('/:productId')
-  .get(auth(), productController.getProductById)
-  .put(auth(), productController.updateProduct)
-  .delete(auth(), productController.deleteProduct);
+  .get(auth(), validate(productController.getProductById), productController.getProductById)
+  .put(auth(), validate(productValidation.updateProduct), productController.updateProduct)
+  .delete(auth(), validate(productValidation.deleteProduct), productController.deleteProduct);
 
 module.exports = router;

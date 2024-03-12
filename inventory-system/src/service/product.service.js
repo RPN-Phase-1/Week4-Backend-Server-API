@@ -23,7 +23,7 @@ const getProductById = async (productId) => {
   });
 
   if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found');
   }
 
   return result;

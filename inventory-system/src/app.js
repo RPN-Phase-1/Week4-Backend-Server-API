@@ -1,7 +1,7 @@
 const express = require('express');
 const httpStatus = require('http-status');
 const helmet = require('helmet');
-const compression = require('compression');
+// const compression = require('compression');
 const xss = require('xss-clean');
 const cors = require('cors');
 const passport = require('passport');
@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 
 // app.use(compression);
+// ini kalo diaktifin gatau kenapa jadi error pas request data
 
 app.use(cors());
 app.options('*', cors());
