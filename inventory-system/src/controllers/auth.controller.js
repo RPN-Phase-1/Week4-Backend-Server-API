@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService } = require('../service/index');
 const ApiError = require('../utils/apiError');
+const prisma = require('../../prisma/client');
 
 const register = catchAsync(async (req, res) => {
   const existingUser = await userService.getUserByEmail(req.body.email);
@@ -22,7 +23,20 @@ const login = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
+const logout = catchAsync(async (req, res) => {
+  const user = await prisma.user.findFirst({
+    where: { email: req.body.email },
+  });
+
+  await prisma.token.deleteMany({
+    where: { userId: user.id },
+  });
+
+  res.send('Logout Success!');
+});
+
 module.exports = {
   register,
   login,
+  logout,
 };

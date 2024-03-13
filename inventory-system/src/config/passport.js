@@ -13,6 +13,15 @@ const jwtVerify = async (payload, done) => {
     if (payload.type !== tokenTypes.ACCESS) {
       throw new Error('Invalid token type');
     }
+
+    const token = await prisma.token.findFirst({
+      where: { userId: payload.sub },
+    });
+
+    if (token.blacklisted === true) {
+      throw new Error('Your token has been blacklisted, Please reauthenticate');
+    }
+
     const user = await prisma.user.findFirst({ where: { id: payload.sub } });
     if (!user) {
       return done(null, false);
