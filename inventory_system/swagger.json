@@ -56,7 +56,6 @@
 			}
 		},
 
-
 		"/auth/register": {
 			"post": {
 				"tags": [
@@ -345,6 +344,118 @@
 					}
 				}
 			}
+		},
+
+		"/order": {
+			"get": {
+				"tags": ["Order API"],
+				"summary": "Get list order",
+				"security": [{
+					"Bearer": []
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			},
+
+			"post": {
+				"tags": ["Order API"],
+				"summary": "Create a order",
+				"description": "In the totalPrice just fill 0, because it will update by the orderItems",
+				"security": [{
+					"Bearer": []
+				}],
+				"parameters": [{
+					"in": "body",
+					"name": "body",
+					"schema": {
+						"type": "object",
+						"properties": {
+							"totalPrice": "float",
+							"customerName": "string",
+							"customerEmail": "string",
+							"userId": "string"
+						},
+						"example": {
+							"totalPrice": 0,
+							"customerName": "user",
+							"customerEmail": "user@mail.com",
+							"userId": "1"
+						}
+					}
+				}],
+				"responses": {
+					"201": {
+						"description": "Created"
+					}
+				}
+			}
+		},
+
+		"/order/{orderId}": {
+			"get": {
+				"tags": ["Order API"],
+				"summary": "Get a order using id",
+				"description": "",
+				"security": [{
+					"Bearer": []
+				}],
+				"parameters": [{
+					"in": "path",
+					"name": "orderId"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			},
+			"patch": {
+				"tags": ["Order API"],
+				"summary": "Update order using id",
+				"description": "",
+				"security": [{
+					"Bearer": []
+				}],
+				"parameters": [{
+					"in": "path",
+					"name": "orderId"
+				}, {
+					"in": "body",
+					"name": "body",
+					"schema": {
+						"type": "object",
+						"example": {
+							"customerName": "User"
+						}
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Order API"],
+				"summary": "Delete a order using id",
+				"description": "",
+				"security": [{
+					"Bearer": []
+				}],
+				"parameters": [{
+					"in": "path",
+					"name": "orderId"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
 		}
+
 	}
 }

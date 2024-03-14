@@ -26,22 +26,39 @@ const getOrderItemById = async (orderItemId) => {
 };
 
 const createOrderItem = async (reqBody) => {
-  const orderItem = await prisma.orderItem.create({
-    data: reqBody,
-  });
-
-  await prisma.order.update({
+  const data = await prisma.orderItem.findMany({
     where: {
-      id: reqBody.orderId,
-    },
-    data: {
-      totalPrice: reqBody.unitPrice * reqBody.quantity,
-    },
+      orderId: reqBody.orderId
+    }
   });
 
   const jumlahBarang = await prisma.product.findUnique({
     where: {
       id: reqBody.productId,
+    },
+  });
+
+  if ( jumlahBarang.quantityInStock < reqBody.quantity ) {
+    throw new ApiError(500, "Insufficient Product");
+  }
+
+  const orderItem = await prisma.orderItem.create({
+    data: reqBody,
+  });
+  let total = 0;
+  total = reqBody.quantity * reqBody.unitPrice;
+  if ( data.length ) {
+    for ( let i = 0; i <= data.length - 1; i++ ) {
+      total += data[i].quantity * data[i].unitPrice
+    }   
+  }
+  
+  await prisma.order.update({
+    where: {
+      id: reqBody.orderId,
+    },
+    data: {
+      totalPrice: total,
     },
   });
 
@@ -112,11 +129,12 @@ const deleteOrderItem = async (orderItemId) => {
     },
   });
 
-  return prisma.orderItem.deleteMany({
+  await prisma.orderItem.deleteMany({
     where: {
       id: orderItemId,
     },
   });
+
 };
 
 module.exports = {

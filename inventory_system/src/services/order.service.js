@@ -17,6 +17,15 @@ const getOrders = async (options, filter) => {
 
   const orders = await prisma.order.findMany(options);
 
+  // await prisma.order.update({
+  //   where: {
+  //     id: orders.id
+  //   },
+  //   data: {
+        
+  //   }
+  // })
+
   return orders;
 };
 
