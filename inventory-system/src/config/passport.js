@@ -1,7 +1,7 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 
 // Konfigurasi untuk Passport Strategy
 const jwtOptions = {

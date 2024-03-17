@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const config = require('../config/config');
 const { tokenTypes } = require('../config/tokens');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 const ApiError = require('../utils/apiError');
 
 // Function untuk menghasilkan JWT token berdasarkan ID, waktu pembuatan, kadalursa, jenis token, dan secret key.

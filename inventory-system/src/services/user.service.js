@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 const ApiError = require('../utils/apiError');
 const bcrypt = require('bcryptjs');
 
@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs');
  */
 const createUser = async (userBody) => {
   userBody.password = bcrypt.hashSync(userBody.password, 8);
-
+  
   return prisma.user.create({
     data: userBody,
   });
