@@ -10,7 +10,7 @@ const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/apiError');
-const router = require('./routes/api');
+const router = require('./routes/v1');
 
 const app = express();
 if (config.env !== 'test') {
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-app.use('/api', router);
+app.use('/v1', router);
 
 // app.use(router);
 app.use((req, res, next) => {

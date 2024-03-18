@@ -1,7 +1,7 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -13,16 +13,11 @@ const jwtVerify = async (payload, done) => {
     if (payload.type !== tokenTypes.ACCESS) {
       throw new Error('Invalid token type');
     }
-
-    const token = await prisma.token.findFirst({
-      where: { userId: payload.sub },
+    const user = await prisma.user.findFirst({
+      where: {
+        id: payload.sub,
+      },
     });
-
-    if (token.blacklisted === true) {
-      throw new Error('Your token has been blacklisted, Please reauthenticate');
-    }
-
-    const user = await prisma.user.findFirst({ where: { id: payload.sub } });
     if (!user) {
       return done(null, false);
     }
@@ -34,6 +29,4 @@ const jwtVerify = async (payload, done) => {
 
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 
-module.exports = {
-  jwtStrategy,
-};
+module.exports = { jwtStrategy };

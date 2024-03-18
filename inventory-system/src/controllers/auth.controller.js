@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService } = require('../service/index');
 const ApiError = require('../utils/apiError');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 
 const register = catchAsync(async (req, res) => {
   const existingUser = await userService.getUserByEmail(req.body.email);

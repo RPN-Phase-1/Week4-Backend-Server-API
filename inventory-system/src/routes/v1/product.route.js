@@ -14,7 +14,7 @@ router
 router
   .route('/:productId')
   .get(auth(), validate(productController.getProductById), productController.getProductById)
-  .put(auth(), validate(productValidation.updateProduct), productController.updateProduct)
+  .patch(auth(), validate(productValidation.updateProduct), productController.updateProduct)
   .delete(auth(), validate(productValidation.deleteProduct), productController.deleteProduct);
 
 module.exports = router;

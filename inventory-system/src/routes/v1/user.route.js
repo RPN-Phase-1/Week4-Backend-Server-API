@@ -6,7 +6,7 @@ const { userValidation } = require('../../validations/index');
 
 const router = express.Router();
 
-router.route('/').get(userController.getAllUsers);
+router.route('/').get(authAdmin(), userController.getAllUsers);
 
 router
   .route('/:userId')

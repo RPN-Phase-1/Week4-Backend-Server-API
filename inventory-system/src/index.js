@@ -1,5 +1,5 @@
 const app = require('./app');
-const prisma = require('../prisma/client');
+const prisma = require('../prisma');
 const logger = require('./config/logger');
 const config = require('./config/config');
 

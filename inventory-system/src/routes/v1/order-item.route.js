@@ -14,7 +14,7 @@ router
 router
   .route('/:orderItemId')
   .get(authAdmin(), validate(orderItemValidation.getOrderItemById), orderItemController.getOrderItemById)
-  .put(authAdmin(), validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem)
+  .patch(authAdmin(), validate(orderItemValidation.updateOrderItem), orderItemController.updateOrderItem)
   .delete(authAdmin(), validate(orderItemValidation.deleteOrderItem), orderItemController.deleteOrderItem);
 
 module.exports = router;
