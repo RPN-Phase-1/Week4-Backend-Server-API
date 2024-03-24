@@ -42,9 +42,14 @@ const insertUsers = async (users) => {
   });
 };
 
+const deleteUsers = async (users) => {
+  await prisma.user.deleteMany({});
+};
+
 module.exports = {
   userOne,
   userTwo,
   admin,
   insertUsers,
+  deleteUsers,
 };
