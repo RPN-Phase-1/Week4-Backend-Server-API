@@ -2,7 +2,7 @@ const request = require('supertest'); // Request HTTP
 const faker = require('faker'); // Fake data
 const httpStatus = require('http-status');
 const app = require('../../src/app');
-const { productOne, insertProducts } = require('../fixtures/product.fixture');
+const { productOne, insertProducts, deleteProducts } = require('../fixtures/product.fixture');
 const { categoryOne, insertCategories, deleteCategories } = require('../fixtures/category.fixture');
 const { userOne, insertUsers, deleteUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken } = require('../fixtures/token.fixture');
@@ -24,6 +24,7 @@ describe('Products Route', () => {
     };
   });
   afterEach(async () => {
+    await deleteProducts();
     await deleteCategories();
     await deleteUsers();
   });
@@ -35,9 +36,11 @@ describe('Products Route', () => {
       });
 
       test('Should return 200 if token is valid', async () => {
-        await insertProducts([productOne], userOne, categoryOne);
+        await insertProducts(userOne, categoryOne, [productOne]);
         await request(app).get('/v1/products').set('Authorization', `Bearer ${userOneAccessToken}`).expect(httpStatus.OK);
       });
     });
+
+    describe('POST Product', () => {});
   });
 });

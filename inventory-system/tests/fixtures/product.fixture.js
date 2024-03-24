@@ -16,9 +16,9 @@ const insertProducts = async (user, category, products) => {
   await insertUsers([user]);
   await insertCategories([category]);
 
-  products.map((product) => ({ ...product, categoryId: category.id, userId: user.id }));
+  const mapped = products.map((product) => ({ ...product, categoryId: category.id, userId: user.id }));
   await prisma.product.createMany({
-    data: products,
+    data: mapped,
     skipDuplicates: true,
   });
 };
