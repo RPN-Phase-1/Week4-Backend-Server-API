@@ -29,6 +29,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
+
 // Endpoint untuk mendapatkan daftar semua pengguna
 app.get("/users", async (req, res) => {
   try {
@@ -38,6 +39,7 @@ app.get("/users", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
