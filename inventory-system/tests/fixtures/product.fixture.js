@@ -12,13 +12,10 @@ const productOne = {
   quantityInStock: faker.datatype.number({ min: 10, max: 100 }),
 };
 
-const insertProducts = async (user, category, products) => {
-  await insertUsers([user]);
-  await insertCategories([category]);
-
-  const mapped = products.map((product) => ({ ...product, categoryId: category.id, userId: user.id }));
+const insertProducts = async (userId, categoryId, products) => {
+  products = products.map((product) => ({ ...product, categoryId: categoryId, userId: userId }));
   await prisma.product.createMany({
-    data: mapped,
+    data: products,
     skipDuplicates: true,
   });
 };

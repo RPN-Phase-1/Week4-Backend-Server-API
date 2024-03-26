@@ -32,7 +32,7 @@ describe('Categories Route', () => {
     });
 
     describe('POST Category', () => {
-      test('Should return 201 if request data is ok and token is valid', async () => {
+      test('Should return 201 if request body is ok and token is valid', async () => {
         const res = await request(app)
           .post('/v1/categories')
           .set('Authorization', `Bearer ${userOneAccessToken}`)
@@ -62,14 +62,14 @@ describe('Categories Route', () => {
         });
       });
 
-      test('Should return 400 error if no request data', async () => {
+      test('Should return 400 error if no request body', async () => {
         await request(app)
           .post('/v1/categories')
           .set('Authorization', `Bearer ${userOneAccessToken}`)
           .expect(httpStatus.BAD_REQUEST);
       });
 
-      test('Should return 400 error if request data is not a valid data type', async () => {
+      test('Should return 400 error if request body is not a valid data type', async () => {
         category.name = 12345;
         await request(app)
           .post('/v1/categories')
@@ -99,7 +99,7 @@ describe('Categories Route', () => {
 
         const dbCategory = await prisma.category.findUnique({
           where: {
-            id: categoryOne.id,
+            id: resData[0].id,
           },
         });
 
@@ -169,7 +169,7 @@ describe('Categories Route', () => {
     });
 
     describe('PUT Category', () => {
-      test('Should return 200 if id and request data is valid', async () => {
+      test('Should return 200 if id and request body is valid', async () => {
         await insertCategories([categoryOne]);
         const res = await request(app)
           .put(`/v1/categories/${categoryOne.id}`)
