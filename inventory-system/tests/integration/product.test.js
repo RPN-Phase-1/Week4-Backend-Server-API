@@ -318,5 +318,113 @@ describe('Products Route', () => {
           .expect(httpStatus.BAD_REQUEST);
       });
     });
+
+    describe('PUT Product', () => {
+      test('Should return 200 if id and request body is valid', async () => {
+        const res = await request(app)
+          .put(`/v1/products/${productOne.id}`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .send({ name: 'updatedProductTest' })
+          .expect(httpStatus.OK);
+        const resData = res.body.data;
+
+        expect(resData).toEqual({
+          id: expect.anything(),
+          name: 'updatedProductTest',
+          description: productOne.description,
+          price: productOne.price,
+          quantityInStock: productOne.quantityInStock,
+          categoryId: categoryOne.id,
+          userId: userOne.id,
+          createdAt: expect.anything(),
+          updatedAt: expect.anything(),
+        });
+
+        const dbProduct = await prisma.product.findUnique({
+          where: {
+            id: resData.id,
+          },
+        });
+
+        expect(dbProduct).toBeDefined();
+        expect(dbProduct).toMatchObject({
+          id: expect.anything(),
+          name: 'updatedProductTest',
+          description: productOne.description,
+          price: productOne.price,
+          quantityInStock: productOne.quantityInStock,
+          categoryId: categoryOne.id,
+          userId: userOne.id,
+          createdAt: expect.anything(),
+          updatedAt: expect.anything(),
+        });
+      });
+
+      test('Should return 404 if id is not found', async () => {
+        // Set dummy UUID
+        await request(app)
+          .put(`/v1/products/317a9bb1-9ae9-4a47-bb79-db13dd89ef0d`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .send({ name: 'updatedProductTest' })
+          .expect(httpStatus.NOT_FOUND);
+      });
+
+      test('Should return 400 if id is not a valid UUID', async () => {
+        await request(app)
+          .put('/v1/products/notValidUUID')
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .expect(httpStatus.BAD_REQUEST);
+      });
+
+      test('Should return 400 if request body is not a valid data types', async () => {
+        await request(app)
+          .put(`/v1/products/${productOne.id}`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .send({ name: 123 })
+          .expect(httpStatus.BAD_REQUEST);
+      });
+
+      test('Should return 400 if request body is empty', async () => {
+        await request(app)
+          .put(`/v1/products/${productOne.id}`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .expect(httpStatus.BAD_REQUEST);
+      });
+    });
+
+    describe('DELETE Product', () => {
+      test('Should return 200 if id is valid', async () => {
+        const res = await request(app)
+          .delete(`/v1/products/${productOne.id}`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .expect(httpStatus.OK);
+        const resData = res.body.data;
+
+        expect(resData).toBe(null);
+
+        const dbProduct = await prisma.product.findUnique({
+          where: {
+            id: productOne.id,
+          },
+        });
+
+        expect(dbProduct).toBeNull();
+      });
+
+      test('Should return 400 if id is not a valid UUID', async () => {
+        await request(app)
+          .delete('/v1/products/notValidUUID')
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .expect(httpStatus.BAD_REQUEST);
+      });
+
+      test('Should return 404 if id is not found', async () => {
+        // Set dummy UUID
+        await request(app)
+          .delete('/v1/products/317a9bb1-9ae9-4a47-bb79-db13dd89ef0d')
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .expect(httpStatus.NOT_FOUND);
+      });
+    });
   });
 });
