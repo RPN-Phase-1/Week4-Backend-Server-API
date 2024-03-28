@@ -30,7 +30,7 @@ const admin = {
   name: faker.name.findName(),
   email: faker.internet.email().toLowerCase(),
   password,
-  user: 'admin',
+  role: 'admin',
   isEmailVerified: false,
 };
 
@@ -42,7 +42,7 @@ const insertUsers = async (users) => {
   });
 };
 
-const deleteUsers = async (users) => {
+const deleteUsers = async () => {
   await prisma.user.deleteMany({});
 };
 
