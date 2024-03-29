@@ -4,6 +4,8 @@ const httpStatus = require('http-status');
 const app = require('../../src/app');
 const { userOne, admin, insertUsers, deleteUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { productOne, insertProducts, deleteProducts } = require('../fixtures/product.fixture');
+const { categoryOne, insertCategories, deleteCategories } = require('../fixtures/category.fixture');
 const prisma = require('../../prisma');
 
 describe('User Routes', () => {
@@ -263,6 +265,50 @@ describe('User Routes', () => {
               page: 'notValidDataTypes',
               size: 'mustBeANumber',
             })
+            .expect(httpStatus.BAD_REQUEST);
+        });
+      });
+
+      describe('GET Product by userId', () => {
+        test('Should return 200 if get product by userId is found', async () => {
+          await insertCategories([categoryOne]);
+          await insertProducts(userOne.id, categoryOne.id, [productOne]);
+
+          const res = await request(app)
+            .get(`/v1/users/${userOne.id}/products`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.OK);
+          const resData = res.body.data;
+
+          expect(resData).toEqual([
+            {
+              id: expect.anything(),
+              name: productOne.name,
+              description: productOne.description,
+              price: productOne.price,
+              quantityInStock: productOne.quantityInStock,
+              categoryId: categoryOne.id,
+              userId: userOne.id,
+              createdAt: expect.anything(),
+              updatedAt: expect.anything(),
+            },
+          ]);
+
+          await deleteProducts();
+          await deleteCategories();
+        });
+
+        test('Should return 404 if get product by userId is not found', async () => {
+          await request(app)
+            .get(`/v1/users/${userOne.id}/products`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.NOT_FOUND);
+        });
+
+        test('Should return 400 if userId is not a valid UUID', async () => {
+          await request(app)
+            .get('/v1/users/invalidUUID/products')
+            .set('Authorization', `Bearer ${adminAccessToken}`)
             .expect(httpStatus.BAD_REQUEST);
         });
       });

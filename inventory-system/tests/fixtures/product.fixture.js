@@ -1,8 +1,6 @@
 const faker = require('faker');
 const prisma = require('../../prisma');
 const { v4 } = require('uuid');
-const { insertCategories } = require('../fixtures/category.fixture');
-const { insertUsers } = require('../fixtures/user.fixture');
 
 const productOne = {
   id: v4(),
