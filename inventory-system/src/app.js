@@ -1,7 +1,10 @@
 const express = require('express');
-// const router = require('./routes');
+const router = require('./routes');
 const config = require('./config/config')
 const morgan = require('./config/morgan');
+const { errorConverter, errorHandler } = require('./middlewares/error');
+const ApiError = require('./utils/ApiError');
+const httpStatus = require('http-status');
 
 const app = express();
 
@@ -22,5 +25,16 @@ app.get('/', (req, res) => {
 });
 
 // app.use(router)
+
+// send 404 error jika route tidak ada
+app.use((req, res, next) => {
+  next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+});
+
+// convert error jadi Instance API Error jika ada error yang tidak ketangkap
+app.use(errorConverter);
+
+// handle error
+app.use(errorHandler);
 
 module.exports = app;
