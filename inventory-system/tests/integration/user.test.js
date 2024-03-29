@@ -312,6 +312,95 @@ describe('User Routes', () => {
             .expect(httpStatus.BAD_REQUEST);
         });
       });
+
+      describe('PUT User', () => {
+        test('Should return 200 if request body and userId is valid', async () => {
+          const res = await request(app)
+            .put(`/v1/users/${userOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({ name: 'updatedUserTest' })
+            .expect(httpStatus.OK);
+          const resData = res.body.data;
+
+          expect(resData).toEqual({
+            id: expect.anything(),
+            name: 'updatedUserTest',
+            email: userOne.email,
+            password: expect.anything(),
+            role: 'user',
+            isEmailVerified: false,
+            createdAt: expect.anything(),
+            updatedAt: expect.anything(),
+          });
+        });
+
+        test('Should return 404 if userId is not found', async () => {
+          // Set dummy UUID
+          await request(app)
+            .put('/v1/users/550e8400-e29b-41d4-a716-446655440000')
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({ name: 'updatedUserTest' })
+            .expect(httpStatus.NOT_FOUND);
+        });
+
+        test('Should return 400 if userId is not a valid UUId', async () => {
+          await request(app)
+            .put('/v1/users/invalidUUID')
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.BAD_REQUEST);
+        });
+
+        test('Should return 400 if request body is not a valid data type', async () => {
+          await request(app)
+            .put(`/v1/users/${userOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({ name: 12345 })
+            .expect(httpStatus.BAD_REQUEST);
+        });
+
+        test('Should return 400 if request body key is not valid', async () => {
+          await request(app)
+            .put(`/v1/users/${userOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({ notValidKey: 'notValidValue' })
+            .expect(httpStatus.BAD_REQUEST);
+        });
+      });
+
+      describe('DELETE User', () => {
+        test('Should return 200 if userId is valid', async () => {
+          const res = await request(app)
+            .delete(`/v1/users/${userOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.OK);
+          const resData = res.body.data;
+
+          expect(resData).toBe(null);
+
+          const dbProduct = await prisma.user.findUnique({
+            where: {
+              id: userOne.id,
+            },
+          });
+
+          expect(dbProduct).toBeNull();
+        });
+
+        test('Should return 400 if id is not a valid UUID', async () => {
+          await request(app)
+            .delete('/v1/users/notValidUUID')
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.BAD_REQUEST);
+        });
+
+        test('Should return 404 if id is not found', async () => {
+          // Set dummy UUID
+          await request(app)
+            .delete('/v1/users/317a9bb1-9ae9-4a47-bb79-db13dd89ef0d')
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.NOT_FOUND);
+        });
+      });
     });
   });
 });
