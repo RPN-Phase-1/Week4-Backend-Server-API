@@ -271,6 +271,120 @@ describe('Order Routes', () => {
             .expect(httpStatus.BAD_REQUEST);
         });
       });
+
+      describe('Put Orders', () => {
+        test('Should return 200 if id is found and request body is valid', async () => {
+          const res = await request(app)
+            .put(`/v1/orders/${orderOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({
+              customerName: 'updatedCustomerName',
+            })
+            .expect(httpStatus.OK);
+          const resData = res.body.data;
+
+          expect(resData).toEqual({
+            id: expect.anything(),
+            date: expect.anything(),
+            totalPrice: orderOne.totalPrice,
+            customerName: 'updatedCustomerName',
+            customerEmail: orderOne.customerEmail,
+            userId: userOne.id,
+            createdAt: expect.anything(),
+            updatedAt: expect.anything(),
+          });
+
+          const dbOrder = await prisma.orders.findUnique({
+            where: {
+              id: orderOne.id,
+            },
+          });
+
+          expect(dbOrder).toBeDefined();
+          expect(dbOrder).toMatchObject({
+            id: expect.anything(),
+            date: expect.anything(),
+            totalPrice: orderOne.totalPrice,
+            customerName: 'updatedCustomerName',
+            customerEmail: orderOne.customerEmail,
+            userId: userOne.id,
+            createdAt: expect.anything(),
+            updatedAt: expect.anything(),
+          });
+        });
+
+        test('Should return 404 if id is not found', async () => {
+          await request(app)
+            .put(`/v1/orders/${faker.datatype.uuid()}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({
+              customerName: 'updatedCustomerName',
+            })
+            .expect(httpStatus.NOT_FOUND);
+        });
+
+        test('Should return 400 if request body is empty', async () => {
+          await request(app)
+            .put(`/v1/orders/${orderOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({})
+            .expect(httpStatus.BAD_REQUEST);
+        });
+
+        test('Should return 400 if request body is not valid', async () => {
+          await request(app)
+            .put(`/v1/orders/${orderOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({
+              notValidKey: 'notValidValue',
+            })
+            .expect(httpStatus.BAD_REQUEST);
+        });
+
+        test('Should return 400 if request body data type is not valid', async () => {
+          await request(app)
+            .put(`/v1/orders/${orderOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .send({
+              customerName: 12345,
+            })
+            .expect(httpStatus.BAD_REQUEST);
+        });
+      });
+
+      describe('Delete Orders', () => {
+        test('Should return 200 if id is found', async () => {
+          const res = await request(app)
+            .delete(`/v1/orders/${orderOne.id}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.OK);
+          const resData = res.body.data;
+
+          expect(resData).toBeNull();
+
+          const dbOrder = await prisma.orders.findUnique({
+            where: {
+              id: orderOne.id,
+            },
+          });
+
+          expect(dbOrder).toBeNull();
+        });
+
+        test('Should return 400 if id is not a valid UUID', async () => {
+          await request(app)
+            .delete('/v1/orders/notValidUUID')
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.BAD_REQUEST);
+        });
+
+        test('Should return 404 if id is not found', async () => {
+          await request(app)
+            .delete(`/v1/orders/${faker.datatype.uuid()}`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.NOT_FOUND);
+        });
+      });
     });
   });
 });

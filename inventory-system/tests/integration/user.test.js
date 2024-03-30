@@ -375,7 +375,7 @@ describe('User Routes', () => {
             .expect(httpStatus.OK);
           const resData = res.body.data;
 
-          expect(resData).toBe(null);
+          expect(resData).toBeNull();
 
           const dbProduct = await prisma.user.findUnique({
             where: {
