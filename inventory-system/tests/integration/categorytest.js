@@ -6,7 +6,6 @@ const { categoryOne, insertCategories, deleteCategories } = require('../fixtures
 const { userOne, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken } = require('../fixtures/token.fixture');
 const prisma = require('../../prisma');
-const { describe } = require('pm2');
 
 describe('Category Routes', () => {
   let category = null;
