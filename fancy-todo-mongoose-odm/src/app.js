@@ -1,10 +1,12 @@
-const express = require("express");
+const express = require('express');
+const userRoutes = require('./routes/user.route');
+const todoRoutes = require('./routes/todo.route');
+
 const app = express();
-const router = require("../src/routes");
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use(router);
+// Use routes
+app.use('/users', userRoutes);
+app.use('/todos', todoRoutes);
 
 module.exports = app;
