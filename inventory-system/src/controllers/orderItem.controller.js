@@ -82,7 +82,7 @@ const deleted = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Delete Order Item Success',
-    data: orderItem,
+    data: null,
   });
 });
 

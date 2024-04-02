@@ -46,10 +46,36 @@ const deleteUsers = async () => {
   await prisma.user.deleteMany({});
 };
 
+const deleteAll = async () => {
+  await prisma.orders.deleteMany({
+    where: {
+      userId: {
+        in: [userOne.id, admin.id],
+      },
+    },
+  });
+  await prisma.product.deleteMany({
+    where: {
+      userId: {
+        in: [userOne.id, admin.id],
+      },
+    },
+  });
+  await prisma.category.deleteMany({});
+  await prisma.user.deleteMany({
+    where: {
+      id: {
+        in: [userOne.id, admin.id],
+      },
+    },
+  });
+};
+
 module.exports = {
   userOne,
   userTwo,
   admin,
   insertUsers,
   deleteUsers,
+  deleteAll,
 };

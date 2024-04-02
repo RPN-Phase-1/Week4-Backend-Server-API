@@ -157,7 +157,8 @@ const deleted = async (id) => {
     },
   });
 
-  const updateProduct = await prisma.product.update({
+  // Update product
+  await prisma.product.update({
     where: {
       id: orderItem.productId,
     },
@@ -165,7 +166,9 @@ const deleted = async (id) => {
       quantityInStock: product.quantityInStock + orderItem.quantity,
     },
   });
-  const updateOrder = await prisma.orders.update({
+
+  // Update order
+  await prisma.orders.update({
     where: {
       id: orderItem.orderId,
     },

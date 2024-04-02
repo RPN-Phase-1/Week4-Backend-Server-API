@@ -6,6 +6,7 @@ const { userOne, admin, insertUsers, deleteUsers } = require('../fixtures/user.f
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 const { productOne, insertProducts, deleteProducts } = require('../fixtures/product.fixture');
 const { categoryOne, insertCategories, deleteCategories } = require('../fixtures/category.fixture');
+const { orderOne, insertOrders, deleteOrders } = require('../fixtures/order.fixture');
 const prisma = require('../../prisma');
 
 describe('User Routes', () => {
@@ -310,6 +311,33 @@ describe('User Routes', () => {
             .get('/v1/users/invalidUUID/products')
             .set('Authorization', `Bearer ${adminAccessToken}`)
             .expect(httpStatus.BAD_REQUEST);
+        });
+      });
+
+      describe('GET Order by userId', () => {
+        test('Should return 200 if get order by userId is found', async () => {
+          await insertOrders(userOne.id, [orderOne]);
+
+          const res = await request(app)
+            .get(`/v1/users/${userOne.id}/orders`)
+            .set('Authorization', `Bearer ${adminAccessToken}`)
+            .expect(httpStatus.OK);
+          const resData = res.body.data;
+
+          expect(resData).toEqual([
+            {
+              id: expect.anything(),
+              date: expect.anything(),
+              totalPrice: orderOne.totalPrice,
+              customerName: orderOne.customerName,
+              customerEmail: orderOne.customerEmail,
+              userId: userOne.id,
+              createdAt: expect.anything(),
+              updatedAt: expect.anything(),
+            },
+          ]);
+
+          await deleteOrders();
         });
       });
 

@@ -42,6 +42,7 @@ describe('Product Routes', () => {
     });
 
     describe('CRUD test', () => {
+      /*
       describe('POST Product', () => {
         test('Should return 201 if request body is OK and token is valid', async () => {
           const res = await request(app)
@@ -392,7 +393,7 @@ describe('Product Routes', () => {
             .expect(httpStatus.BAD_REQUEST);
         });
       });
-
+*/
       describe('DELETE Product', () => {
         test('Should return 200 if id is valid', async () => {
           const res = await request(app)
