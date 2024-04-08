@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable import/order */
+/* eslint-disable prettier/prettier */
 const express = require('express');
 const httpStatus = require('http-status');
 // const router = require('./routes');

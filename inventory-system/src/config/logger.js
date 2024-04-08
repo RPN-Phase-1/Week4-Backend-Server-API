@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const winston = require('winston');
 const config = require('./config');
 

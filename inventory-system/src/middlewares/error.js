@@ -1,3 +1,8 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-use-before-define */
+/* eslint-disable prettier/prettier */
+/* eslint-disable import/order */
+/* eslint-disable prettier/prettier */
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const logger = require('../config/logger');
@@ -22,7 +27,7 @@ const errorConverter = (err, req, res, next) => {
       error = handlePrismaError(err);
     }else{
       // Handling Global Error
-      const statusCode = error.statusCode
+      const {statusCode} = error
       const message = error.message || httpStatus[statusCode];
       error = new ApiError(statusCode, message, false, err.stack);
     }

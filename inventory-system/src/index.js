@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
