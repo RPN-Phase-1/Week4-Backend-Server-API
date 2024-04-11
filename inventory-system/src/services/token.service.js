@@ -104,7 +104,6 @@ const refreshToken = async (token) => {
     },
   });
   if (!dbToken) throw new ApiError(httpStatus.NOT_FOUND, 'Refresh token not found');
-
   const tokenExpires = moment(dbToken.expires).isBefore(moment());
   if (tokenExpires) throw new ApiError(httpStatus.BAD_REQUEST, 'Refresh token is expired');
 
