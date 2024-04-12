@@ -8,6 +8,13 @@
     "parserOptions": {
       "ecmaVersion": 2018
     },
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "parser": "flow"
+      }
+    ],
     "rules": {
       "no-console": "error",
       "func-names": "off",

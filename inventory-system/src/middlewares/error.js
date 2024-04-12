@@ -2,7 +2,6 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable prettier/prettier */
 /* eslint-disable import/order */
-/* eslint-disable prettier/prettier */
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const logger = require('../config/logger');

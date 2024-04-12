@@ -12,6 +12,9 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
+const routes = require('./routes/v1')
+// const { jwtStrategy } = require('./config/passport');
+// const passport = require('passport');
 
 const app = express();
 
@@ -39,9 +42,16 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+// jwt authentication
+// app.use(passport.initialize());
+// passport.use('jwt', jwtStrategy);
+
 app.get('/', (req, res) => {
   res.send('Hello Brongz');
 });
+
+// v1 api routes
+app.use('/v1', routes);
 
 // app.use(router)
 
