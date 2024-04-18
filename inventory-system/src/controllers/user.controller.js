@@ -1,0 +1,81 @@
+const httpStatus = require('http-status');
+const ApiError = require('../utils/ApiError');
+const catchAsync = require('../utils/catchAsync');
+const { userService } = require('../services');
+
+const createUser = catchAsync(async (req, res) => {
+  const user = await userService.createUser(req.body);
+
+  res.status(httpStatus.CREATED).send({
+    status: httpStatus.CREATED,
+    message: "Create User Success",
+    data: user
+  });
+})
+
+const getUserByEmail = catchAsync(async (req, res) => {
+  const user = await userService.getUserByEmail(req.params.email);
+
+  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Get User By Email Success",
+    data: user
+  });
+}) 
+
+const getUsers = catchAsync(async (req, res) => {
+  const user = await userService.getUsers();
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Get All User Success",
+    data: user
+  });
+})
+
+const getUserById = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.params.userId);
+
+  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Get User By id Success",
+    data: user
+  });
+})
+
+const updateUserById = catchAsync(async (req, res) => {
+  const user = await userService.updateUserById(req.params.userId, req.body);
+
+  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Update User By id Success",
+    data: user
+  });
+})
+
+const deleteUserById = catchAsync(async (req, res) => {
+  const user = await userService.deleteUserById(req.params.userId);
+
+  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Delete User By id Success",
+    data: user
+  });
+})
+
+module.exports = {
+  createUser,
+  getUserByEmail,
+  getUsers,
+  getUserById,
+  updateUserById,
+  deleteUserById
+}

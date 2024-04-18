@@ -27,7 +27,42 @@ const getUserByEmail = async (email) => {
   });
 };
 
+const getUsers = async () => {
+  return prisma.user.findMany()
+}
+
+const getUserById = async (userId) => {
+  return prisma.user.findUnique({
+    where : { id: userId }
+  })
+}
+
+const updateUserById = async (userId, userBody) => {
+  const user = await getUserById(userId);
+
+  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  return prisma.user.update({
+    where : { id: userId },
+    data : userBody
+  })
+}
+
+const deleteUserById = async (userId) => {
+  const user = await getUserById(userId);
+
+  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  return prisma.user.delete({
+    where : { id: userId }
+  })
+}
+
 module.exports = {
   createUser,
-  getUserByEmail
+  getUserByEmail,
+  getUsers,
+  getUserById,
+  updateUserById,
+  deleteUserById
 };

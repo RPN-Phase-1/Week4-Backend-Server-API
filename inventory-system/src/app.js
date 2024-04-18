@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 });
 
 // v1 api routes
-app.use('/v1', routes);
+app.use('/api', routes);
 
 // app.use(router)
 
