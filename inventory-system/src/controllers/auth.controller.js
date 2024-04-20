@@ -42,9 +42,12 @@ const refresh = catchAsync(async (req, res) => {
 });
 
 const logout = catchAsync(async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
-  await tokenService.deleteToken(token);
-
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(' ')[1];
+    await tokenService.deleteToken(token);
+  } else {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+  }
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     mesage: 'Logout Success',
