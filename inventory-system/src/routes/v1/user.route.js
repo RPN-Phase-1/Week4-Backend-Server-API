@@ -3,6 +3,7 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const userController = require('../../controllers/user.controller');
 const userValidation = require('../../validations/user.validation');
+const productValidation = require('../../validations/product.validation');
 
 const router = express.Router();
 
@@ -15,7 +16,11 @@ const router = express.Router();
  .route('/:userId')
  .get(auth(),  validate(userValidation.getUsersById), userController.getUserById)
  .put(auth(),  validate(userValidation.updateUserById), userController.updateUserById)
- .delete(auth(),  validate(userValidation.deleteUserById), userController.deleteUserById);
+ .delete(auth(),  validate(userValidation.deleteUserById), userController.deleteUserById)
+
+ router
+ .route('/:userId/product')
+ .get(auth(), validate(productValidation.getProductByUser), userController.getProductByUser)
 
  router
  .route('/email/:email')

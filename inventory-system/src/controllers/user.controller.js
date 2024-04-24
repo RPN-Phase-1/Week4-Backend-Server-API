@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { userService } = require('../services');
+const { userService, productService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -50,8 +50,6 @@ const getUserById = catchAsync(async (req, res) => {
 const updateUserById = catchAsync(async (req, res) => {
   const user = await userService.updateUserById(req.params.userId, req.body);
 
-  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: "Update User By id Success",
@@ -62,14 +60,24 @@ const updateUserById = catchAsync(async (req, res) => {
 const deleteUserById = catchAsync(async (req, res) => {
   const user = await userService.deleteUserById(req.params.userId);
 
-  if(!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: "Delete User By id Success",
     data: user
   });
-})
+});
+
+const getProductByUser = catchAsync (async (req, res) => {
+  const product = await userService.getProductByUser(req.params.userId);
+
+  if(!product) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Get Product By User Success",
+    data: product
+  });
+});
 
 module.exports = {
   createUser,
@@ -77,5 +85,6 @@ module.exports = {
   getUsers,
   getUserById,
   updateUserById,
-  deleteUserById
+  deleteUserById,
+  getProductByUser
 }

@@ -32,7 +32,7 @@ const getUsers = async () => {
 }
 
 const getUserById = async (userId) => {
-  return prisma.user.findUnique({
+  return prisma.user.findFirst({
     where : { id: userId }
   })
 }
@@ -55,6 +55,17 @@ const deleteUserById = async (userId) => {
 
   return prisma.user.delete({
     where : { id: userId }
+  });
+};
+
+const getProductByUser = async (userId) => {
+  const productUser = await getUserById(userId);
+
+  if (!productUser) throw new ApiError(httpStatus.NOT_FOUND, 'Product or User not found');
+
+  return prisma.user.findMany({
+    where: {id: userId},
+    include: {products: true}
   })
 }
 
@@ -64,5 +75,6 @@ module.exports = {
   getUsers,
   getUserById,
   updateUserById,
-  deleteUserById
+  deleteUserById,
+  getProductByUser
 };
