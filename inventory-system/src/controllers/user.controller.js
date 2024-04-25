@@ -79,6 +79,18 @@ const getProductByUser = catchAsync (async (req, res) => {
   });
 });
 
+const getOrderByUser = catchAsync (async (req, res) => {
+  const order = await userService.getOrderByUser(req.params.userId);
+
+  if(!order) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Get Product By User Success",
+    data: order
+  });
+});
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -86,5 +98,6 @@ module.exports = {
   getUserById,
   updateUserById,
   deleteUserById,
-  getProductByUser
+  getProductByUser,
+  getOrderByUser
 }

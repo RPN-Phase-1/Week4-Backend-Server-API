@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { productService } = require('../services');
+
 const createProduct = catchAsync (async (req, res) => {
   const product = await productService.createProduct(req.body);
 
@@ -29,7 +30,7 @@ const getProductById = catchAsync (async (req, res) => {
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Get Category By Id Success",
+    message: "Get Product By Id Success",
     data: product
   });
 });

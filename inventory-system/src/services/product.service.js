@@ -1,7 +1,6 @@
 const httpStatus = require('http-status');
 const prisma = require('../../prisma/client');
 const ApiError = require('../utils/ApiError');
-const { userService } = require('../services');
 
 const createProduct = async (productBodys) => {
   return prisma.product.create({
@@ -40,22 +39,10 @@ const deleteProductById = async (productId) => {
   });
 };
 
-const getProductByUser = async (userId) => {
-  const productUser = await userService.getUserById(userId);
-
-  if (!productUser) throw new ApiError(httpStatus.NOT_FOUND, 'Product or User not found');
-
-  return prisma.user.findMany({
-    where: {id: userId},
-    include: {products: true}
-  })
-}
-
 module.exports = {
   createProduct,
   getProducts,
   getProductById,
   updateProductById,
-  deleteProductById,
-  getProductByUser
+  deleteProductById
 };

@@ -27,8 +27,8 @@ const updateProductById = {
     description: Joi.string(),
     price: Joi.number().positive(),
     quantityInStock: Joi.number(),
-    categoryId: Joi.string().required(),
-    userId: Joi.string().required()
+    categoryId: Joi.string().custom(objectId).required(),
+    userId: Joi.string().custom(objectId).required()
   })
 };
 

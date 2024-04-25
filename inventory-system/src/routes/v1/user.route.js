@@ -19,8 +19,12 @@ const router = express.Router();
  .delete(auth(),  validate(userValidation.deleteUserById), userController.deleteUserById)
 
  router
- .route('/:userId/product')
+ .route('/:userId/products')
  .get(auth(), validate(productValidation.getProductByUser), userController.getProductByUser)
+
+ router
+ .route('/:userId/orders')
+ .get(auth(), userController.getOrderByUser)
 
  router
  .route('/email/:email')
