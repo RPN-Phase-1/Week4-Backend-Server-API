@@ -2,8 +2,9 @@ const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const userController = require('../../controllers/user.controller');
-const userValidation = require('../../validations/user.validation');
-const productValidation = require('../../validations/product.validation');
+const { userValidation } = require('../../validations');
+const { productValidation } = require('../../validations');
+const { orderValidation } = require('../../validations')
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ const router = express.Router();
 
  router
  .route('/:userId/orders')
- .get(auth(), userController.getOrderByUser)
+ .get(auth(), validate(orderValidation.getOrderByUser), userController.getOrderByUser)
 
  router
  .route('/email/:email')

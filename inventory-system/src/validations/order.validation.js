@@ -15,7 +15,7 @@ const createOrder = {
 
 const getOrderById = {
   params: Joi.object().keys({
-    orderId: Joi.string().required()
+    orderId: Joi.string().required().custom(objectId)
   })
 };
 
@@ -37,11 +37,18 @@ const deleteOrderById = {
   params: Joi.object().keys({
     orderId: Joi.string().required().custom(objectId)
   })
+};
+
+const getOrderByUser = {
+  params: Joi.object().keys({
+    userId: Joi.string().required().custom(objectId)
+  })
 }
 
 module.exports = {
   createOrder,
   getOrderById,
   updateOrderById,
-  deleteOrderById
+  deleteOrderById,
+  getOrderByUser
 }

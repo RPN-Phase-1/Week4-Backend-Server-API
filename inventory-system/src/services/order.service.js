@@ -3,9 +3,11 @@ const prisma = require('../../prisma/client');
 const ApiError = require('../utils/ApiError');
 
 const createOrder = async (orderBodys) => {
-  return await prisma.order.create({
+  const createOrder =  await prisma.order.create({
     data: orderBodys
   });
+
+  return createOrder
 };
 
 const getOrders = async () => {
@@ -13,9 +15,11 @@ const getOrders = async () => {
 };
 
 const getOrderById = async (orderId) => {
-  return await prisma.order.findFirst({
+  const getOrder = await prisma.order.findFirst({
     where: {id: orderId}
   });
+
+  return getOrder
 };
 
 const updateOrderById = async (orderId, orderBodys) => {
@@ -23,10 +27,12 @@ const updateOrderById = async (orderId, orderBodys) => {
 
   if(!order) throw new ApiError(httpStatus.NOT_FOUND, 'order not found');
 
-  return await prisma.order.update({
+  const updateOrder = await prisma.order.update({
     where: {id: orderId},
     data: orderBodys
   });
+
+  return updateOrder
 };
 
 const deleteOrderById = async (orderId) => {
@@ -34,9 +40,24 @@ const deleteOrderById = async (orderId) => {
 
   if(!order) throw new ApiError(httpStatus.NOT_FOUND, 'order not found');
 
-  return await prisma.order.delete({
+  const deleteOrder = await prisma.order.delete({
     where: {id: orderId}
   });
+
+  return deleteOrder
+};
+
+const getOrderItemByOrder = async (orderId) => {
+  const orderItemByOrder = await getOrderById(orderId)
+
+  if(!orderItemByOrder) throw new ApiError(httpStatus.NOT_FOUND, "Order Item or Orders Not Found")
+
+  const getOrderItem = await prisma.order.findMany({
+    where: {id: orderId},
+    include: {orderItems: true}
+  })
+
+  return getOrderItem
 };
 
 module.exports = {
@@ -44,5 +65,6 @@ module.exports = {
   getOrders,
   getOrderById,
   updateOrderById,
-  deleteOrderById
+  deleteOrderById,
+  getOrderItemByOrder
 }

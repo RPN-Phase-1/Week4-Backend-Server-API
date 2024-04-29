@@ -3,9 +3,11 @@ const prisma = require('../../prisma/client');
 const ApiError = require('../utils/ApiError');
 
 const createProduct = async (productBodys) => {
-  return prisma.product.create({
+  const createProduct = await prisma.product.create({
     data: productBodys
   });
+
+  return createProduct
 };
 
 const getProducts = async () => {
@@ -13,9 +15,11 @@ const getProducts = async () => {
 };
 
 const getProductById = async (id) => {
-  return prisma.product.findFirst({
+  const getProduct = await prisma.product.findFirst({
     where: { id: id },
   });
+
+  return getProduct
 };
 
 const updateProductById = async (productId, productBodys) => {
@@ -23,10 +27,12 @@ const updateProductById = async (productId, productBodys) => {
 
   if (!product) throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
 
-  return prisma.product.update({
+  const updateProduct = await prisma.product.update({
     where: { id: productId },
     data: productBodys,
   });
+
+  return updateProduct
 };
 
 const deleteProductById = async (productId) => {
@@ -34,9 +40,11 @@ const deleteProductById = async (productId) => {
 
   if (!product) throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
 
-  return prisma.product.delete({
+  const deleteProduct = await prisma.product.delete({
     where: { id: productId },
   });
+
+  return deleteProduct
 };
 
 module.exports = {

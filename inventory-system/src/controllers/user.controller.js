@@ -86,7 +86,7 @@ const getOrderByUser = catchAsync (async (req, res) => {
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Get Product By User Success",
+    message: "Get Order By User Success",
     data: order
   });
 });

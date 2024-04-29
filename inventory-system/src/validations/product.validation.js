@@ -19,7 +19,7 @@ const getProductById =  {
 };
 
 const updateProductById = {
-  parmans: Joi.object().keys({
+  params: Joi.object().keys({
     productId: Joi.string().custom(objectId)
   }),
   body: Joi.object().keys({
@@ -29,7 +29,7 @@ const updateProductById = {
     quantityInStock: Joi.number(),
     categoryId: Joi.string().custom(objectId).required(),
     userId: Joi.string().custom(objectId).required()
-  })
+  }).min(3)
 };
 
 const deleteProductById = {

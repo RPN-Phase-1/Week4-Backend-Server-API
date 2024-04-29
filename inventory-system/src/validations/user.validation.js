@@ -12,7 +12,8 @@ const createUser = {
 
 const getUserByEmail = {
   params: Joi.object().keys({
-    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } }).required()
+    .messages({'any.required': 'email is required'})
   })
 };
 

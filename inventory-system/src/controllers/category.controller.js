@@ -31,7 +31,7 @@ const getCategory = catchAsync(async (req, res) => {
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Get Category Success",
+    message: "Get Category By Id Success",
     data: category
   });
 });

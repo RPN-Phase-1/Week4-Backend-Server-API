@@ -53,12 +53,25 @@ const deleteOrderById = catchAsync (async (req, res) => {
     message: "Delete Order By Id Success",
     data: order
   });
-})
+});
+
+const getOrderItemByOrder = catchAsync (async (req, res) => {
+  const getOrderItem = await orderService.getOrderItemByOrder(req.params.orderId)
+
+  if(!getOrderItem) throw new ApiError(httpStatus.NOT_FOUND, "Order Not Found")
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Get Order Item By Order Success",
+    data: getOrderItem
+  });
+});
 
 module.exports = {
   createOrder,
   getOrders,
   getOrderById,
   updateOrderById,
-  deleteOrderById
+  deleteOrderById,
+  getOrderItemByOrder
 }
