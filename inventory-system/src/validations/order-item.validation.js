@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
-const { order } = require('../../prisma/client');
 
 const createOrderItem = {
   body: Joi.object().keys({

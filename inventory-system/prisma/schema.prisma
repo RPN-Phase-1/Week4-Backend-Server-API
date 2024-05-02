@@ -49,7 +49,7 @@ model Product {
   categoryId    String
   category      Category     @relation(fields: [categoryId], references: [id])
   userId        String
-  user          User         @relation(fields: [userId], references: [id])
+  User          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   orderItems    OrderItem[]
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -66,11 +66,11 @@ model Category {
 model Order {
   id          String     @id @default(uuid())
   date        DateTime
-  totalPrice  Float
+  totalPrice  Float          @default(0)
   customerName String
   customerEmail String
   userId      String
-  user        User       @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   orderItems  OrderItem[]
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -79,9 +79,9 @@ model Order {
 model OrderItem {
   id         String    @id @default(uuid())
   orderId    String
-  order      Order     @relation(fields: [orderId], references: [id])
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId  String
-  product    Product   @relation(fields: [productId], references: [id])
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity   Int
   unitPrice  Float
   createdAt       DateTime     @default(now())
