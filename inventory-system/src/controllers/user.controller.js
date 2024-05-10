@@ -26,12 +26,20 @@ const getUserByEmail = catchAsync(async (req, res) => {
 }) 
 
 const getUsers = catchAsync(async (req, res) => {
-  const user = await userService.getUsers();
+  const filter = {user: req.query.user};
+  const options = {page: req.query.page, size: req.query.size};
+
+  const result = await userService.getUsers(filter, options);
+
+  if (options.page > result.page || options.size > result.totalData) throw new ApiError(httpStatus.BAD_REQUEST, "Page or Size is not Found");
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: "Get All User Success",
-    data: user
+    currentPage: parseInt(result.page),
+    totalData: result.totalData,
+    totalPage: result.totalPage,
+    data: result.data
   });
 })
 

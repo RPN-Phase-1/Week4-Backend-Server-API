@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const prisma = require('../../prisma/client')
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
+// const { faker } = require('@faker-js/faker');
 
 /**
  * Create a user
@@ -16,6 +17,23 @@ const createUser = async (userBody) => {
   });
 };
 
+//untuk memasukan data langsung banyak pake feker.js dan di looping sampai sebnyak yg di inginkan
+// const createUser = async () => {
+//   // userBody.password = bcrypt.hashSync(userBody.password, 8);
+//   const result = await prisma.user.create({
+//     data: {
+//       name: faker.internet.userName(),
+//       email: faker.internet.email(),
+//       password: faker.internet.password(),
+//       role: faker.person.jobDescriptor()
+//     }
+//   })
+//   return result
+// }
+// for (let i = 0; i <= 100; i++){
+//   createUser();
+// }
+
 /**
  * Get user by email
  * @param {string} email
@@ -27,8 +45,26 @@ const getUserByEmail = async (email) => {
   });
 };
 
-const getUsers = async () => {
-  return prisma.user.findMany()
+const getUsers = async (filter, options) => {
+  const {user} = filter;
+  const {page = 1, size = 5} = options;
+  let countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
+
+  const users = await prisma.user.findMany({
+    skip: parseInt(countPage),
+    take: parseInt(size),
+    where: {
+      name: {
+        contains: user
+      }
+    },
+    orderBy: {name: 'asc'}
+  })
+
+  const resultUsers = await prisma.user.count();// total data keseluruhan
+  const totalPage = Math.ceil(resultUsers / size);//total page 
+
+  return {totalPage, totalData: resultUsers, data: users, page};
 };
 
 const getUserById = async (userId) => {

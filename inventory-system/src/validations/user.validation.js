@@ -5,7 +5,7 @@ const createUser = {
   body: Joi.object().keys({
     name:  Joi.string().required(),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } }).required(),
-    password: Joi.string().required().custom(password),
+    password: Joi.string().custom(password).required(),
     role: Joi.string().required()       
   }),
 };

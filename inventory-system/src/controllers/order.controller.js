@@ -14,12 +14,20 @@ const createOrder = catchAsync (async (req, res) => {
 });
 
 const getOrders = catchAsync (async (req, res) => {
-  const order = await orderService.getOrders();
+  const filter = {order: req.query.order};
+  const options = {page: req.query.page, size: req.query.size};
+
+  const result = await orderService.getOrders(filter, options);
+
+  if (options.page > result.page || options.size > result.totalData) throw new ApiError(httpStatus.BAD_REQUEST, "Page or Size is not Found");
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: "Get Orders Success",
-    data: order
+    currentPage: parseInt(result.page),
+    totalData: result.totalData,
+    totalPage: result.totalPage, 
+    data: result.data
   });
 });
 

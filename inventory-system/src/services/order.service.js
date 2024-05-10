@@ -10,8 +10,26 @@ const createOrder = async (orderBodys) => {
   return createOrder
 };
 
-const getOrders = async () => {
-  return await prisma.order.findMany();
+const getOrders = async (filter, options) => {
+  const {order} = filter;
+  const {page = 1, size = 10} = options;
+  const countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
+
+  const result = await prisma.order.findMany({
+    skip: parseInt(countPage),
+    take: parseInt(size),
+    where: {
+      customerName: {
+        contains: order
+      }
+    },
+    orderBy: {customerName: 'asc'}
+  });
+
+  const resultOrders = await prisma.order.count(); // total data keseluruhan
+  const totalPage = Math.ceil(resultOrders / size);//total page 
+
+  return {totalPage, page, totalData: resultOrders, data: result};
 };
 
 const getOrderById = async (orderId) => {

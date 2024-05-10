@@ -38,8 +38,26 @@ const createOrderItem = async (orderItemBodys) => {
   return createOrderItem
 };
 
-const getOrderItems = async () => {
-  return prisma.orderItem.findMany()
+const getOrderItems = async (filter, options) => {
+  const {orderItem} = filter;
+  const {page = 1, size = 10} = options;
+  const countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
+
+  const result = await prisma.orderItem.findMany({
+    skip: parseInt(countPage),
+    take: parseInt(size),
+    where: {
+      orderId: {
+        contains: orderItem
+      }
+    },
+    orderBy: {unitPrice: 'asc'}
+  });
+
+  const resultOrderItems = await prisma.orderItem.count(); // total data keseluruhan
+  const totalPage = Math.ceil(resultOrderItems / size); //total page 
+
+  return {totalPage, page, totalData: resultOrderItems, data: result};
 };
 
 const getOrderItemById = async (orderItemId) => {

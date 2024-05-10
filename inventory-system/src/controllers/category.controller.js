@@ -14,12 +14,20 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  const result = await categoryService.queryCategorys();
+  const filter = {category: req.query.category};
+  const options = {page: req.query.page, size: req.query.size};
+
+  const result = await categoryService.queryCategorys(filter, options);
+
+  if (options.page > result.page || options.size > result.totalData) throw new ApiError(httpStatus.BAD_REQUEST, "Page or Size is not Found");
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: "Get Categorys Success",
-    data: result
+    currentPage: parseInt(result.page),
+    totalData: result.totalData,
+    totalPage: result.totalPage,
+    data: result.data
   });
 });
 

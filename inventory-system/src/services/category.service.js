@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const prisma = require('../../prisma/client')
 const ApiError = require('../utils/ApiError');
+// const { faker } = require('@faker-js/faker');
 
 /**
  * Create a category
@@ -13,13 +14,42 @@ const createCategory = async (categoryBody) => {
   });
 };
 
+//untuk memasukan data langsung banyak pake feker.js dan di looping sampai sebnyak yg di inginkan
+// const createCategory = async () => {
+//   const result = await prisma.category.create({
+//     data: {name: faker.commerce.productName()}
+//   });
+
+//   return result
+// }
+// for (let i = 0; i <= 100; i++){
+//     createCategory()
+// }
+
 /**
  * Query for categorys
  * @returns {Promise<QueryResult>}
  */
 const queryCategorys = async (filter, options) => {
-  const categorys = await prisma.category.findMany();
-  return categorys;
+  const {category} = filter;
+  const {page = 1, size = 10} = options;
+  let countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
+
+  const categorys = await prisma.category.findMany({
+    skip: parseInt(countPage), 
+    take: parseInt(size),
+    where: {
+      name: {
+        contains: category
+      }
+    },
+    orderBy: {name: 'asc'}
+  });
+
+  const resultCategorys = await prisma.category.count();// total data keseluruhan
+  const totalPage = Math.ceil(resultCategorys / size);//total page 
+
+  return { totalPage: totalPage, totalData: resultCategorys, data: categorys, page};
 };
 
 /**
