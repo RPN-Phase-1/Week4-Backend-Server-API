@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { productService } = require('../services');
+const { category } = require('../../prisma/client');
 
 const createProduct = catchAsync (async (req, res) => {
   const product = await productService.createProduct(req.body);
@@ -14,7 +15,7 @@ const createProduct = catchAsync (async (req, res) => {
 });
 
 const getProducts = catchAsync (async (req, res) => {
-  const filter = {product: req.query.product};
+  const filter = {priceExpensive: req.query.priceExpensive, priceCheap: req.query.priceCheap, categoryName: req.query.categoryName};
   const options = {page: req.query.page, size: req.query.size};
 
   const result = await productService.getProducts(filter, options);

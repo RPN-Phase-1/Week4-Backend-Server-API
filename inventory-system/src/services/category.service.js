@@ -31,7 +31,7 @@ const createCategory = async (categoryBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryCategorys = async (filter, options) => {
-  const {category} = filter;
+  const {name} = filter;
   const {page = 1, size = 10} = options;
   let countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
 
@@ -40,7 +40,7 @@ const queryCategorys = async (filter, options) => {
     take: parseInt(size),
     where: {
       name: {
-        contains: category
+        contains: name
       }
     },
     orderBy: {name: 'asc'}

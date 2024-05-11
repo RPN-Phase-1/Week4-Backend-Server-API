@@ -14,7 +14,7 @@ const createOrder = catchAsync (async (req, res) => {
 });
 
 const getOrders = catchAsync (async (req, res) => {
-  const filter = {order: req.query.order};
+  const filter = {customerName: req.query.customerName};
   const options = {page: req.query.page, size: req.query.size};
 
   const result = await orderService.getOrders(filter, options);

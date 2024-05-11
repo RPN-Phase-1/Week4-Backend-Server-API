@@ -11,7 +11,7 @@ const createOrder = async (orderBodys) => {
 };
 
 const getOrders = async (filter, options) => {
-  const {order} = filter;
+  const {customerName} = filter;
   const {page = 1, size = 10} = options;
   const countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
 
@@ -20,7 +20,7 @@ const getOrders = async (filter, options) => {
     take: parseInt(size),
     where: {
       customerName: {
-        contains: order
+        contains: customerName
       }
     },
     orderBy: {customerName: 'asc'}

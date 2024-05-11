@@ -26,7 +26,7 @@ const getUserByEmail = catchAsync(async (req, res) => {
 }) 
 
 const getUsers = catchAsync(async (req, res) => {
-  const filter = {user: req.query.user};
+  const filter = {role: req.query.role};
   const options = {page: req.query.page, size: req.query.size};
 
   const result = await userService.getUsers(filter, options);

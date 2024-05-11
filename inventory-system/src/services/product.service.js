@@ -12,7 +12,7 @@ const createProduct = async (productBodys) => {
 };
 
 const getProducts = async (filter, options) => {
-  const {product} = filter;
+  const {name, priceExpensive = 1, priceCheap = 50000, categoryName} = filter;
   const {page = 1, size = 10} = options;
   const countPage = ( page - 1 )* size;//menghitung skip yang ditampilkan per page
 
@@ -21,10 +21,19 @@ const getProducts = async (filter, options) => {
     take: parseInt(size),
     where: {
       name: {
-        contains: product
+        contains: name
+      },
+      category: {
+        name: categoryName
+      },
+      price: {
+        gte: parseInt(priceExpensive),
+        lte: parseInt(priceCheap),
       }
     },
-    orderBy: {price: 'asc'}
+    include: {
+      category: true
+    }
   });
 
   const resultProduct = await prisma.product.count();// total data keseluruhan

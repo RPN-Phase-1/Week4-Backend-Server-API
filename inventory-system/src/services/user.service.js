@@ -46,7 +46,7 @@ const getUserByEmail = async (email) => {
 };
 
 const getUsers = async (filter, options) => {
-  const {user} = filter;
+  const {role} = filter;
   const {page = 1, size = 5} = options;
   let countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
 
@@ -54,9 +54,7 @@ const getUsers = async (filter, options) => {
     skip: parseInt(countPage),
     take: parseInt(size),
     where: {
-      name: {
-        contains: user
-      }
+      role: {contains: role},
     },
     orderBy: {name: 'asc'}
   })

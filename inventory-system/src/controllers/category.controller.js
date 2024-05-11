@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
+const { category } = require('../../prisma/client');
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body);
@@ -14,7 +15,7 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  const filter = {category: req.query.category};
+  const filter = {name: req.query.name};
   const options = {page: req.query.page, size: req.query.size};
 
   const result = await categoryService.queryCategorys(filter, options);

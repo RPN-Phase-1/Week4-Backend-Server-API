@@ -39,7 +39,7 @@ const createOrderItem = async (orderItemBodys) => {
 };
 
 const getOrderItems = async (filter, options) => {
-  const {orderItem} = filter;
+  const {quantityLarge = 1, quantitySmall = Infinity} = filter;
   const {page = 1, size = 10} = options;
   const countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
 
@@ -47,11 +47,11 @@ const getOrderItems = async (filter, options) => {
     skip: parseInt(countPage),
     take: parseInt(size),
     where: {
-      orderId: {
-        contains: orderItem
+      quantity: {
+        gte: parseInt(quantityLarge),
+        lte: parseInt(quantitySmall)
       }
     },
-    orderBy: {unitPrice: 'asc'}
   });
 
   const resultOrderItems = await prisma.orderItem.count(); // total data keseluruhan
