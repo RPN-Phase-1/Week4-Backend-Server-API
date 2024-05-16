@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { password } = require('./custom.validation');
+const { password, jwtRefresh } = require('./custom.validation');
 
 const register = {
   body: Joi.object().keys({
@@ -15,16 +15,23 @@ const login = {
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } }).required(),
     password: Joi.string().required(),
   }),
-}
+};
 
 const logout = {
   body: Joi.object().keys({
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } }).required()
   })
-}
+};
+
+const refreshTokens = {
+  body: Joi.object().keys({
+    refreshToken: Joi.string().required()
+  })
+};
 
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  refreshTokens
 };

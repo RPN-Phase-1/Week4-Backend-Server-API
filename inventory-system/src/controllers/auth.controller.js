@@ -35,10 +35,25 @@ const logout = catchAsync(async (req, res) => {
     message: "logout User Success",
     data: user
   });
+});
+
+const refreshTokens = catchAsync(async (req, res) => {
+  const refresh = await tokenService.refreshTokens(req.body.refreshToken);
+
+  if (!refresh) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: "Refresh Token Success",
+    data: refresh
+  });
 })
 
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  refreshTokens
 };

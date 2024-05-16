@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const config = require('../config/config');
 const { tokenTypes } = require('../config/tokens');
-const prisma = require('../../prisma/client')
+const prisma = require('../../prisma/client');
+const { ne } = require('@faker-js/faker');
 
 /**
  * Generate token
@@ -87,9 +88,45 @@ const generateAuthTokens = async (user) => {
   };
 };
 
+const refreshTokens = async (token) => {
+    const payload = jwt.verify(token, config.jwt.secret);
+
+  if (payload.type !== tokenTypes.REFRESH) {
+    throw new Error('Invalid token type');
+  }
+
+  const findToken = await prisma.token.findFirst({
+    where: { token, userId: payload.sub, type: tokenTypes.REFRESH, blacklisted: false }
+  });
+
+  if (!findToken) {
+    throw new Error('Token not found');
+  }
+
+  const findUser = await prisma.user.findFirst({
+    where: { id: payload.sub }
+  });
+
+  if (!findUser) {
+    throw new Error('User not found');
+  }
+
+  if (findToken.userId !== findUser.id) {
+    throw new Error('Refresh token does not match user');
+  }
+
+  await prisma.token.delete({
+    where: { id: findToken.id }
+  });
+
+  const refresh = await generateAuthTokens(findUser);
+  return refresh;
+};
+
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
+  refreshTokens
 };
