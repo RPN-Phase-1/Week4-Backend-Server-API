@@ -24,4 +24,17 @@ const auth = () => async (req, res, next) => {
     .catch((err) => next(err));
 };
 
-module.exports = auth;
+const authAdmin = () => (req, res, next) => {
+  return new Promise((succes, failed) => {
+    passport.authenticate('jwt', {session: false}, verifyCallback(req, succes, failed))(req, res, next);
+  })
+  .then(() => {
+    if (req.user && req.user.role.toLowerCase() === 'admin'){
+       return next()
+    } else {
+       throw new ApiError(httpStatus.UNAUTHORIZED ,'Only Admin to access')
+    }
+  }) . catch((err) => next(err))
+}
+
+module.exports = {auth, authAdmin};

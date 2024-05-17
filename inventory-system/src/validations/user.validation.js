@@ -31,7 +31,7 @@ const updateUserById = {
     name:  Joi.string(),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com'] } }),
     password: Joi.string().custom(password),
-    role: Joi.string().valid('user', 'admin')
+    role: Joi.string()
   }).min(1)
 };
 
