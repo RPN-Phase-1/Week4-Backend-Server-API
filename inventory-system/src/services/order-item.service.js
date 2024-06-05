@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 
 const createOrderItem = async (orderItemBodys) => {
@@ -39,17 +39,19 @@ const createOrderItem = async (orderItemBodys) => {
 };
 
 const getOrderItems = async (filter, options) => {
-  const {quantityLarge = 1, quantitySmall = Infinity} = filter;
+  const {quantityLarge = Infinity, quantitySmall = 1} = filter;
   const {page = 1, size = 10} = options;
   const countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
+
+  if(!quantityLarge || !quantitySmall || !page || !size) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid query Request');
 
   const result = await prisma.orderItem.findMany({
     skip: parseInt(countPage),
     take: parseInt(size),
     where: {
       quantity: {
-        gte: parseInt(quantityLarge),
-        lte: parseInt(quantitySmall)
+        gte: parseInt(quantitySmall),
+        lte: parseInt(quantityLarge)
       }
     },
   });

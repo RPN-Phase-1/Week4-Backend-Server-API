@@ -2,8 +2,9 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const config = require('../config/config');
 const { tokenTypes } = require('../config/tokens');
-const prisma = require('../../prisma/client');
-const { ne } = require('@faker-js/faker');
+const prisma = require('../../prisma/index');
+const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
 
 /**
  * Generate token
@@ -89,10 +90,12 @@ const generateAuthTokens = async (user) => {
 };
 
 const refreshTokens = async (token) => {
-    const payload = jwt.verify(token, config.jwt.secret);
+
+  try {
+  const payload = jwt.verify(token, config.jwt.secret);
 
   if (payload.type !== tokenTypes.REFRESH) {
-    throw new Error('Invalid token type');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token type');
   }
 
   const findToken = await prisma.token.findFirst({
@@ -100,7 +103,7 @@ const refreshTokens = async (token) => {
   });
 
   if (!findToken) {
-    throw new Error('Token not found');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Token not found');
   }
 
   const findUser = await prisma.user.findFirst({
@@ -108,11 +111,7 @@ const refreshTokens = async (token) => {
   });
 
   if (!findUser) {
-    throw new Error('User not found');
-  }
-
-  if (findToken.userId !== findUser.id) {
-    throw new Error('Refresh token does not match user');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
   }
 
   await prisma.token.delete({
@@ -121,6 +120,13 @@ const refreshTokens = async (token) => {
 
   const refresh = await generateAuthTokens(findUser);
   return refresh;
+
+  } catch(error){
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token signature');
+    }
+    throw error
+  }  
 };
 
 module.exports = {

@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
-const { category } = require('../../prisma/client');
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body);
@@ -16,15 +15,15 @@ const createCategory = catchAsync(async (req, res) => {
 
 const getCategorys = catchAsync(async (req, res) => {
   const filter = {name: req.query.name};
-  const options = {page: req.query.page, size: req.query.size};
+  const options = { page: req.query.page, size: req.query.size };
 
   const result = await categoryService.queryCategorys(filter, options);
 
-  if (options.page > result.page || options.size > result.totalData) throw new ApiError(httpStatus.BAD_REQUEST, "Page or Size is not Found");
-  
+  if (options.page > result.page || options.size > result.totalData) throw new ApiError(httpStatus.BAD_REQUEST, "Page or Size is invalid");
+
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
-    message: "Get Categorys Success",
+    message: "Get Categories Success",
     currentPage: parseInt(result.page),
     totalData: result.totalData,
     totalPage: result.totalPage,
@@ -56,12 +55,12 @@ const updateCategory = catchAsync(async (req, res) => {
 });
 
 const deleteCategory = catchAsync(async (req, res) => {
-  await categoryService.deleteCategoryById(req.params.categoryId);
+  const category = await categoryService.deleteCategoryById(req.params.categoryId);
   
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: "Delete Category Success",
-    data: null
+    data: category
   });
 });
 

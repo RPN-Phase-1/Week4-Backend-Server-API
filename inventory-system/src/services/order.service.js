@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 
 const createOrder = async (orderBodys) => {
@@ -14,6 +14,8 @@ const getOrders = async (filter, options) => {
   const {customerName} = filter;
   const {page = 1, size = 10} = options;
   const countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
+
+  if(!customerName && !page && !size) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid query Request');
 
   const result = await prisma.order.findMany({
     skip: parseInt(countPage),

@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { productService } = require('../services');
-const { category } = require('../../prisma/client');
 
 const createProduct = catchAsync (async (req, res) => {
   const product = await productService.createProduct(req.body);

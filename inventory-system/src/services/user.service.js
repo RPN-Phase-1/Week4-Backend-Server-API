@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client')
+const prisma = require('../../prisma/index')
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 // const { faker } = require('@faker-js/faker');
@@ -49,6 +49,8 @@ const getUsers = async (filter, options) => {
   const {role} = filter;
   const {page = 1, size = 5} = options;
   let countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
+
+  if(!role && !page && !size) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid query Request');
 
   const users = await prisma.user.findMany({
     skip: parseInt(countPage),

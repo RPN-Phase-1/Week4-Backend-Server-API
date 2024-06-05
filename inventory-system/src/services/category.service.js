@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client')
+const prisma = require('../../prisma/index')
 const ApiError = require('../utils/ApiError');
 // const { faker } = require('@faker-js/faker');
 
@@ -35,6 +35,8 @@ const queryCategorys = async (filter, options) => {
   const {page = 1, size = 10} = options;
   let countPage = (page - 1) * size; //menghitung skip yang ditampilkan per page
 
+  if(!name && !page && !size) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid query Request');
+
   const categorys = await prisma.category.findMany({
     skip: parseInt(countPage), 
     take: parseInt(size),
@@ -45,6 +47,7 @@ const queryCategorys = async (filter, options) => {
     },
     orderBy: {name: 'asc'}
   });
+
 
   const resultCategorys = await prisma.category.count();// total data keseluruhan
   const totalPage = Math.ceil(resultCategorys / size);//total page 
@@ -98,7 +101,7 @@ const deleteCategoryById = async (categoryId) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
 
-  const deleteCategorys = await prisma.category.deleteMany({
+  const deleteCategorys = await prisma.category.delete({
     where: {
       id: categoryId
     },

@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService } = require('../services');
 const ApiError = require('../utils/ApiError');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 
 const register = catchAsync(async (req, res) => {
   const existingUser = await userService.getUserByEmail(req.body.email);
@@ -28,13 +28,13 @@ const logout = catchAsync(async (req, res) => {
     where: { email: req.body.email },
   });
 
-  await prisma.token.updateMany({where: {userId: user.id}, data: {blacklisted: true}})
+  if (!user){
+    throw new ApiError(httpStatus.NOT_FOUND, 'Email not found');
+  } 
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
-    message: "logout User Success",
-    data: user
-  });
+  await prisma.token.updateMany({where: {userId: user.id}, data: {blacklisted: true}});
+
+  res.status(httpStatus.OK).send({user})
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
@@ -44,11 +44,7 @@ const refreshTokens = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
   }
 
-  res.status(httpStatus.OK).send({
-    status: httpStatus.OK,
-    message: "Refresh Token Success",
-    data: refresh
-  });
+  res.status(httpStatus.OK).send({ refresh });
 })
 
 module.exports = {

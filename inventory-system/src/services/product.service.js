@@ -1,7 +1,6 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
-const { faker } = require('@faker-js/faker');
 
 const createProduct = async (productBodys) => {
   const createProduct = await prisma.product.create({
@@ -14,7 +13,9 @@ const createProduct = async (productBodys) => {
 const getProducts = async (filter, options) => {
   const {name, priceExpensive = 1, priceCheap = 50000, categoryName} = filter;
   const {page = 1, size = 10} = options;
-  const countPage = ( page - 1 )* size;//menghitung skip yang ditampilkan per page
+  const countPage = ( page - 1 ) * size;//menghitung skip yang ditampilkan per page
+
+  if(!name && !page && !size) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid query Request');
 
   const result = await prisma.product.findMany({
     skip: parseInt(countPage),

@@ -12,7 +12,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const compression = require('compression');
 const cors = require('cors');
-const routes = require('./routes/v1')
+const routes = require('./routes/api')
 const { jwtStrategy } = require('./config/passport');
 const passport = require('passport');
 
@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
   res.send('Hello Brongz');
 });
 
-// v1 api routes
+// api api routes
 app.use('/api', routes);
 
 // app.use(router)
