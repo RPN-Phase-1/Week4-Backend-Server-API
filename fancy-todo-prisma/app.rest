@@ -1,0 +1,19 @@
+http://localhost:3000/
+
+###
+GET http://localhost:3000/user/:id
+Content-Type: application/json
+
+{
+    "id": "8ecb90f1-4317-4621-85af-c2ceea71ee31"
+}
+
+###
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "name": "brongz",
+    "email": "brongz@gmail.com",
+    "phone": "0876352572"
+}
