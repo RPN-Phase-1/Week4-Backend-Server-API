@@ -47,7 +47,7 @@ model Product {
   price         Float
   quantityInStock Int
   categoryId    String
-  category      Category     @relation(fields: [categoryId], references: [id])
+  category      Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   userId        String
   User          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   orderItems    OrderItem[]

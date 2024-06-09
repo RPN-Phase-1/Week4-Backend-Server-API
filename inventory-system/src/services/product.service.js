@@ -11,26 +11,29 @@ const createProduct = async (productBodys) => {
 };
 
 const getProducts = async (filter, options) => {
-  const {name, priceExpensive = 1, priceCheap = 50000, categoryName} = filter;
+  const {priceExpensive = 1000000000, priceCheap = 10, categoryName} = filter;
   const {page = 1, size = 10} = options;
   const countPage = ( page - 1 ) * size;//menghitung skip yang ditampilkan per page
 
-  if(!name && !page && !size) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid query Request');
+  if(!categoryName && !page && !size) throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid query Request');
 
   const result = await prisma.product.findMany({
     skip: parseInt(countPage),
     take: parseInt(size),
     where: {
-      name: {
-        contains: name
-      },
-      category: {
-        name: categoryName
-      },
-      price: {
-        gte: parseInt(priceExpensive),
-        lte: parseInt(priceCheap),
-      }
+      AND: [
+        {
+          name: {
+            contains: categoryName,
+          },
+        },
+        {
+          price: {
+            gte: parseInt(priceCheap),
+            lte: parseInt(priceExpensive),
+          },
+        },
+      ],
     },
     include: {
       category: true
