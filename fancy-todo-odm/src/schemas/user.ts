@@ -1,30 +1,26 @@
-import { model, Schema, type Types } from "mongoose";
-import { SchemaModel } from "#todo/lib/schema";
+import { SchemaModel } from "#todo/lib/schemaModel";
+import { UserModel } from "#todo/models/user";
+import type { Types } from "mongoose";
 
-const mod = model("User", new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  phoneNumber: { type: Number, required: true },
-}));
 
 export class UserSchema extends SchemaModel {
   public override async all() {
-    return await mod.find();
+    return await UserModel.find();
   }
 
   public override async show(id: Types.ObjectId) {
-    return await mod.findOne({ _id: id });
+    return await UserModel.findOne({ _id: id });
   }
 
   public override async create(name: string, email: string, phoneNumber: number) {
-    return await mod.create({ name, email, phoneNumber });
+    return await UserModel.create({ name, email, phoneNumber });
   }
 
   public override async update(id: Types.ObjectId, name: string, email: string, phoneNumber: number) {
-    return await mod.updateOne({ _id: id }, { name, email, phoneNumber });
+    return await UserModel.updateOne({ _id: id }, { name, email, phoneNumber });
   }
 
   public override async delete(id: Types.ObjectId) {
-    return await mod.deleteOne({ _id: id });
+    return await UserModel.deleteOne({ _id: id });
   }
 }
