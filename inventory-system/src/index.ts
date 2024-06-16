@@ -1,3 +1,5 @@
 import App from './lib/app';
 
-App.main();
+App.registerMiddlewares()
+  .registerRouters()
+  .then((x) => x.connect());
