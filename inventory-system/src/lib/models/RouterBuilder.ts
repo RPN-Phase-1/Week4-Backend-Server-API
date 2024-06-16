@@ -3,8 +3,17 @@ import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 
 export default class RouterBuilder {
+  public static useAuth = false;
+
+  public static useParam = false;
+
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public static async controller(_request: Request, _response: Response, _next: NextFunction) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'this must be overrided');
+  }
+
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  public static async authentication(_request: Request, _response: Response, _next: NextFunction) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'this must be overrided');
   }
 }

@@ -1,6 +1,9 @@
 import type { Request, Response } from 'express';
-import RouterBuilder from '../../../lib/models/RouterBuilder';
+import RouterBuilder from '../../../../lib/models/RouterBuilder';
+import { UseParam, UseAuth } from '../../../../lib/utils/RouterDecorator';
 
+@UseAuth
+@UseParam
 export default class UserGet extends RouterBuilder {
   public static override async controller(_req: Request, res: Response) {
     res.status(200).send('woy');

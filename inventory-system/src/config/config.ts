@@ -1,4 +1,3 @@
-// @ts-expect-error 7016
 import dotenv from 'dotenv';
 import path from 'node:path';
 import process from 'node:process';
@@ -15,6 +14,12 @@ export default class Config {
   public static port = process.env.PORT;
 
   public static database = { url: process.env.DATABASE_URL };
+
+  public static jwt = {
+    secret: process.env.JWT_SECRET,
+    accessExpirationMinutes: process.env.JWT_ACCESS_EXPIRATION_MINUTES,
+    refreshExpirationDay: process.env.JWT_REFRESH_EXPIRATION_DAYS,
+  };
 
   public static routesPath = path.join(__dirname, '../routes');
 }

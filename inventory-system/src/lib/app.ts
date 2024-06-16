@@ -6,11 +6,13 @@ import xss from 'xss-clean';
 import compression from 'compression';
 // @ts-expect-error 7016
 import cors from 'cors';
+import passport from 'passport';
 import httpStatus from 'http-status';
 
 import Config from '../config/config';
 import Logger from '../config/logger';
 import Morgan from '../config/morgan';
+import Passport from '../config/passport';
 
 import ErrorMiddleware from './middlewares/ErrorMiddleware';
 import ApiError from './utils/ApiError';
@@ -29,6 +31,10 @@ export default class App {
 
     this.app.use((_req, _res, next) => next(new ApiError(httpStatus.NOT_FOUND, 'Not Found')));
 
+    // error handling
+    this.app.use(ErrorMiddleware.errorConverter);
+    this.app.use(ErrorMiddleware.errorHandler);
+
     return this;
   }
 
@@ -39,14 +45,14 @@ export default class App {
       this.app.use(Morgan.errorHandler);
     }
 
-    // url encoded
-    this.app.use(express.urlencoded({ extended: true }));
-
     // Body parser
     this.app.use(express.json());
 
     // Security
     this.app.use(helmet());
+
+    // url encoded
+    this.app.use(express.urlencoded({ extended: true }));
 
     // saniteze request
     this.app.use(xss());
@@ -58,14 +64,12 @@ export default class App {
     this.app.use(cors());
     this.app.options('*', cors());
 
-    // error handling
-    this.app.use(ErrorMiddleware.errorConverter);
-    this.app.use(ErrorMiddleware.errorHandler);
-
+    this.app.use(passport.initialize());
+    passport.use('jwt', Passport.jwtStrategy);
     return this;
   }
 
   public static connect() {
-    this.app.listen(this.port, () => Logger.info(`Connected on port ${this.port}`));
+    return this.app.listen(this.port, () => Logger.info(`Connected on port ${this.port}`));
   }
 }
