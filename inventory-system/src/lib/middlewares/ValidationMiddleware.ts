@@ -8,7 +8,7 @@ export default class ValidationMiddleware {
   public static validate(schema: object) {
     return async function (req: Request, _res: Response, next: NextFunction) {
       const validSchema = pick(schema, ['params', 'query', 'body'] as never[]);
-      const object = pick(req, ['params', 'query', 'body']);
+      const object = pick(req, Object.keys(validSchema) as ['params']);
       const { value, error } = Joi.compile(validSchema)
         .prefs({ errors: { label: 'key' }, abortEarly: false })
         .validate(object);
@@ -17,6 +17,7 @@ export default class ValidationMiddleware {
         return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
       }
       Object.assign(req, value);
+      next();
     };
   }
 }
