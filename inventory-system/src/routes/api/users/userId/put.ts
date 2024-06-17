@@ -9,11 +9,11 @@ import UserService from '../../../../services/user';
 @AddMiddleware(AuntheticationMiddleware.auth())
 export default class extends RouterBuilder {
   public static override async controller(req: Request<{ userId: string }>, res: Response) {
-    const data = await UserService.getId(req.params.userId);
+    const data = await UserService.update(req.params.userId, req.body);
     const code = httpStatus.OK;
     res.status(code).json({
       code,
-      message: 'User succesfully retrieved!',
+      message: 'Succesfully update user!',
       data,
     });
   }
