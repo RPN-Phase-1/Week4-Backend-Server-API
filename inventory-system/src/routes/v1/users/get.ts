@@ -8,7 +8,7 @@ import UserService from '../../../services/user';
 @AddMiddleware(AuntheticationMiddleware.auth())
 export default class extends RouterBuilder {
   public static override async controller(_req: Request, res: Response) {
-    const data = UserService.getAll();
+    const data = await UserService.getAll();
     const code = httpStatus.OK;
     res.status(code).json({ code, data });
   }

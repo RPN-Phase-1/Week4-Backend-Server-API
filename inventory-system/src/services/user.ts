@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
-import httpStatus from "http-status";
-import prisma from "../lib/database";
-import ApiError from "../lib/utils/ApiError";
+import httpStatus from 'http-status';
+import prisma from '../lib/database';
+import ApiError from '../lib/utils/ApiError';
 
 export default class UserService {
   public static async getId(id: string) {
@@ -12,8 +12,7 @@ export default class UserService {
 
   public static async getEmail(email: string) {
     const data = await prisma.user.findUnique({ where: { email } });
-    if (!data) throw new ApiError(httpStatus.NOT_FOUND, `User by email: ${email} not found!`);
-    return data!;
+    return data;
   }
 
   public static async getAll() {

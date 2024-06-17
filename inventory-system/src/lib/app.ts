@@ -25,7 +25,7 @@ export default class App {
 
   public static async registerRouters() {
     Logger.info('Registering routers');
-    this.app.get('/', (_req, res) => res.status(200).send('hello world'));
+    this.app.get('/', (_req, res) => res.send('hello world'));
 
     await WalkRouter.exec(this.app);
 
