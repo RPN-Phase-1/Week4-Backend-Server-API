@@ -47,4 +47,10 @@ export default class UserService {
     await this.getId(id);
     return prisma.product.findMany({ where: { userId: id } });
   }
+
+  public static async deleteTokens(email: string) {
+    const data = await this.getEmail(email);
+    if (!data) throw new ApiError(httpStatus.BAD_REQUEST, 'User not found!');
+    return prisma.token.deleteMany({ where: { userId: data.id } });
+  }
 }

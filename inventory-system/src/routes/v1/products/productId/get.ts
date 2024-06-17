@@ -3,20 +3,20 @@ import httpStatus from 'http-status';
 import RouterBuilder from '../../../../lib/models/RouterBuilder';
 import { AddMiddleware, UseParam } from '../../../../lib/utils/RouterDecorator';
 import AuntheticationMiddleware from '../../../../lib/middlewares/AuthenticationMiddleware';
+import ProductService from '../../../../services/product';
 import ValidationMiddleware from '../../../../lib/middlewares/ValidationMiddleware';
-import OrderValidations from '../../../../lib/validations/OrderValidations';
-import OrderService from '../../../../services/order';
+import ProductValidations from '../../../../lib/validations/ProductValidations';
 
 @UseParam
-@AddMiddleware(ValidationMiddleware.validate(OrderValidations.update))
+@AddMiddleware(ValidationMiddleware.validate(ProductValidations.get))
 @AddMiddleware(AuntheticationMiddleware.auth())
 export default class extends RouterBuilder {
-  public static override async controller(req: Request<{ orderId: string }>, res: Response) {
-    const data = await OrderService.update(req.params.orderId, req.body);
+  public static override async controller(req: Request<{ productId: string }>, res: Response) {
+    const data = await ProductService.get(req.params.productId);
     const code = httpStatus.OK;
     res.status(code).json({
       code,
-      message: 'Order Updated!',
+      message: 'Product Retrieved!',
       data,
     });
   }

@@ -4,7 +4,11 @@ import RouterBuilder from '../../../../lib/models/RouterBuilder';
 import UserService from '../../../../services/user';
 import ApiError from '../../../../lib/utils/ApiError';
 import TokenService from '../../../../services/generateToken';
+import { AddMiddleware } from '../../../../lib/utils/RouterDecorator';
+import ValidationMiddleware from '../../../../lib/middlewares/ValidationMiddleware';
+import AuthValidation from '../../../../lib/validations/AuthValidations';
 
+@AddMiddleware(ValidationMiddleware.validate(AuthValidation.register))
 export default class extends RouterBuilder {
   public static override async controller(req: Request, res: Response) {
     const existing = await UserService.getEmail(req.body.email);

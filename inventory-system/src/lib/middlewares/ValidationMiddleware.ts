@@ -6,7 +6,7 @@ import ApiError from '../utils/ApiError';
 
 export default class ValidationMiddleware {
   public static validate(schema: object) {
-    return function (req: Request, _res: Response, next: NextFunction) {
+    return async function (req: Request, _res: Response, next: NextFunction) {
       const validSchema = pick(schema, ['params', 'query', 'body'] as never[]);
       const object = pick(req, ['params', 'query', 'body']);
       const { value, error } = Joi.compile(validSchema)

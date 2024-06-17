@@ -1,11 +1,23 @@
 import type { Request, Response } from 'express';
+import httpStatus from 'http-status';
 import RouterBuilder from '../../../../lib/models/RouterBuilder';
-import { UseAuth, UseParam } from '../../../../lib/utils/RouterDecorator';
+import { AddMiddleware, UseParam } from '../../../../lib/utils/RouterDecorator';
+import AuntheticationMiddleware from '../../../../lib/middlewares/AuthenticationMiddleware';
+import ValidationMiddleware from '../../../../lib/middlewares/ValidationMiddleware';
+import OrderValidations from '../../../../lib/validations/OrderValidations';
+import OrderService from '../../../../services/order';
 
-@UseAuth
 @UseParam
+@AddMiddleware(ValidationMiddleware.validate(OrderValidations.delete))
+@AddMiddleware(AuntheticationMiddleware.auth())
 export default class extends RouterBuilder {
-  public static override async controller(_req: Request, res: Response) {
-    res.status(200).send('woy');
+  public static override async controller(req: Request<{ orderId: string }>, res: Response) {
+    const data = await OrderService.delete(req.params.orderId);
+    const code = httpStatus.OK;
+    res.status(code).json({
+      code,
+      message: 'Order deleted',
+      data,
+    });
   }
 }

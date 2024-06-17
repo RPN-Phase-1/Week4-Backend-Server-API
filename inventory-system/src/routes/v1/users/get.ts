@@ -10,6 +10,10 @@ export default class extends RouterBuilder {
   public static override async controller(_req: Request, res: Response) {
     const data = await UserService.getAll();
     const code = httpStatus.OK;
-    res.status(code).json({ code, data });
+    res.status(code).json({
+      code,
+      message: 'Users retrieved!',
+      data,
+    });
   }
 }
