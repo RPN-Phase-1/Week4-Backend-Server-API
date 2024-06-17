@@ -12,7 +12,7 @@ export default class WalkRouter {
     const dirs = await opendir(path);
     /* eslint-disable-next-line no-restricted-syntax */
     for await (const item of dirs) {
-      if (item.isFile()) {
+      if (item.isFile() && (item.name.endsWith('.ts') || item.name.endsWith('.js'))) {
         let route = path.replace(Config.routesPath, '').replace(/\\/g, '/').padStart(1, '/');
 
         let method = item.name.replace(/(\.ts|\.js|\.mjs)$/, '');
@@ -35,7 +35,8 @@ export default class WalkRouter {
           middlewares.push(catchAsync(imported.controller));
 
           router[method as 'get'](route, ...middlewares);
-          Logger.info(`register route '${route}' with method '${method}'`);
+          imported.middlewares = [];
+          Logger.info(`register route '${route}' with method '${method}' with ${middlewares.length - 1} middlewares`);
         } catch (error) {
           Logger.error(`register route '${route}' with method '${method}' failed cause ${(error as Error).message}`);
         }

@@ -12,6 +12,8 @@ export function DeclareMethod(method: 'get' | 'post' | 'put' | 'delete') {
 
 export function AddMiddleware(...middleware: typeof RouterBuilder.middlewares) {
   return function (target: typeof RouterBuilder) {
+    const middlewares = Reflect.get(target, 'middlewares');
+    if (!middlewares) Reflect.set(target, 'middlewares', []);
     target.middlewares.push(...middleware);
   };
 }

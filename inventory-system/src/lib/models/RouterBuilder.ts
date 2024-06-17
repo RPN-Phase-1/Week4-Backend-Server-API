@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 
 export default class RouterBuilder {
-  public static middlewares: (typeof this.controller)[] = [];
+  public static middlewares: (typeof this.controller)[];
 
   public static useParam = false;
 

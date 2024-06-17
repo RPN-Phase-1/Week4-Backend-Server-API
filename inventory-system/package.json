@@ -17,7 +17,7 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.ts",
     "prettier:fix": "prettier --write **/*.ts",
-    "build": "tsc"
+    "build": "tsc --build"
   },
   "keywords": [
     "node",
