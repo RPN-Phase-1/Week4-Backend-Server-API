@@ -9,9 +9,23 @@ export default class CategoryService {
     return data;
   }
 
-  public static async getAll() {
-    const datas = await prisma.category.findMany();
-    return datas;
+  public static async getByName(name: string) {
+    const data = await prisma.category.findFirst({ where: { name } });
+    if (!data) throw new ApiError(httpStatus.NOT_FOUND, `Category by name: ${name} not found!`);
+    return data;
+  }
+
+  public static async getAll({ pageSize, pageIndex }: { pageIndex: number; pageSize: number }) {
+    const datasSize = await prisma.category.count();
+    const numOfPages = Math.ceil(datasSize / pageSize);
+    const index = Math.min(pageIndex, numOfPages);
+    const skip = Math.min(datasSize, (index - 1) * numOfPages);
+    const datas = await prisma.category.findMany({ take: pageSize, skip });
+    return {
+      index,
+      numOfPages,
+      datas,
+    };
   }
 
   public static async create<T extends Awaited<ReturnType<typeof CategoryService.get>>>(data: T) {

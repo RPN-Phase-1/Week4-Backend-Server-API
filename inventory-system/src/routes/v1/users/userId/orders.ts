@@ -7,7 +7,7 @@ import UserService from '../../../../services/user';
 
 @UseParam
 @DeclareMethod('get')
-@AddMiddleware(AuntheticationMiddleware.auth())
+@AddMiddleware(AuntheticationMiddleware.auth(true))
 export default class extends RouterBuilder {
   public static override async controller(req: Request<{ userId: string }>, res: Response) {
     const data = await UserService.getOrders(req.params.userId);

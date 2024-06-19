@@ -11,14 +11,26 @@ export default class OrderItemService {
     return data;
   }
 
-  public static async getAll() {
-    const datas = await prisma.orderItem.findMany();
-    return datas;
+  public static async getAll({ pageSize, pageIndex }: { pageIndex: number; pageSize: number }) {
+    const datasSize = await prisma.orderItem.count();
+    const numOfPages = Math.ceil(datasSize / pageSize);
+    const index = Math.min(pageIndex, numOfPages);
+    const skip = Math.min(datasSize, (index - 1) * numOfPages);
+    const datas = await prisma.orderItem.findMany({ take: pageSize, skip });
+    return {
+      index,
+      numOfPages,
+      datas,
+    };
   }
 
   public static async create<T extends Awaited<ReturnType<typeof OrderItemService.get>>>(data: T) {
     await OrderService.get(data.orderId);
-    await ProductService.get(data.productId);
+    const product = await ProductService.get(data.productId);
+    if (product.quantityInStock < data.quantity)
+      throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'Product Quantity is less than OrderItem quantity');
+    product.quantityInStock -= 1;
+    await ProductService.update(data.productId, product);
     return prisma.orderItem.create({ data });
   }
 

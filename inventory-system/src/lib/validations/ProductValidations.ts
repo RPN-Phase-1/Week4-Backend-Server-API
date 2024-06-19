@@ -40,4 +40,10 @@ export default class ProductValidations {
       productId: Joi.string().required().custom(CustomValidations.objectId),
     }),
   };
+
+  public static search = {
+    query: Joi.object().keys({
+      category: Joi.string().required(),
+    }),
+  };
 }

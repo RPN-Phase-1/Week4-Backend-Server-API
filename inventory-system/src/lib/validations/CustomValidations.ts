@@ -16,4 +16,11 @@ export default class CustomValidations {
     }
     return value;
   }
+
+  public static getAll = {
+    query: Joi.object().keys({
+      pageIndex: Joi.number().min(1).required(),
+      pageSize: Joi.number().min(1).required(),
+    }),
+  };
 }

@@ -15,9 +15,17 @@ export default class UserService {
     return data;
   }
 
-  public static async getAll() {
-    const datas = await prisma.user.findMany();
-    return datas;
+  public static async getAll({ pageSize, pageIndex }: { pageIndex: number; pageSize: number }) {
+    const datasSize = await prisma.user.count();
+    const numOfPages = Math.ceil(datasSize / pageSize);
+    const index = Math.min(pageIndex, numOfPages);
+    const skip = Math.min(datasSize, (index - 1) * numOfPages);
+    const datas = await prisma.user.findMany({ take: pageSize, skip });
+    return {
+      index,
+      numOfPages,
+      datas,
+    };
   }
 
   public static async create<T extends Awaited<ReturnType<typeof UserService.getId>>>(data: T) {

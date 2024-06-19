@@ -5,7 +5,7 @@ import { AddMiddleware } from '../../../lib/utils/RouterDecorator';
 import AuntheticationMiddleware from '../../../lib/middlewares/AuthenticationMiddleware';
 import UserService from '../../../services/user';
 
-@AddMiddleware(AuntheticationMiddleware.auth())
+@AddMiddleware(AuntheticationMiddleware.auth(true))
 export default class extends RouterBuilder {
   public static override async controller(req: Request, res: Response) {
     const data = await UserService.create(req.body);

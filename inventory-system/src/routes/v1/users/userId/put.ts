@@ -6,7 +6,7 @@ import AuntheticationMiddleware from '../../../../lib/middlewares/Authentication
 import UserService from '../../../../services/user';
 
 @UseParam
-@AddMiddleware(AuntheticationMiddleware.auth())
+@AddMiddleware(AuntheticationMiddleware.auth(true))
 export default class extends RouterBuilder {
   public static override async controller(req: Request<{ userId: string }>, res: Response) {
     const data = await UserService.update(req.params.userId, req.body);
