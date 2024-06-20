@@ -15,7 +15,7 @@ export default class ProductService {
     const datasSize = await prisma.product.count();
     const numOfPages = Math.ceil(datasSize / pageSize);
     const index = Math.min(pageIndex, numOfPages);
-    const skip = Math.min(datasSize, (index - 1) * numOfPages);
+    const skip = Math.min(datasSize, (index - 1) * pageSize);
     const datas = await prisma.product.findMany({ take: pageSize, skip });
     return {
       index,

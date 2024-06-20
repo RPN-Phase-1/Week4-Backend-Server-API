@@ -17,6 +17,12 @@ export default class CustomValidations {
     return value;
   }
 
+  public static role(value: string, helpers: Joi.CustomHelpers) {
+    if (value !== 'Admin' && value !== 'User')
+      return helpers.message('role must be "Admin" or "User"' as unknown as Joi.LanguageMessages);
+    return value;
+  }
+
   public static getAll = {
     query: Joi.object().keys({
       pageIndex: Joi.number().min(1).required(),

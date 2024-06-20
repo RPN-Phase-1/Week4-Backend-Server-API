@@ -19,12 +19,12 @@ import ApiError from './utils/ApiError';
 import WalkRouter from './utils/WalkRouter';
 
 export default class App {
-  private static app = express();
+  public static app = express();
 
   private static port = Config.port;
 
   public static async registerRouters() {
-    Logger.info('Registering routers');
+    if (Config.env !== 'test') Logger.info('Registering routers');
     this.app.get('/', (_req, res) => res.send('hello world'));
 
     await WalkRouter.exec(this.app);
@@ -39,8 +39,8 @@ export default class App {
   }
 
   public static registerMiddlewares() {
-    Logger.info('Registering middlewares');
     if (Config.env !== 'test') {
+      Logger.info('Registering middlewares');
       this.app.use(Morgan.succesHandler);
       this.app.use(Morgan.errorHandler);
     }

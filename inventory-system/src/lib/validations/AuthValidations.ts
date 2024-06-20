@@ -7,13 +7,14 @@ export default class AuthValidation {
       email: Joi.string().required().email(),
       password: Joi.string().required().custom(CustomValidations.password),
       name: Joi.string().required(),
+      role: Joi.string().custom(CustomValidations.role),
     }),
   };
 
   public static login = {
     body: Joi.object().keys({
       email: Joi.string().required(),
-      password: Joi.string().required().custom(CustomValidations.password),
+      password: Joi.string().required(),
     }),
   };
 

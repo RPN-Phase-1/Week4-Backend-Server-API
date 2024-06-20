@@ -4,8 +4,11 @@ import RouterBuilder from '../../../../lib/models/RouterBuilder';
 import { UseParam, AddMiddleware } from '../../../../lib/utils/RouterDecorator';
 import AuntheticationMiddleware from '../../../../lib/middlewares/AuthenticationMiddleware';
 import UserService from '../../../../services/user';
+import ValidationMiddleware from '../../../../lib/middlewares/ValidationMiddleware';
+import UserValidation from '../../../../lib/validations/UserValidation';
 
 @UseParam
+@AddMiddleware(ValidationMiddleware.validate(UserValidation.delete))
 @AddMiddleware(AuntheticationMiddleware.auth(true))
 export default class extends RouterBuilder {
   public static override async controller(req: Request<{ userId: string }>, res: Response) {

@@ -36,9 +36,11 @@ export default class WalkRouter {
 
           router[method as 'get'](route, ...middlewares);
           imported.middlewares = [];
-          Logger.info(`register route '${route}' with method '${method}' with ${middlewares.length - 1} middlewares`);
+          if (Config.env === 'development')
+            Logger.info(`register route '${route}' with method '${method}' with ${middlewares.length - 1} middlewares`);
         } catch (error) {
-          Logger.error(`register route '${route}' with method '${method}' failed cause ${(error as Error).message}`);
+          if (Config.env === 'development')
+            Logger.error(`register route '${route}' with method '${method}' failed cause ${(error as Error).message}`);
         }
       } else if (item.isDirectory()) {
         await this.exec(router, join(path, item.name), item.name);
