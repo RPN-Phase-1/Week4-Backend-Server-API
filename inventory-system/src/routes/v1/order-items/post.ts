@@ -12,7 +12,7 @@ import OrderItemValidations from '../../../lib/validations/OrderItemValidations'
 export default class extends RouterBuilder {
   public static override async controller(req: Request, res: Response) {
     const data = await OrderItemService.create(req.body);
-    const code = httpStatus.OK;
+    const code = httpStatus.CREATED;
     res.status(code).json({
       code,
       message: 'OrderItems Created',

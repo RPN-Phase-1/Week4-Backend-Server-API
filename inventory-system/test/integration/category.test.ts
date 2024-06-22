@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { BAD_REQUEST, OK, UNAUTHORIZED } from 'http-status';
-import { describe } from 'pm2';
+import { BAD_REQUEST, CREATED, OK, UNAUTHORIZED } from 'http-status';
 import { supertest } from '../helpers';
 import { insertUsers, userOne } from '../fixtures/user.fixture';
 import { categoryOne, categoryThree, categoryTwo, insertCategory } from '../fixtures/product.fixture';
@@ -141,7 +140,7 @@ describe('Category routes', () => {
     });
   });
 
-  describe('POST /v1/categories', async () => {
+  describe('POST /v1/categories', () => {
     it('should return ok (200) and created new category', async () => {
       await insertUsers(userOne);
       await insertCategory(categoryOne);
@@ -151,17 +150,20 @@ describe('Category routes', () => {
         .post('/v1/categories/')
         .auth(userOneAccessToken, { type: 'bearer' })
         .send({ name: 'newCategory' })
-        .expect(OK);
+        .expect(CREATED);
       const categoryData = await prisma.category.findFirst({ where: { id: data.id } });
       expect(data.name).toEqual(categoryData?.name);
     });
   });
 
-  describe('GET /v1/categories/:categoryId', async () => {
+  describe('GET /v1/categories/:categoryId', () => {
     it('should return ok (200) and send category based on category id', async () => {
       await insertUsers(userOne);
       await insertCategory(categoryOne);
-      const response = await agent.get(`/v1/categories/${categoryOne.id}`).expect(OK);
+      const response = await agent
+        .get(`/v1/categories/${categoryOne.id}`)
+        .auth(userOneAccessToken, { type: 'bearer' })
+        .expect(OK);
       const categoryData = await prisma.category.findFirst({ where: { id: categoryOne.id } });
       expect(response.body.data).toMatchObject({
         ...categoryData,
@@ -171,23 +173,27 @@ describe('Category routes', () => {
     });
   });
 
-  describe('PUT /v1/categories/:categoryId', async () => {
+  describe('PUT /v1/categories/:categoryId', () => {
     it('should return ok (200) and update category', async () => {
       await insertUsers(userOne);
       await insertCategory(categoryOne);
       const name = 'updatedNAme';
-      const response = await agent.put(`/v1/categories/${categoryOne.id}`).send({ name }).expect(OK);
+      const response = await agent
+        .put(`/v1/categories/${categoryOne.id}`)
+        .auth(userOneAccessToken, { type: 'bearer' })
+        .send({ name })
+        .expect(OK);
       const categoryData = await prisma.category.findFirst({ where: { id: categoryOne.id } });
       expect(response.body.data.name).toEqual(name);
       expect(response.body.data.name).toEqual(categoryData?.name);
     });
   });
 
-  describe('DELETE /v1/categories/:categoryId', async () => {
+  describe('DELETE /v1/categories/:categoryId', () => {
     it('should return ok (200) and deleted category category', async () => {
       await insertUsers(userOne);
       await insertCategory(categoryOne);
-      await agent.delete(`/v1/categories/${categoryOne.id}`).expect(OK);
+      await agent.delete(`/v1/categories/${categoryOne.id}`).auth(userOneAccessToken, { type: 'bearer' }).expect(OK);
       const categoryData = await prisma.category.findFirst({ where: { id: categoryOne.id } });
       expect(categoryData).toBeNull();
     });

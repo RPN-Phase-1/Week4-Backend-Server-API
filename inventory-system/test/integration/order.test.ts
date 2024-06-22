@@ -109,6 +109,8 @@ describe('Order routes', () => {
       await insertUsers(userOne);
       await insertOrder(orderOne);
       await agent.delete(`/v1/orders/${orderOne.id}`).auth(userOneAccessToken, { type: 'bearer' }).expect(OK);
+      const data = await prisma.order.findFirst({ where: { id: orderOne.id } });
+      expect(data).toBeNull();
     });
   });
 });

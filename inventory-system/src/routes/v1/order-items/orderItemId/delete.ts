@@ -12,7 +12,7 @@ import OrderItemValidations from '../../../../lib/validations/OrderItemValidatio
 @AddMiddleware(AuntheticationMiddleware.auth())
 export default class extends RouterBuilder {
   public static override async controller(req: Request<{ orderItemId: string }>, res: Response) {
-    const data = await OrderItemService.get(req.params.orderItemId);
+    const data = await OrderItemService.delete(req.params.orderItemId);
     const code = httpStatus.OK;
     res.status(code).json({
       code,

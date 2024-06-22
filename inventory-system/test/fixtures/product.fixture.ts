@@ -19,7 +19,7 @@ export function getFakeProduct(userId: string, categoryId: string, categoryName?
     name: faker.animal[categoryName ?? getFakeCategory().name](),
     userId,
     price: faker.number.int({ min: 1_000, max: 10_000 }),
-    quantityInStock: faker.number.int({ min: 1, max: 10 }),
+    quantityInStock: faker.number.int({ min: 3, max: 10 }),
     categoryId,
     description: faker.lorem.paragraph(),
   };
