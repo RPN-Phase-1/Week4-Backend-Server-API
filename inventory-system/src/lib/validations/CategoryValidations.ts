@@ -10,13 +10,13 @@ export default class CategoryValidations {
 
   public static get = {
     params: Joi.object().keys({
-      categoryId: Joi.string().required().custom(CustomValidations.objectId),
+      categoryId: Joi.string().required().custom(CustomValidations.uuid),
     }),
   };
 
   public static update = {
     params: Joi.object().keys({
-      categoryId: Joi.string().required().custom(CustomValidations.objectId),
+      categoryId: Joi.string().required().custom(CustomValidations.uuid),
     }),
     body: Joi.object()
       .keys({
@@ -27,7 +27,7 @@ export default class CategoryValidations {
 
   public static delete = {
     params: Joi.object().keys({
-      categoryId: Joi.string().required().custom(CustomValidations.objectId),
+      categoryId: Joi.string().required().custom(CustomValidations.uuid),
     }),
   };
 }

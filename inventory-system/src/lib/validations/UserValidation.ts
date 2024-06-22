@@ -14,7 +14,7 @@ export default class UserValidation {
 
   public static update = {
     params: {
-      userId: Joi.string().required().custom(CustomValidations.objectId),
+      userId: Joi.string().required().custom(CustomValidations.uuid),
     },
     body: Joi.object().keys({
       email: Joi.string().email(),
@@ -27,13 +27,13 @@ export default class UserValidation {
 
   public static delete = {
     params: {
-      userId: Joi.string().required().custom(CustomValidations.objectId),
+      userId: Joi.string().required().custom(CustomValidations.uuid),
     },
   };
 
   public static get = {
     params: {
-      userId: Joi.string().required().custom(CustomValidations.objectId),
+      userId: Joi.string().required().custom(CustomValidations.uuid),
     },
   };
 }

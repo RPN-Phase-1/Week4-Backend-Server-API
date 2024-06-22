@@ -1,64 +1,69 @@
-# inventory-system
+# inventory-sytem
 
-mungkin diantara kalian ada yg melihat kalo struktural bikin route di repository ini agak beda
-alasan gw bikin begini karena:
+`POST` [/v1/auth/register](#POST/v1/auth/register)
 
-```md
-- Agar lebih customize tiap route GET sama POST bisa beda middleware
-- Langsung membuat route tanpa harus di deklarasiin dulu di App.ts
-- Jujur iseng aja sih mau nerapin penggunaan rekursif
-```
+`POST` [/v1/auth/login](#POST/v1/auth/login)
 
-dan ya untuk contoh membuat route kita hanya perlu masuk ke `/routes` trus buat folder dan file,
-misal jika ingin membuat route `/v1/halo` dengan metode `GET` maka kita hanya perlu membuatnya seperti ini
+`POST` [/v1/auth/logout](#POST/v1/auth/logout)
 
-```
-./src/routes/v1/halo/get.ts
-```
+## `POST` /v1/auth/register
 
-lalu isi filenya dengan kode berikut
+to register so we can use login
 
-```ts
-// tipe deklarasi
-import type { Request, Response, NextFunction } from "express";
+### Body
 
-// import base router dari sini
-import RouterBuilder from "../../../lib/models/RouterBuilder";
+|key|type|description|
+|-|-|-|
+|***email**|_string_|an user email
+|***password**|_string_|a user password
+|***name**|_string_|a fantastic name of your
+|**role**|_Admin, User_|an user role
 
-// Kita membuat kelas sekaligus menerapkan inheritanc dri RouterBuilder
-export default class extends RouterBuilder {
+Example:
 
-  // Lalu kita override fungsi controller
-  public static override async controller(req: Request, res: Response, next: NextFunction) {
-    res.status(200).send("halo!")
-  }
+```json
+{
+  "email": "rakemoon@super.ma.il",
+  "password": "@4kuW1bu",
+  "name": "ImRakemoon",
+  "role": "Admin"
 }
 ```
 
-maka file ini akan terbaca oleh library util `WalkRouter` dan akan otomatis meregisternya kedalam router.
+## `POST` /v1/auth/login
 
-Untuk menambahkan middleware kita hanya perlu menambahkan dekorator `@AddMidleware`
-Contoh jika ingin route `v1/halo` hanya diizinkan bagi orang yang login
+to login and get tokens for accessing another api endpoint
 
+### Body
 
-```ts
-import type { Request, Response, NextFunction } from "express";
-import RouterBuilder from "../../../lib/models/RouterBuilder";
+|key|type|description|
+|-|-|-|
+|***email**|_string_|an user email
+|***password**|_string_|an user password
 
-// Kita import dekoratornya dri sini
-import { AddMidleware } from "../../../lib/utils/RouterDecorator";
+Example:
 
-// Kita import middlewar untuk autentikasi
-import AuntheticationMiddleware from "../../../lib/middlewares/AuthenticationMiddleware";
-
-// lalu gunakan disini
-@AddMidleware(AuthenticationMiddleware.auth())
-export default class extends RouterBuilder {
-  public static override async controller(req: Request, res: Response, next: NextFunction) {
-    res.status(200).send("halo!")
-  }
+```json
+{
+  "email": "rakemoon@super.ma.il",
+  "password": "@4kuW1bu"
 }
 ```
 
-Untuk error handling sendiri sudah ditangani oleh util `WalkRouter`
-karena saat meregistrasi dia otomatis memanggil util `CatchAsync` dan menggunakannya pda controller
+## `POST` /v1/auth/logout
+
+to logout of course
+
+### Body
+
+|key|type|description|
+|-|-|-|
+|***email**|_string_|an user email
+
+Example:
+
+```json
+{
+  "email": "rakemoon@super.ma.il"
+}
+```

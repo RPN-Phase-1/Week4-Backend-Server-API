@@ -8,20 +8,20 @@ export default class ProductValidations {
       price: Joi.number().required(),
       description: Joi.string().required(),
       quantityInStock: Joi.number().required(),
-      userId: Joi.string().required().custom(CustomValidations.objectId),
-      categoryId: Joi.string().required().custom(CustomValidations.objectId),
+      userId: Joi.string().required().custom(CustomValidations.uuid),
+      categoryId: Joi.string().required().custom(CustomValidations.uuid),
     }),
   };
 
   public static get = {
     params: Joi.object().keys({
-      productId: Joi.string().required().custom(CustomValidations.objectId),
+      productId: Joi.string().required().custom(CustomValidations.uuid),
     }),
   };
 
   public static update = {
     params: Joi.object().keys({
-      productId: Joi.string().required().custom(CustomValidations.objectId),
+      productId: Joi.string().required().custom(CustomValidations.uuid),
     }),
     body: Joi.object()
       .keys({
@@ -29,15 +29,15 @@ export default class ProductValidations {
         price: Joi.number(),
         description: Joi.string(),
         quantityInStock: Joi.number(),
-        userId: Joi.string().custom(CustomValidations.objectId),
-        categoryId: Joi.string().custom(CustomValidations.objectId),
+        userId: Joi.string().custom(CustomValidations.uuid),
+        categoryId: Joi.string().custom(CustomValidations.uuid),
       })
       .min(1),
   };
 
   public static delete = {
     params: Joi.object().keys({
-      productId: Joi.string().required().custom(CustomValidations.objectId),
+      productId: Joi.string().required().custom(CustomValidations.uuid),
     }),
   };
 

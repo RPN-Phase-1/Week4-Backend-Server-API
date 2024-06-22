@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 export default class CustomValidations {
-  public static objectId(value: string, helpers: Joi.CustomHelpers) {
+  public static uuid(value: string, helpers: Joi.CustomHelpers) {
     if (!value.match(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi))
       return helpers.message('"{{#label}}" must be a valid UUID' as unknown as Joi.LanguageMessages);
     return value;
