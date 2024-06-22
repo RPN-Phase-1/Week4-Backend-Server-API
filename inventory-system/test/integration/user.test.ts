@@ -112,7 +112,7 @@ describe('Users Routes', () => {
     });
 
     it('should return ok (200) and data of the last index if the pageIndex is out of range', async () => {
-      await insertUsers(userAdmin);
+      await insertUsers(userAdmin, userOne, userTwo);
       const response = await agent
         .get('/v1/users')
         .auth(adminAccessToken, { type: 'bearer' })
@@ -123,6 +123,20 @@ describe('Users Routes', () => {
         .expect(OK);
       expect(response.body.data.index).toEqual(response.body.data.numOfPages);
       expect(response.body.data.datas.length).toBeGreaterThan(0);
+    });
+
+    it('should return ok (200) and make thePageSize equal to database size if pageSize is out of range', async () => {
+      await insertUsers(userAdmin, userOne, userTwo);
+      const response = await agent
+        .get('/v1/users')
+        .auth(adminAccessToken, { type: 'bearer' })
+        .query({
+          pageIndex: 1,
+          pageSize: 69,
+        })
+        .expect(OK);
+      expect(response.body.data.datas.length).toEqual(3);
+      expect(response.body.data.numOfPages).toEqual(1);
     });
   });
 

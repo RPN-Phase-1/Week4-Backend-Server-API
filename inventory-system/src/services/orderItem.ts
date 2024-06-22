@@ -13,9 +13,9 @@ export default class OrderItemService {
 
   public static async getAll({ pageSize, pageIndex }: { pageIndex: number; pageSize: number }) {
     const datasSize = await prisma.orderItem.count();
-    const numOfPages = Math.ceil(datasSize / pageSize);
+    const numOfPages = Math.ceil(datasSize / Math.min(pageSize, datasSize));
     const index = Math.min(pageIndex, numOfPages);
-    const skip = Math.min(datasSize, (index - 1) * numOfPages);
+    const skip = (index - 1) * pageSize;
     const datas = await prisma.orderItem.findMany({ take: pageSize, skip });
     return {
       index,

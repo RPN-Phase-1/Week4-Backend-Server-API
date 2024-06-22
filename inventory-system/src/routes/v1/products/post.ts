@@ -12,7 +12,7 @@ import ProductValidations from '../../../lib/validations/ProductValidations';
 export default class extends RouterBuilder {
   public static override async controller(req: Request, res: Response) {
     const data = await ProductService.create(req.body);
-    const code = httpStatus.OK;
+    const code = httpStatus.CREATED;
     res.status(code).json({
       code,
       message: 'Product created!',

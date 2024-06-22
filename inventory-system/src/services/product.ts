@@ -13,9 +13,9 @@ export default class ProductService {
 
   public static async getAll({ pageSize, pageIndex }: { pageIndex: number; pageSize: number }) {
     const datasSize = await prisma.product.count();
-    const numOfPages = Math.ceil(datasSize / pageSize);
+    const numOfPages = Math.ceil(datasSize / Math.min(pageSize, datasSize));
     const index = Math.min(pageIndex, numOfPages);
-    const skip = Math.min(datasSize, (index - 1) * pageSize);
+    const skip = (index - 1) * pageSize;
     const datas = await prisma.product.findMany({ take: pageSize, skip });
     return {
       index,

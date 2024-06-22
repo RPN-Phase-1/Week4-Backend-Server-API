@@ -23,10 +23,10 @@ export default class OrderItemValidations {
     }),
     body: Joi.object()
       .keys({
-        quantity: Joi.number().required(),
-        unitPrice: Joi.number().required(),
-        orderId: Joi.string().required().custom(CustomValidations.objectId),
-        productId: Joi.string().required().custom(CustomValidations.objectId),
+        quantity: Joi.number(),
+        unitPrice: Joi.number(),
+        orderId: Joi.string().custom(CustomValidations.objectId),
+        productId: Joi.string().custom(CustomValidations.objectId),
       })
       .min(1),
   };
