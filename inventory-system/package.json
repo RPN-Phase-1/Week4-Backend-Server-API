@@ -22,7 +22,7 @@
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
-    "docs": "ts-node ./docs/parser.ts"
+    "docs": "ts-node ./docs/parser.ts",
     "build": "tsc --build"
   },
   "keywords": [
