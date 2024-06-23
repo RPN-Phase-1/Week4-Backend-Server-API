@@ -41,16 +41,16 @@ export function createJsonIfyBody(values: RouterValue[]) {
 }
 
 export function createMainSchema(schema: RouterSchema) {
-  const results = [`## \`${schema.method}\` ${schema.route}`, '', schema.description];
-  if (schema.params) results.push('', '### Parameters', '', createTableParam(schema.params));
-  if (schema.queries) results.push('', '### Queries', '', createTableQuery(schema.queries));
+  const results = [`### \`${schema.method}\` ${schema.route}`, '', schema.description];
+  if (schema.params) results.push('', '**Parameters**', '', createTableParam(schema.params));
+  if (schema.queries) results.push('', '**Queries**', '', createTableQuery(schema.queries));
   if (schema.body)
-    results.push('', '### Body', '', createTableBody(schema.body), '', 'Example:', '', createJsonIfyBody(schema.body));
+    results.push('', '**Body**', '', createTableBody(schema.body), '', 'Example:', '', createJsonIfyBody(schema.body));
   return results.join('\n');
 }
 
 export function createSchemaLinks(schemas: RouterSchema[]) {
-  return schemas.map((x) => `\`${x.method}\` [${x.route}](#${x.method}${x.route})`).join('\n\n');
+  return schemas.map((x) => `- \`${x.method}\` [${x.route}](#${x.method}-${x.route.replaceAll('/', '')})`).join('\n');
 }
 
 export function createGroupsSchema(schemas: RouterSchema[]) {

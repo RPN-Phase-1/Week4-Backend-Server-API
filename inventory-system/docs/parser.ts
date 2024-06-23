@@ -1,23 +1,23 @@
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync } from 'node:fs';
 import { createGroupsSchema, createSchemaLinks } from './templates';
 
 import AuthPayload from './routes/v1/auth';
 import UserPayload from './routes/v1/user';
 
-const content = `\
-# inventory-sytem
+try {
+  process.stdout.write('Opening bases file\n');
+  const content = readFileSync('./docs/bases.md');
 
-### Authentication Routes
+  process.stdout.write('Creating README.md\n');
+  const toWrite = content
+    .toString()
+    .replace('{replace:auth:routes}', createSchemaLinks(AuthPayload))
+    .replace('{replace:user:routes}', createSchemaLinks(UserPayload))
+    .replace('{replace:auth:schemas}', createGroupsSchema(AuthPayload))
+    .replace('{replace:user:schemas}', createGroupsSchema(UserPayload));
 
-${createSchemaLinks(AuthPayload)}
-
-### Users Routes
-
-${createSchemaLinks(UserPayload)}
-
-${createGroupsSchema(AuthPayload)}
-
-${createGroupsSchema(UserPayload)}
-`;
-
-writeFileSync('./README.md', content);
+  writeFileSync('./README.md', toWrite);
+  process.stdout.write('Success Creating Docs!\n');
+} catch (e) {
+  process.stdout.write((e as Error).message);
+}
