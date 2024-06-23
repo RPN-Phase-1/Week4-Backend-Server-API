@@ -1,10 +1,12 @@
 # inventory-system
 
-A phase1 week4 long run projects on RPN.
+An inventory management system app using express
+that based on rpn phase1 week4 long run project
 
 ## Table of Contents
 
 - [Features](#Features)
+- [Project Structure](#ProjectStructure)
 - [Environment Variables](#EnvironmentVariables)
 - [Api Endpoints](#ApiEndpoints)
 
@@ -15,13 +17,27 @@ A phase1 week4 long run projects on RPN.
 - **Validation**: request data validation using [Joi](https://github.com/hapijs/joi)
 - **Logging**: using [winston](https://github.com/winstonjs/winston) and [morgan](https://github.com/expressjs/morgan)
 - **Error Handling**: centralized error handling mechanism
-- **Api Documentation**: using [docs](https://github.com/Rakemoon/tree/adzikri/docs/parser.ts)
+- **Api Documentation**: using [docs](https://github.com/Rakemoon/Week4-Backend-Server-API/blob/adzikri/inventory-system/docs/parser.ts)
 - **Process Management**: using [pm2](https://pm2.keymetrics.io/)
 - **Dependency Management**: using [pnpm](https://github.com/pnpm/pnpm)
 - **Environment Variables**: using [dotenv](https://github.com/motdotla/dotenv) and [cross-env](https://github.com/kentcdodds/cross-env)
 - **Security**: set security http headers using [helmet](https://helmetjs.github.io/)
 - **Sanitizing**: sanitize request data against [xss](https://www.npmjs.com/package/xss-clean)
 - **CORS**: enabled using [cors](https://github.com/expressjs/cors)
+
+## Project Structure
+
+```ls
+src\
+ | -- config\               # Environment Variables and config related things
+ | -- routes\               # Routes Controller layers
+ | -- services\             # Service Layers
+ | -- lib\
+       | -- middlewares\    # The collection of custom middlewares
+       | -- models\         # The collection of abstract classes
+       | -- utils\          # The collection of utility things
+       | -- validations\    # The collections of request data validations
+```
 
 ## Environment Variables
 
