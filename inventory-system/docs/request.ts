@@ -102,6 +102,8 @@ export default class DocsFaker {
         return this.fakeOrders[0][key as 'id'];
       case 'orderItem':
         return this.fakeOrderItems[0][key as 'id'];
+      case 'product':
+        return this.fakeProducts[0][key as 'id'];
       default:
         return null;
     }

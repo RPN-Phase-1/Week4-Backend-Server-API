@@ -8,7 +8,7 @@ that based on rpn phase1 week4 long run project
 - [Features](#Features)
 - [Project Structure](#ProjectStructure)
 - [Environment Variables](#EnvironmentVariables)
-- [Api Endpoints](#ApiEndpoints)
+- [Api Documentation](#ApiDocumentation)
 
 ## Features
 
@@ -68,6 +68,26 @@ JWT_REFRESH_EXPIRATION_DAYS=30
 
 {replace:user:routes}
 
+**Category Routes**:
+
+{replace:category:routes}
+
+**Order Routes**:
+
+{replace:order:routes}
+
+**Order Items**:
+
+{replace:orderItem:routes}
+
+## Api Endpoints
+
 {replace:auth:schemas}
 
 {replace:user:schemas}
+
+{replace:category:schemas}
+
+{replace:order:schemas}
+
+{replace:orderItem:schemas}

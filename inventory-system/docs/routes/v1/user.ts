@@ -139,4 +139,32 @@ export default [
       },
     ],
   },
+  {
+    route: '/v1/users/:userId/products',
+    method: 'GET',
+    descriptions: 'get the list products user have',
+    level: 'Admin',
+    params: [
+      {
+        name: 'userId',
+        description: 'an user id who need to retrive products data',
+        type: 'uuid',
+        example: '{replace:user:id}',
+      },
+    ],
+  },
+  {
+    route: '/v1/users/:userId/orders',
+    method: 'GET',
+    descriptions: 'get the list orders user have',
+    level: 'Admin',
+    params: [
+      {
+        name: 'userId',
+        description: 'an user id who need to retrive orders data',
+        type: 'uuid',
+        example: '{replace:user:id}',
+      },
+    ],
+  },
 ] as RouterSchema[];
