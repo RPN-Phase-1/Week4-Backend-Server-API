@@ -6,9 +6,9 @@ that based on rpn phase1 week4 long run project
 ## Table of Contents
 
 - [Features](#Features)
-- [Project Structure](#ProjectStructure)
-- [Environment Variables](#EnvironmentVariables)
-- [Api Documentation](#ApiDocumentation)
+- [Project Structure](#Project-Structure)
+- [Environment Variables](#Environment-Variables)
+- [Api Documentation](#Api-Documentation)
 
 ## Features
 
@@ -84,6 +84,15 @@ JWT_REFRESH_EXPIRATION_DAYS=30
 - `PUT` [/v1/categories/:categoryId](#PUT-v1categoriescategoryId)
 - `DELETE` [/v1/categories/:categoryId](#DELETE-v1categoriescategoryId)
 
+**Product Routes**:
+
+- `GET` [/v1/products](#GET-v1products)
+- `POST` [/v1/products](#POST-v1products)
+- `GET` [/v1/products/:productId](#GET-v1productsproductId)
+- `PUT` [/v1/products/:productId](#PUT-v1productsproductId)
+- `DELETE` [/v1/products/:productId](#DELETE-v1productsproductId)
+- `GET` [/v1/products/search](#GET-v1productssearch)
+
 **Order Routes**:
 
 - `GET` [/v1/orders](#GET-v1orders)
@@ -135,23 +144,23 @@ Example:
   "message": "User Created!",
   "data": {
     "user": {
-      "id": "db008c57-bed5-41f5-b0a5-35362456ff58",
+      "id": "7be10a80-e44a-4f39-8656-79bb1cc820c2",
       "name": "ImRakemoon",
       "email": "rakemoon@super.ma.il",
-      "password": "$2a$08$y1vAStWgO/8fTuzzpTSSbuk5WnRF6PfRglzeeEclCKfymBOjiklKi",
+      "password": "$2a$08$Dc0Xs5WUtLYG7DVr8ylBp.JMy7g7kLt7CPNQljcZFbibPNlsFllNu",
       "role": "Admin",
-      "createdAt": "2024-06-23T10:57:42.246Z",
-      "updatedAt": "2024-06-23T10:57:42.246Z",
+      "createdAt": "2024-06-23T13:10:53.481Z",
+      "updatedAt": "2024-06-23T13:10:53.481Z",
       "isEmailVerified": false
     },
     "tokens": {
       "access": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYjAwOGM1Ny1iZWQ1LTQxZjUtYjBhNS0zNTM2MjQ1NmZmNTgiLCJpYXQiOjE3MTkxNDAyNjMsImV4cCI6MTcxOTE0MjA2MywidHlwZSI6ImFjY2VzcyJ9.Y1DvZ2twKlGMm2UFWeduCsRirvI8fampBFprmn31XBk",
-        "expires": "2024-06-23T11:27:43.518Z"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YmUxMGE4MC1lNDRhLTRmMzktODY1Ni03OWJiMWNjODIwYzIiLCJpYXQiOjE3MTkxNDgyNTQsImV4cCI6MTcxOTE1MDA1NCwidHlwZSI6ImFjY2VzcyJ9.Ho0B9EX44O2eqMCTk5oupYWw5SQ_5uLD_xI1YrHWV0A",
+        "expires": "2024-06-23T13:40:54.659Z"
       },
       "refresh": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYjAwOGM1Ny1iZWQ1LTQxZjUtYjBhNS0zNTM2MjQ1NmZmNTgiLCJpYXQiOjE3MTkxNDAyNjMsImV4cCI6MTcyMTczMjI2MywidHlwZSI6InJlZnJlc2gifQ.3wW_06ivBqg8AjDEB_xgxYfSESTG3sI8VjinxVTax58",
-        "expires": "2024-07-23T10:57:43.522Z"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YmUxMGE4MC1lNDRhLTRmMzktODY1Ni03OWJiMWNjODIwYzIiLCJpYXQiOjE3MTkxNDgyNTQsImV4cCI6MTcyMTc0MDI1NCwidHlwZSI6InJlZnJlc2gifQ.iA8XJOqkhQelWLOXV2XVGk0Ej8RAP0rqTpnrljwuFx8",
+        "expires": "2024-07-23T13:10:54.666Z"
       }
     }
   }
@@ -188,23 +197,23 @@ Example:
   "message": "User Login!",
   "data": {
     "user": {
-      "id": "db008c57-bed5-41f5-b0a5-35362456ff58",
+      "id": "7be10a80-e44a-4f39-8656-79bb1cc820c2",
       "name": "ImRakemoon",
       "email": "rakemoon@super.ma.il",
-      "password": "$2a$08$y1vAStWgO/8fTuzzpTSSbuk5WnRF6PfRglzeeEclCKfymBOjiklKi",
+      "password": "$2a$08$Dc0Xs5WUtLYG7DVr8ylBp.JMy7g7kLt7CPNQljcZFbibPNlsFllNu",
       "role": "Admin",
-      "createdAt": "2024-06-23T10:57:42.246Z",
-      "updatedAt": "2024-06-23T10:57:42.246Z",
+      "createdAt": "2024-06-23T13:10:53.481Z",
+      "updatedAt": "2024-06-23T13:10:53.481Z",
       "isEmailVerified": false
     },
     "tokens": {
       "access": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYjAwOGM1Ny1iZWQ1LTQxZjUtYjBhNS0zNTM2MjQ1NmZmNTgiLCJpYXQiOjE3MTkxNDAyNjUsImV4cCI6MTcxOTE0MjA2NSwidHlwZSI6ImFjY2VzcyJ9.lKW4dJmowPwcjW17wpH-sGUuS2TQ_pIvk1898N3jHDg",
-        "expires": "2024-06-23T11:27:45.004Z"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YmUxMGE4MC1lNDRhLTRmMzktODY1Ni03OWJiMWNjODIwYzIiLCJpYXQiOjE3MTkxNDgyNTYsImV4cCI6MTcxOTE1MDA1NiwidHlwZSI6ImFjY2VzcyJ9.TDxYtK04brKiljTTVh_goVPZqwb-6kOZT1w_HFu9RQI",
+        "expires": "2024-06-23T13:40:56.029Z"
       },
       "refresh": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYjAwOGM1Ny1iZWQ1LTQxZjUtYjBhNS0zNTM2MjQ1NmZmNTgiLCJpYXQiOjE3MTkxNDAyNjUsImV4cCI6MTcyMTczMjI2NSwidHlwZSI6InJlZnJlc2gifQ.HPwHKj8jFA2AJvcauowLdAVdffYeMIVdC5tpQU72YwA",
-        "expires": "2024-07-23T10:57:45.004Z"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YmUxMGE4MC1lNDRhLTRmMzktODY1Ni03OWJiMWNjODIwYzIiLCJpYXQiOjE3MTkxNDgyNTYsImV4cCI6MTcyMTc0MDI1NiwidHlwZSI6InJlZnJlc2gifQ.fcvQvDd3rLXKljE1S4ZuVsjAEyCCiaenwE3RQ2W7qd0",
+        "expires": "2024-07-23T13:10:56.029Z"
       }
     }
   }
@@ -269,53 +278,53 @@ retrieve all users data
     "numOfPages": 1,
     "datas": [
       {
-        "id": "29c37af7-a74a-4af8-a681-ef3cffc59fa5",
-        "name": "Claude Littel",
-        "email": "violette.littel@hotmail.com",
-        "password": "$2a$08$mfwndWFfU7pR5fhppRTVju2FF3a3uHj6dZnrqx4rQBWiXMnTRQZHW",
+        "id": "0fa7322e-2641-44e5-b401-e9b6258f35e5",
+        "name": "Benjamin Zboncak",
+        "email": "efrain.bailey@gmail.com",
+        "password": "$2a$08$aI/Iujnxj9A6vqCAl63taOyIdoj4IYtKVswayIvy7bw0HzpjUyGgG",
+        "role": "User",
+        "createdAt": "2024-06-23T13:10:48.819Z",
+        "updatedAt": "2024-06-23T13:10:48.819Z",
+        "isEmailVerified": false
+      },
+      {
+        "id": "15c1f054-fc9f-4ad0-af15-adb803ecc7f1",
+        "name": "Ignacio Howell",
+        "email": "louisa85@yahoo.com",
+        "password": "$2a$08$aI/Iujnxj9A6vqCAl63taOyIdoj4IYtKVswayIvy7bw0HzpjUyGgG",
         "role": "Admin",
-        "createdAt": "2024-06-23T10:57:37.594Z",
-        "updatedAt": "2024-06-23T10:57:37.594Z",
+        "createdAt": "2024-06-23T13:10:48.819Z",
+        "updatedAt": "2024-06-23T13:10:48.819Z",
         "isEmailVerified": false
       },
       {
-        "id": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-        "name": "Debbie Brown",
-        "email": "estel.rohan14@gmail.com",
-        "password": "$2a$08$mfwndWFfU7pR5fhppRTVju2FF3a3uHj6dZnrqx4rQBWiXMnTRQZHW",
+        "id": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+        "name": "Joyce Rohan",
+        "email": "tomas91@hotmail.com",
+        "password": "$2a$08$aI/Iujnxj9A6vqCAl63taOyIdoj4IYtKVswayIvy7bw0HzpjUyGgG",
         "role": "User",
-        "createdAt": "2024-06-23T10:57:37.594Z",
-        "updatedAt": "2024-06-23T10:57:37.594Z",
+        "createdAt": "2024-06-23T13:10:48.819Z",
+        "updatedAt": "2024-06-23T13:10:48.819Z",
         "isEmailVerified": false
       },
       {
-        "id": "71458d15-48a0-4d77-a5cd-632b31e31713",
-        "name": "Karl Wehner",
-        "email": "letitia86@hotmail.com",
-        "password": "$2a$08$mfwndWFfU7pR5fhppRTVju2FF3a3uHj6dZnrqx4rQBWiXMnTRQZHW",
-        "role": "User",
-        "createdAt": "2024-06-23T10:57:37.594Z",
-        "updatedAt": "2024-06-23T10:57:37.594Z",
-        "isEmailVerified": false
-      },
-      {
-        "id": "db008c57-bed5-41f5-b0a5-35362456ff58",
+        "id": "7be10a80-e44a-4f39-8656-79bb1cc820c2",
         "name": "ImRakemoon",
         "email": "rakemoon@super.ma.il",
-        "password": "$2a$08$y1vAStWgO/8fTuzzpTSSbuk5WnRF6PfRglzeeEclCKfymBOjiklKi",
+        "password": "$2a$08$Dc0Xs5WUtLYG7DVr8ylBp.JMy7g7kLt7CPNQljcZFbibPNlsFllNu",
         "role": "Admin",
-        "createdAt": "2024-06-23T10:57:42.246Z",
-        "updatedAt": "2024-06-23T10:57:42.246Z",
+        "createdAt": "2024-06-23T13:10:53.481Z",
+        "updatedAt": "2024-06-23T13:10:53.481Z",
         "isEmailVerified": false
       },
       {
-        "id": "db9f3ab3-e675-4848-97f1-e3dc2553d232",
-        "name": "Dawn Kling",
-        "email": "adriana.johnston23@yahoo.com",
-        "password": "$2a$08$mfwndWFfU7pR5fhppRTVju2FF3a3uHj6dZnrqx4rQBWiXMnTRQZHW",
+        "id": "dbc908f1-4834-4750-ab23-5385b738fc7c",
+        "name": "Katherine Reilly",
+        "email": "cathrine.lowe-lindgren11@gmail.com",
+        "password": "$2a$08$aI/Iujnxj9A6vqCAl63taOyIdoj4IYtKVswayIvy7bw0HzpjUyGgG",
         "role": "User",
-        "createdAt": "2024-06-23T10:57:37.594Z",
-        "updatedAt": "2024-06-23T10:57:37.594Z",
+        "createdAt": "2024-06-23T13:10:48.819Z",
+        "updatedAt": "2024-06-23T13:10:48.819Z",
         "isEmailVerified": false
       }
     ]
@@ -362,13 +371,13 @@ Example:
   "code": 201,
   "message": "User succesfully created",
   "data": {
-    "id": "1bc7427a-7334-466f-b05f-9390cee3a789",
+    "id": "06604685-0b08-47bd-ba31-02fb6966a6d9",
     "name": "hantuKiyowo",
     "email": "hantu@kiyowo.co.uk",
-    "password": "$2a$08$LxSHfzt2PB7EL1hkOFerze7xkmYnYe9eEk022M1QghygWJ6pKKD6e",
+    "password": "$2a$08$HNdZbuZxIW25tUVQ3VXvluTiYLDR8jIkpAcuQsN7uM6tgW2L9HT8G",
     "role": "User",
-    "createdAt": "2024-06-23T10:57:47.662Z",
-    "updatedAt": "2024-06-23T10:57:47.662Z",
+    "createdAt": "2024-06-23T13:10:58.782Z",
+    "updatedAt": "2024-06-23T13:10:58.782Z",
     "isEmailVerified": false
   }
 }
@@ -387,7 +396,7 @@ retrieve user data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who need to retrieve|6033b295-78cd-4c04-9f29-d1b0c4688547|
+|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who need to retrieve|2e317601-3ba2-47a8-80da-0884c54b4eb1|
 
 **Responses**
 
@@ -397,13 +406,13 @@ retrieve user data
   "code": 200,
   "message": "User succesfully retrieved!",
   "data": {
-    "id": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-    "name": "Debbie Brown",
-    "email": "estel.rohan14@gmail.com",
-    "password": "$2a$08$mfwndWFfU7pR5fhppRTVju2FF3a3uHj6dZnrqx4rQBWiXMnTRQZHW",
+    "id": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "name": "Joyce Rohan",
+    "email": "tomas91@hotmail.com",
+    "password": "$2a$08$aI/Iujnxj9A6vqCAl63taOyIdoj4IYtKVswayIvy7bw0HzpjUyGgG",
     "role": "User",
-    "createdAt": "2024-06-23T10:57:37.594Z",
-    "updatedAt": "2024-06-23T10:57:37.594Z",
+    "createdAt": "2024-06-23T13:10:48.819Z",
+    "updatedAt": "2024-06-23T13:10:48.819Z",
     "isEmailVerified": false
   }
 }
@@ -422,7 +431,7 @@ update user data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who will get the data update|1bc7427a-7334-466f-b05f-9390cee3a789|
+|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who will get the data update|06604685-0b08-47bd-ba31-02fb6966a6d9|
 
 **Body**
 
@@ -454,13 +463,13 @@ Example:
   "code": 200,
   "message": "Succesfully update user!",
   "data": {
-    "id": "1bc7427a-7334-466f-b05f-9390cee3a789",
+    "id": "06604685-0b08-47bd-ba31-02fb6966a6d9",
     "name": "bakYusa",
     "email": "bakbibuk@strip.email",
-    "password": "$2a$08$pfeqEuoy6tGOFlwhBpfMJuXIri2mtseIVsLiGugtRNZxs23Z3K/LC",
+    "password": "$2a$08$JCL43EIRz2DbVxtkbTxLBeY5zqsCmhoSC9d7IVuj3N.lY5ZA5qMxC",
     "role": "User",
-    "createdAt": "2024-06-23T10:57:47.662Z",
-    "updatedAt": "2024-06-23T10:57:49.762Z",
+    "createdAt": "2024-06-23T13:10:58.782Z",
+    "updatedAt": "2024-06-23T13:11:01.059Z",
     "isEmailVerified": false
   }
 }
@@ -479,7 +488,7 @@ delete user data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who will get deleted|1bc7427a-7334-466f-b05f-9390cee3a789|
+|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who will get deleted|06604685-0b08-47bd-ba31-02fb6966a6d9|
 
 **Responses**
 
@@ -489,13 +498,13 @@ delete user data
   "code": 200,
   "message": "Succesfully delete user!",
   "data": {
-    "id": "1bc7427a-7334-466f-b05f-9390cee3a789",
+    "id": "06604685-0b08-47bd-ba31-02fb6966a6d9",
     "name": "bakYusa",
     "email": "bakbibuk@strip.email",
-    "password": "$2a$08$pfeqEuoy6tGOFlwhBpfMJuXIri2mtseIVsLiGugtRNZxs23Z3K/LC",
+    "password": "$2a$08$JCL43EIRz2DbVxtkbTxLBeY5zqsCmhoSC9d7IVuj3N.lY5ZA5qMxC",
     "role": "User",
-    "createdAt": "2024-06-23T10:57:47.662Z",
-    "updatedAt": "2024-06-23T10:57:49.762Z",
+    "createdAt": "2024-06-23T13:10:58.782Z",
+    "updatedAt": "2024-06-23T13:11:01.059Z",
     "isEmailVerified": false
   }
 }
@@ -514,7 +523,7 @@ delete user data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who need to retrive products data|6033b295-78cd-4c04-9f29-d1b0c4688547|
+|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who need to retrive products data|2e317601-3ba2-47a8-80da-0884c54b4eb1|
 
 **Responses**
 
@@ -525,15 +534,15 @@ delete user data
   "message": "Products Succesfully retrieved!",
   "data": [
     {
-      "id": "4b392050-ef43-4f03-8f0e-0f34ef8c4ce3",
-      "name": "Canebrake",
-      "description": "Solio cras avaritia absens sumo vix. Amita aequitas tabgo creator conduco dolorum crebro ea modi surgo. Sufficio vomica inventore velit cibus.",
-      "price": 7945,
-      "quantityInStock": 9,
-      "categoryId": "ba60fcb0-85bd-4c21-827c-77aa8e78e5ab",
-      "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-      "createdAt": "2024-06-23T10:57:39.140Z",
-      "updatedAt": "2024-06-23T10:57:39.140Z"
+      "id": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
+      "name": "Barbour's pit viper",
+      "description": "Theatrum absum defleo aestivus caries adduco. Clementia demonstro corrupti vomito commodo delinquo alioqui. Curso volutabrum delectus vir tricesimus.",
+      "price": 8092,
+      "quantityInStock": 7,
+      "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
+      "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+      "createdAt": "2024-06-23T13:10:50.495Z",
+      "updatedAt": "2024-06-23T13:10:50.495Z"
     }
   ]
 }
@@ -552,7 +561,7 @@ delete user data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who need to retrive orders data|6033b295-78cd-4c04-9f29-d1b0c4688547|
+|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|an user id who need to retrive orders data|2e317601-3ba2-47a8-80da-0884c54b4eb1|
 
 **Responses**
 
@@ -563,14 +572,14 @@ delete user data
   "message": "Orders Succesfully retrieved!",
   "data": [
     {
-      "id": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-      "date": "2024-06-23T10:57:39.137Z",
-      "totalPrice": 37206,
-      "customerName": "Debbie Brown",
-      "customerEmail": "estel.rohan14@gmail.com",
-      "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-      "createdAt": "2024-06-23T10:57:39.140Z",
-      "updatedAt": "2024-06-23T10:57:39.140Z"
+      "id": "1500495e-d350-416e-9afb-6529b453471b",
+      "date": "2024-06-23T13:10:50.492Z",
+      "totalPrice": 71204,
+      "customerName": "Joyce Rohan",
+      "customerEmail": "tomas91@hotmail.com",
+      "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+      "createdAt": "2024-06-23T13:10:50.495Z",
+      "updatedAt": "2024-06-23T13:10:50.495Z"
     }
   ]
 }
@@ -604,22 +613,22 @@ retrieve all categories data
     "numOfPages": 1,
     "datas": [
       {
-        "id": "97df82cc-fb0a-4849-9a12-d5e513c970d3",
-        "name": "fish",
-        "createdAt": "2024-06-23T10:57:37.594Z",
-        "updatedAt": "2024-06-23T10:57:37.594Z"
-      },
-      {
-        "id": "ba60fcb0-85bd-4c21-827c-77aa8e78e5ab",
+        "id": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
         "name": "snake",
-        "createdAt": "2024-06-23T10:57:37.594Z",
-        "updatedAt": "2024-06-23T10:57:37.594Z"
+        "createdAt": "2024-06-23T13:10:48.819Z",
+        "updatedAt": "2024-06-23T13:10:48.819Z"
       },
       {
-        "id": "e714f42c-28d3-4b5f-8353-f301601cdf90",
+        "id": "6b012f09-d3cb-4bfd-943a-cbf2ada8ce25",
+        "name": "snake",
+        "createdAt": "2024-06-23T13:10:48.819Z",
+        "updatedAt": "2024-06-23T13:10:48.819Z"
+      },
+      {
+        "id": "d992f4b3-e71f-4eca-9810-26bd76e550e2",
         "name": "rabbit",
-        "createdAt": "2024-06-23T10:57:37.594Z",
-        "updatedAt": "2024-06-23T10:57:37.594Z"
+        "createdAt": "2024-06-23T13:10:48.819Z",
+        "updatedAt": "2024-06-23T13:10:48.819Z"
       }
     ]
   }
@@ -657,10 +666,10 @@ Example:
   "code": 201,
   "message": "Category Created!",
   "data": {
-    "id": "ca0058cf-efe6-45ac-b616-57371e09a029",
+    "id": "76a6101e-ef6d-4c9e-b8da-a773463b0725",
     "name": "Opopipipar",
-    "createdAt": "2024-06-23T10:57:55.507Z",
-    "updatedAt": "2024-06-23T10:57:55.507Z"
+    "createdAt": "2024-06-23T13:11:07.160Z",
+    "updatedAt": "2024-06-23T13:11:07.160Z"
   }
 }
 
@@ -678,7 +687,7 @@ to retrive existing category
 
 |parameter|type|description|example|
 |-|-|-|-|
-|***categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the id of category to retrieve|ba60fcb0-85bd-4c21-827c-77aa8e78e5ab|
+|***categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the id of category to retrieve|1e79d5bd-e637-4bc1-9dcf-3c6622da95b3|
 
 **Responses**
 
@@ -688,10 +697,10 @@ to retrive existing category
   "code": 200,
   "message": "Category retrieved!",
   "data": {
-    "id": "ba60fcb0-85bd-4c21-827c-77aa8e78e5ab",
+    "id": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
     "name": "snake",
-    "createdAt": "2024-06-23T10:57:37.594Z",
-    "updatedAt": "2024-06-23T10:57:37.594Z"
+    "createdAt": "2024-06-23T13:10:48.819Z",
+    "updatedAt": "2024-06-23T13:10:48.819Z"
   }
 }
 
@@ -709,7 +718,7 @@ to edit existing category
 
 |parameter|type|description|example|
 |-|-|-|-|
-|***categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the id of category to edit|ca0058cf-efe6-45ac-b616-57371e09a029|
+|***categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the id of category to edit|76a6101e-ef6d-4c9e-b8da-a773463b0725|
 
 **Body**
 
@@ -733,10 +742,10 @@ Example:
   "code": 200,
   "message": "Category Updated",
   "data": {
-    "id": "ca0058cf-efe6-45ac-b616-57371e09a029",
+    "id": "76a6101e-ef6d-4c9e-b8da-a773463b0725",
     "name": "Osupipipar",
-    "createdAt": "2024-06-23T10:57:55.507Z",
-    "updatedAt": "2024-06-23T10:57:58.375Z"
+    "createdAt": "2024-06-23T13:11:07.160Z",
+    "updatedAt": "2024-06-23T13:11:10.001Z"
   }
 }
 
@@ -754,7 +763,7 @@ to delete existing category
 
 |parameter|type|description|example|
 |-|-|-|-|
-|***categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the id of category to delete|ca0058cf-efe6-45ac-b616-57371e09a029|
+|***categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the id of category to delete|76a6101e-ef6d-4c9e-b8da-a773463b0725|
 
 **Responses**
 
@@ -764,11 +773,300 @@ to delete existing category
   "code": 200,
   "message": "Category deleted",
   "data": {
-    "id": "ca0058cf-efe6-45ac-b616-57371e09a029",
+    "id": "76a6101e-ef6d-4c9e-b8da-a773463b0725",
     "name": "Osupipipar",
-    "createdAt": "2024-06-23T10:57:55.507Z",
-    "updatedAt": "2024-06-23T10:57:58.375Z"
+    "createdAt": "2024-06-23T13:11:07.160Z",
+    "updatedAt": "2024-06-23T13:11:10.001Z"
   }
+}
+
+```
+
+### `GET` /v1/products
+
+retrieve all products data
+
+**Authorization**
+
+`Bearer` User token
+
+**Queries**
+
+|query|type|description|example|
+|-|-|-|-|
+|***pageIndex**|_[integer](https://en.wikipedia.org/wiki/Integer)_|the index of current pages|1|
+|***pageSize**|_[integer](https://en.wikipedia.org/wiki/Integer)_|the document limit for every pages|10|
+
+**Responses**
+
+```json
+
+{
+  "code": 200,
+  "message": "Products retrieved!",
+  "data": {
+    "index": 1,
+    "numOfPages": 1,
+    "datas": [
+      {
+        "id": "06266073-3985-49ef-b904-a6e2f9e49371",
+        "name": "Satin",
+        "description": "Neque hic accusator curvo confugo. Acies decerno clarus complectus anser sapiente utrum adversus cubitum deripio. Appositus ventito cursus adstringo pel voluptatum carcer tergo tamisium.",
+        "price": 5465,
+        "quantityInStock": 8,
+        "categoryId": "d992f4b3-e71f-4eca-9810-26bd76e550e2",
+        "userId": "0fa7322e-2641-44e5-b401-e9b6258f35e5",
+        "createdAt": "2024-06-23T13:10:50.495Z",
+        "updatedAt": "2024-06-23T13:10:50.495Z"
+      },
+      {
+        "id": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
+        "name": "Barbour's pit viper",
+        "description": "Theatrum absum defleo aestivus caries adduco. Clementia demonstro corrupti vomito commodo delinquo alioqui. Curso volutabrum delectus vir tricesimus.",
+        "price": 8092,
+        "quantityInStock": 7,
+        "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
+        "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+        "createdAt": "2024-06-23T13:10:50.495Z",
+        "updatedAt": "2024-06-23T13:10:50.495Z"
+      },
+      {
+        "id": "fbabeba4-8cf3-4ed6-a03c-82c6b10644d8",
+        "name": "Hairy bush viper",
+        "description": "Victoria officiis facere. Advoco solus universe. Comes celebrer alii trepide conscendo adnuo vitiosus.",
+        "price": 5530,
+        "quantityInStock": 4,
+        "categoryId": "6b012f09-d3cb-4bfd-943a-cbf2ada8ce25",
+        "userId": "dbc908f1-4834-4750-ab23-5385b738fc7c",
+        "createdAt": "2024-06-23T13:10:50.495Z",
+        "updatedAt": "2024-06-23T13:10:50.495Z"
+      }
+    ]
+  }
+}
+
+```
+
+### `POST` /v1/products
+
+to create products data
+
+**Authorization**
+
+`Bearer` User token
+
+**Body**
+
+|key|type|description|
+|-|-|-|
+|***name**|_[string](https://en.wikipedia.org/wiki/String_(computer_science))_|the name of the product
+|***price**|_[float](https://en.wikipedia.org/wiki/Floating-point_arithmetic)_|the price of the product
+|***description**|_[string](https://en.wikipedia.org/wiki/String_(computer_science))_|the description of the product
+|***quantityInStock**|_[integer](https://en.wikipedia.org/wiki/Integer)_|the quantity of the products
+|***userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the user id who create this product
+|***categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the category id for this product
+
+Example:
+
+```json
+{
+  "name": "Aloha",
+  "price": 1000,
+  "description": "This is a brand new aloe verra with durian scene",
+  "quantityInStock": 10,
+  "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+  "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3"
+}
+```
+
+**Responses**
+
+```json
+
+{
+  "code": 201,
+  "message": "Product created!",
+  "data": {
+    "id": "f51166c2-de3b-471f-bcec-225f966ba5c0",
+    "name": "Aloha",
+    "description": "This is a brand new aloe verra with durian scene",
+    "price": 1000,
+    "quantityInStock": 10,
+    "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:11:14.923Z",
+    "updatedAt": "2024-06-23T13:11:14.923Z"
+  }
+}
+
+```
+
+### `GET` /v1/products/:productId
+
+to retrieve product data
+
+**Authorization**
+
+`Bearer` User token
+
+**Parameters**
+
+|parameter|type|description|example|
+|-|-|-|-|
+|***productId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the product id who need to retrieve their data|cdffb3a4-385d-440b-a3f6-a56a8d5dfd43|
+
+**Responses**
+
+```json
+
+{
+  "code": 200,
+  "message": "Product Retrieved!",
+  "data": {
+    "id": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
+    "name": "Barbour's pit viper",
+    "description": "Theatrum absum defleo aestivus caries adduco. Clementia demonstro corrupti vomito commodo delinquo alioqui. Curso volutabrum delectus vir tricesimus.",
+    "price": 8092,
+    "quantityInStock": 7,
+    "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:10:50.495Z",
+    "updatedAt": "2024-06-23T13:10:50.495Z"
+  }
+}
+
+```
+
+### `PUT` /v1/products/:productId
+
+to edit product data
+
+**Authorization**
+
+`Bearer` User token
+
+**Parameters**
+
+|parameter|type|description|example|
+|-|-|-|-|
+|***productId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the product id to update the data|f51166c2-de3b-471f-bcec-225f966ba5c0|
+
+**Body**
+
+|key|type|description|
+|-|-|-|
+|**name**|_[string](https://en.wikipedia.org/wiki/String_(computer_science))_|the name of the product
+|**price**|_[float](https://en.wikipedia.org/wiki/Floating-point_arithmetic)_|the price of the product
+|**description**|_[string](https://en.wikipedia.org/wiki/String_(computer_science))_|the description of the product
+|**quantityInStock**|_[integer](https://en.wikipedia.org/wiki/Integer)_|the quantity of the products
+|**userId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the user id who create this product
+|**categoryId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the category id for this product
+
+Example:
+
+```json
+{
+  "name": "BaiLoha",
+  "price": 1000,
+  "description": "This is a brand new aloe verra with durian scene",
+  "quantityInStock": 10,
+  "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+  "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3"
+}
+```
+
+**Responses**
+
+```json
+
+{
+  "code": 200,
+  "message": "Product Updated!",
+  "data": {
+    "id": "f51166c2-de3b-471f-bcec-225f966ba5c0",
+    "name": "BaiLoha",
+    "description": "This is a brand new aloe verra with durian scene",
+    "price": 1000,
+    "quantityInStock": 10,
+    "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:11:14.923Z",
+    "updatedAt": "2024-06-23T13:11:17.186Z"
+  }
+}
+
+```
+
+### `DELETE` /v1/products/:productId
+
+to delete product data
+
+**Authorization**
+
+`Bearer` User token
+
+**Parameters**
+
+|parameter|type|description|example|
+|-|-|-|-|
+|***productId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the product id who to delete|f51166c2-de3b-471f-bcec-225f966ba5c0|
+
+**Responses**
+
+```json
+
+{
+  "code": 200,
+  "message": "Product Deleted!",
+  "data": {
+    "id": "f51166c2-de3b-471f-bcec-225f966ba5c0",
+    "name": "BaiLoha",
+    "description": "This is a brand new aloe verra with durian scene",
+    "price": 1000,
+    "quantityInStock": 10,
+    "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:11:14.923Z",
+    "updatedAt": "2024-06-23T13:11:17.186Z"
+  }
+}
+
+```
+
+### `GET` /v1/products/search
+
+to search product by category
+
+**Authorization**
+
+`Bearer` User token
+
+**Queries**
+
+|query|type|description|example|
+|-|-|-|-|
+|***category**|_[string](https://en.wikipedia.org/wiki/String_(computer_science))_|the category name|snake|
+
+**Responses**
+
+```json
+
+{
+  "code": 200,
+  "message": "Product Retrieved!",
+  "data": [
+    {
+      "id": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
+      "name": "Barbour's pit viper",
+      "description": "Theatrum absum defleo aestivus caries adduco. Clementia demonstro corrupti vomito commodo delinquo alioqui. Curso volutabrum delectus vir tricesimus.",
+      "price": 8092,
+      "quantityInStock": 7,
+      "categoryId": "1e79d5bd-e637-4bc1-9dcf-3c6622da95b3",
+      "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+      "createdAt": "2024-06-23T13:10:50.495Z",
+      "updatedAt": "2024-06-23T13:10:50.495Z"
+    }
+  ]
 }
 
 ```
@@ -800,34 +1098,34 @@ retrieve all orders data
     "numOfPages": 1,
     "datas": [
       {
-        "id": "33146511-8c01-47e5-9d09-0271dc00e2b6",
-        "date": "2024-06-23T10:57:39.137Z",
-        "totalPrice": 11982,
-        "customerName": "Karl Wehner",
-        "customerEmail": "letitia86@hotmail.com",
-        "userId": "71458d15-48a0-4d77-a5cd-632b31e31713",
-        "createdAt": "2024-06-23T10:57:39.140Z",
-        "updatedAt": "2024-06-23T10:57:39.140Z"
+        "id": "1500495e-d350-416e-9afb-6529b453471b",
+        "date": "2024-06-23T13:10:50.492Z",
+        "totalPrice": 71204,
+        "customerName": "Joyce Rohan",
+        "customerEmail": "tomas91@hotmail.com",
+        "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+        "createdAt": "2024-06-23T13:10:50.495Z",
+        "updatedAt": "2024-06-23T13:10:50.495Z"
       },
       {
-        "id": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-        "date": "2024-06-23T10:57:39.137Z",
-        "totalPrice": 37206,
-        "customerName": "Debbie Brown",
-        "customerEmail": "estel.rohan14@gmail.com",
-        "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-        "createdAt": "2024-06-23T10:57:39.140Z",
-        "updatedAt": "2024-06-23T10:57:39.140Z"
+        "id": "46593a05-868f-436b-9410-1bfddacdc82b",
+        "date": "2024-06-23T13:10:50.492Z",
+        "totalPrice": 37600,
+        "customerName": "Benjamin Zboncak",
+        "customerEmail": "efrain.bailey@gmail.com",
+        "userId": "0fa7322e-2641-44e5-b401-e9b6258f35e5",
+        "createdAt": "2024-06-23T13:10:50.495Z",
+        "updatedAt": "2024-06-23T13:10:50.495Z"
       },
       {
-        "id": "f08cc6a7-edde-4dd0-92c6-9520d9c384ed",
-        "date": "2024-06-23T10:57:39.137Z",
-        "totalPrice": 72709,
-        "customerName": "Dawn Kling",
-        "customerEmail": "adriana.johnston23@yahoo.com",
-        "userId": "db9f3ab3-e675-4848-97f1-e3dc2553d232",
-        "createdAt": "2024-06-23T10:57:39.140Z",
-        "updatedAt": "2024-06-23T10:57:39.140Z"
+        "id": "61b3ae4d-ee74-4afc-b443-b5f9d637288b",
+        "date": "2024-06-23T13:10:50.492Z",
+        "totalPrice": 98909,
+        "customerName": "Katherine Reilly",
+        "customerEmail": "cathrine.lowe-lindgren11@gmail.com",
+        "userId": "dbc908f1-4834-4750-ab23-5385b738fc7c",
+        "createdAt": "2024-06-23T13:10:50.495Z",
+        "updatedAt": "2024-06-23T13:10:50.495Z"
       }
     ]
   }
@@ -859,9 +1157,9 @@ Example:
 {
   "date": "1970-01-01T00:00:00.000Z",
   "totalPrice": 1000000,
-  "customerName": "Debbie Brown",
-  "customerEmail": "estel.rohan14@gmail.com",
-  "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547"
+  "customerName": "Joyce Rohan",
+  "customerEmail": "tomas91@hotmail.com",
+  "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1"
 }
 ```
 
@@ -873,14 +1171,14 @@ Example:
   "code": 201,
   "message": "Order Created!",
   "data": {
-    "id": "4a45f407-6e4f-4d9d-b5f6-ffd62336fb44",
+    "id": "d5def1db-a9a9-4097-9700-356fdf781a10",
     "date": "1970-01-01T00:00:00.000Z",
     "totalPrice": 1000000,
-    "customerName": "Debbie Brown",
-    "customerEmail": "estel.rohan14@gmail.com",
-    "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-    "createdAt": "2024-06-23T10:58:03.121Z",
-    "updatedAt": "2024-06-23T10:58:03.121Z"
+    "customerName": "Joyce Rohan",
+    "customerEmail": "tomas91@hotmail.com",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:11:22.613Z",
+    "updatedAt": "2024-06-23T13:11:22.613Z"
   }
 }
 
@@ -898,7 +1196,7 @@ retrieve the order data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**orderId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order id who need to retrieve their data|467c62fd-440c-4f3b-b61e-4309eecc435b|
+|**orderId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order id who need to retrieve their data|1500495e-d350-416e-9afb-6529b453471b|
 
 **Responses**
 
@@ -908,14 +1206,14 @@ retrieve the order data
   "code": 200,
   "message": "Order retrieved!",
   "data": {
-    "id": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-    "date": "2024-06-23T10:57:39.137Z",
-    "totalPrice": 37206,
-    "customerName": "Debbie Brown",
-    "customerEmail": "estel.rohan14@gmail.com",
-    "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-    "createdAt": "2024-06-23T10:57:39.140Z",
-    "updatedAt": "2024-06-23T10:57:39.140Z"
+    "id": "1500495e-d350-416e-9afb-6529b453471b",
+    "date": "2024-06-23T13:10:50.492Z",
+    "totalPrice": 71204,
+    "customerName": "Joyce Rohan",
+    "customerEmail": "tomas91@hotmail.com",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:10:50.495Z",
+    "updatedAt": "2024-06-23T13:10:50.495Z"
   }
 }
 
@@ -933,7 +1231,7 @@ update the order data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**orderId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order id to get updated|4a45f407-6e4f-4d9d-b5f6-ffd62336fb44|
+|**orderId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order id to get updated|d5def1db-a9a9-4097-9700-356fdf781a10|
 
 **Body**
 
@@ -951,9 +1249,9 @@ Example:
 {
   "date": "1970-01-01T00:00:00.000Z",
   "totalPrice": 2000000,
-  "customerName": "Debbie Brown",
-  "customerEmail": "estel.rohan14@gmail.com",
-  "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547"
+  "customerName": "Joyce Rohan",
+  "customerEmail": "tomas91@hotmail.com",
+  "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1"
 }
 ```
 
@@ -965,14 +1263,14 @@ Example:
   "code": 200,
   "message": "Order Updated!",
   "data": {
-    "id": "4a45f407-6e4f-4d9d-b5f6-ffd62336fb44",
+    "id": "d5def1db-a9a9-4097-9700-356fdf781a10",
     "date": "1970-01-01T00:00:00.000Z",
     "totalPrice": 2000000,
-    "customerName": "Debbie Brown",
-    "customerEmail": "estel.rohan14@gmail.com",
-    "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-    "createdAt": "2024-06-23T10:58:03.121Z",
-    "updatedAt": "2024-06-23T10:58:05.441Z"
+    "customerName": "Joyce Rohan",
+    "customerEmail": "tomas91@hotmail.com",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:11:22.613Z",
+    "updatedAt": "2024-06-23T13:11:25.285Z"
   }
 }
 
@@ -990,7 +1288,7 @@ delete the order data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**orderId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order id to get deleted|4a45f407-6e4f-4d9d-b5f6-ffd62336fb44|
+|**orderId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order id to get deleted|d5def1db-a9a9-4097-9700-356fdf781a10|
 
 **Responses**
 
@@ -1000,14 +1298,14 @@ delete the order data
   "code": 200,
   "message": "Order deleted",
   "data": {
-    "id": "4a45f407-6e4f-4d9d-b5f6-ffd62336fb44",
+    "id": "d5def1db-a9a9-4097-9700-356fdf781a10",
     "date": "1970-01-01T00:00:00.000Z",
     "totalPrice": 2000000,
-    "customerName": "Debbie Brown",
-    "customerEmail": "estel.rohan14@gmail.com",
-    "userId": "6033b295-78cd-4c04-9f29-d1b0c4688547",
-    "createdAt": "2024-06-23T10:58:03.121Z",
-    "updatedAt": "2024-06-23T10:58:05.441Z"
+    "customerName": "Joyce Rohan",
+    "customerEmail": "tomas91@hotmail.com",
+    "userId": "2e317601-3ba2-47a8-80da-0884c54b4eb1",
+    "createdAt": "2024-06-23T13:11:22.613Z",
+    "updatedAt": "2024-06-23T13:11:25.285Z"
   }
 }
 
@@ -1040,31 +1338,31 @@ retrieve all order items data
     "numOfPages": 1,
     "datas": [
       {
-        "id": "548aa218-808c-4706-99af-737d92a83ee8",
-        "orderId": "f08cc6a7-edde-4dd0-92c6-9520d9c384ed",
-        "productId": "2c0bde27-0a9e-4f73-b772-3e0fd3f2a2c2",
+        "id": "459d7c6d-ca9c-4af4-8d70-7e7a468c8465",
+        "orderId": "46593a05-868f-436b-9410-1bfddacdc82b",
+        "productId": "06266073-3985-49ef-b904-a6e2f9e49371",
         "quantity": 2,
-        "unitPrice": 4699,
-        "createdAt": "2024-06-23T10:57:40.152Z",
-        "updatedAt": "2024-06-23T10:57:40.152Z"
+        "unitPrice": 5465,
+        "createdAt": "2024-06-23T13:10:51.281Z",
+        "updatedAt": "2024-06-23T13:10:51.281Z"
       },
       {
-        "id": "88596df3-662b-4c7e-a442-32a6a4c798a5",
-        "orderId": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-        "productId": "4b392050-ef43-4f03-8f0e-0f34ef8c4ce3",
-        "quantity": 1,
-        "unitPrice": 7945,
-        "createdAt": "2024-06-23T10:57:40.152Z",
-        "updatedAt": "2024-06-23T10:57:40.152Z"
-      },
-      {
-        "id": "bc4f9aa0-890d-45f4-bfc5-2d337390553a",
-        "orderId": "33146511-8c01-47e5-9d09-0271dc00e2b6",
-        "productId": "5366bbe2-f733-4e8c-ab02-2b34bd01053b",
+        "id": "a7b912ce-d643-4e75-bf8e-c7be7b0a0995",
+        "orderId": "1500495e-d350-416e-9afb-6529b453471b",
+        "productId": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
         "quantity": 3,
-        "unitPrice": 2657,
-        "createdAt": "2024-06-23T10:57:40.152Z",
-        "updatedAt": "2024-06-23T10:57:40.152Z"
+        "unitPrice": 8092,
+        "createdAt": "2024-06-23T13:10:51.281Z",
+        "updatedAt": "2024-06-23T13:10:51.281Z"
+      },
+      {
+        "id": "ffffbd8e-c0c7-4783-9ce7-65d3058a70ad",
+        "orderId": "61b3ae4d-ee74-4afc-b443-b5f9d637288b",
+        "productId": "fbabeba4-8cf3-4ed6-a03c-82c6b10644d8",
+        "quantity": 3,
+        "unitPrice": 5530,
+        "createdAt": "2024-06-23T13:10:51.281Z",
+        "updatedAt": "2024-06-23T13:10:51.281Z"
       }
     ]
   }
@@ -1095,8 +1393,8 @@ Example:
 {
   "quantity": 1,
   "unitPrice": 1000000,
-  "orderId": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-  "productId": "4b392050-ef43-4f03-8f0e-0f34ef8c4ce3"
+  "orderId": "1500495e-d350-416e-9afb-6529b453471b",
+  "productId": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43"
 }
 ```
 
@@ -1108,13 +1406,13 @@ Example:
   "code": 201,
   "message": "OrderItems Created",
   "data": {
-    "id": "75cc1f5f-6cc9-4b2b-a301-87ede79b9381",
-    "orderId": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-    "productId": "4b392050-ef43-4f03-8f0e-0f34ef8c4ce3",
+    "id": "411ce3b3-232b-4d00-9102-ad46146635cf",
+    "orderId": "1500495e-d350-416e-9afb-6529b453471b",
+    "productId": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
     "quantity": 1,
     "unitPrice": 1000000,
-    "createdAt": "2024-06-23T10:58:12.309Z",
-    "updatedAt": "2024-06-23T10:58:12.309Z"
+    "createdAt": "2024-06-23T13:11:31.097Z",
+    "updatedAt": "2024-06-23T13:11:31.097Z"
   }
 }
 
@@ -1132,7 +1430,7 @@ get order item data
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**orderItemId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order item id who need to get retrieved|548aa218-808c-4706-99af-737d92a83ee8|
+|**orderItemId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order item id who need to get retrieved|459d7c6d-ca9c-4af4-8d70-7e7a468c8465|
 
 **Responses**
 
@@ -1142,13 +1440,13 @@ get order item data
   "code": 200,
   "message": "OrderItem Retrieved!",
   "data": {
-    "id": "548aa218-808c-4706-99af-737d92a83ee8",
-    "orderId": "f08cc6a7-edde-4dd0-92c6-9520d9c384ed",
-    "productId": "2c0bde27-0a9e-4f73-b772-3e0fd3f2a2c2",
+    "id": "459d7c6d-ca9c-4af4-8d70-7e7a468c8465",
+    "orderId": "46593a05-868f-436b-9410-1bfddacdc82b",
+    "productId": "06266073-3985-49ef-b904-a6e2f9e49371",
     "quantity": 2,
-    "unitPrice": 4699,
-    "createdAt": "2024-06-23T10:57:40.152Z",
-    "updatedAt": "2024-06-23T10:57:40.152Z"
+    "unitPrice": 5465,
+    "createdAt": "2024-06-23T13:10:51.281Z",
+    "updatedAt": "2024-06-23T13:10:51.281Z"
   }
 }
 
@@ -1166,7 +1464,7 @@ update order items
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**orderItemId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order item id who need get updated|548aa218-808c-4706-99af-737d92a83ee8|
+|**orderItemId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order item id who need get updated|459d7c6d-ca9c-4af4-8d70-7e7a468c8465|
 
 **Body**
 
@@ -1183,8 +1481,8 @@ Example:
 {
   "quantity": 1,
   "unitPrice": 2000000,
-  "orderId": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-  "productId": "4b392050-ef43-4f03-8f0e-0f34ef8c4ce3"
+  "orderId": "1500495e-d350-416e-9afb-6529b453471b",
+  "productId": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43"
 }
 ```
 
@@ -1196,13 +1494,13 @@ Example:
   "code": 200,
   "message": "OrderItem Updated!",
   "data": {
-    "id": "548aa218-808c-4706-99af-737d92a83ee8",
-    "orderId": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-    "productId": "4b392050-ef43-4f03-8f0e-0f34ef8c4ce3",
+    "id": "459d7c6d-ca9c-4af4-8d70-7e7a468c8465",
+    "orderId": "1500495e-d350-416e-9afb-6529b453471b",
+    "productId": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
     "quantity": 1,
     "unitPrice": 2000000,
-    "createdAt": "2024-06-23T10:57:40.152Z",
-    "updatedAt": "2024-06-23T10:58:14.382Z"
+    "createdAt": "2024-06-23T13:10:51.281Z",
+    "updatedAt": "2024-06-23T13:11:32.956Z"
   }
 }
 
@@ -1220,7 +1518,7 @@ delete order item
 
 |parameter|type|description|example|
 |-|-|-|-|
-|**orderItemId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order item id who need to get deleted|548aa218-808c-4706-99af-737d92a83ee8|
+|**orderItemId**|_[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)_|the order item id who need to get deleted|459d7c6d-ca9c-4af4-8d70-7e7a468c8465|
 
 **Responses**
 
@@ -1230,13 +1528,13 @@ delete order item
   "code": 200,
   "message": "OrderItem deleted !",
   "data": {
-    "id": "548aa218-808c-4706-99af-737d92a83ee8",
-    "orderId": "467c62fd-440c-4f3b-b61e-4309eecc435b",
-    "productId": "4b392050-ef43-4f03-8f0e-0f34ef8c4ce3",
+    "id": "459d7c6d-ca9c-4af4-8d70-7e7a468c8465",
+    "orderId": "1500495e-d350-416e-9afb-6529b453471b",
+    "productId": "cdffb3a4-385d-440b-a3f6-a56a8d5dfd43",
     "quantity": 1,
     "unitPrice": 2000000,
-    "createdAt": "2024-06-23T10:57:40.152Z",
-    "updatedAt": "2024-06-23T10:58:14.382Z"
+    "createdAt": "2024-06-23T13:10:51.281Z",
+    "updatedAt": "2024-06-23T13:11:32.956Z"
   }
 }
 

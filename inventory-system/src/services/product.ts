@@ -12,7 +12,7 @@ export default class ProductService {
   }
 
   public static async getAll({ pageSize, pageIndex }: { pageIndex: number; pageSize: number }) {
-    const datasSize = await prisma.product.count();
+    const datasSize = Math.max(await prisma.product.count());
     const numOfPages = Math.ceil(datasSize / Math.min(pageSize, datasSize));
     const index = Math.min(pageIndex, numOfPages);
     const skip = (index - 1) * pageSize;
@@ -46,8 +46,8 @@ export default class ProductService {
   }
 
   public static async searchByCategory(name: string) {
-    const category = await CategoryService.get(name);
-    const results = await prisma.product.findMany({ where: { categoryId: category.id } });
-    return results;
+    const results = await prisma.category.findFirst({ where: { name }, select: { products: true } });
+    if (!results) throw new ApiError(httpStatus.NOT_FOUND, `Category with name: ${name} not found`);
+    return results.products;
   }
 }

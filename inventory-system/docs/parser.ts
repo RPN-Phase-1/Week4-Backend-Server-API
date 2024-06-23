@@ -6,6 +6,7 @@ import { createGroupsSchema, createSchemaLinks } from './templates';
 import AuthPayload from './routes/v1/auth';
 import UserPayload from './routes/v1/user';
 import CategoryPayload from './routes/v1/category';
+import ProductPayload from './routes/v1/product';
 import OrderPayload from './routes/v1/order';
 import OrderItemPayload from './routes/v1/orderItem';
 
@@ -25,6 +26,7 @@ const main = async () => {
     for (const schema of AuthPayload) await faker.req(schema);
     for (const schema of UserPayload) await faker.req(schema);
     for (const schema of CategoryPayload) await faker.req(schema);
+    for (const schema of ProductPayload) await faker.req(schema);
     for (const schema of OrderPayload) await faker.req(schema);
     for (const schema of OrderItemPayload) await faker.req(schema);
 
@@ -36,11 +38,13 @@ const main = async () => {
       .replace('{replace:auth:routes}', createSchemaLinks(AuthPayload))
       .replace('{replace:user:routes}', createSchemaLinks(UserPayload))
       .replace('{replace:category:routes}', createSchemaLinks(CategoryPayload))
+      .replace('{replace:product:routes}', createSchemaLinks(ProductPayload))
       .replace('{replace:order:routes}', createSchemaLinks(OrderPayload))
       .replace('{replace:orderItem:routes}', createSchemaLinks(OrderItemPayload))
       .replace('{replace:auth:schemas}', createGroupsSchema(AuthPayload))
       .replace('{replace:user:schemas}', createGroupsSchema(UserPayload))
       .replace('{replace:category:schemas}', createGroupsSchema(CategoryPayload))
+      .replace('{replace:product:schemas}', createGroupsSchema(ProductPayload))
       .replace('{replace:order:schemas}', createGroupsSchema(OrderPayload))
       .replace('{replace:orderItem:schemas}', createGroupsSchema(OrderItemPayload))
       .replace(/\{replace:responses:(.+)\}/g, (_, x) => JSON.stringify(faker.cachedResponse.get(x) || {}, null, 2));

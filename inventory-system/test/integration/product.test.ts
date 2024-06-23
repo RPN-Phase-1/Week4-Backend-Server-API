@@ -323,4 +323,18 @@ describe('Product route', () => {
       await agent.get(`/v1/users/${userOne.id}/products`).auth(userOneAccessToken, { type: 'bearer' }).expect(UNAUTHORIZED);
     });
   });
+
+  describe('GET /v1/products/search', () => {
+    it('should return ok (200) and succesfully retrieved the products', async () => {
+      await insertUsers(userOne);
+      await insertCategory(categoryOne);
+      await insertProduct(productOne);
+      const response = await agent
+        .get(`/v1/products/search`)
+        .auth(userOneAccessToken, { type: 'bearer' })
+        .query({ category: categoryOne.name })
+        .expect(OK);
+      expect(response.body.data[0].id).toEqual(productOne.id);
+    });
+  });
 });

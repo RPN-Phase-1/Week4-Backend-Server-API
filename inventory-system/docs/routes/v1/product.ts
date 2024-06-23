@@ -52,7 +52,7 @@ export default [
         example: 'This is a brand new aloe verra with durian scene',
       },
       {
-        name: 'quantityStock',
+        name: 'quantityInStock',
         type: 'integer',
         description: 'the quantity of the products',
         required: true,
@@ -123,7 +123,7 @@ export default [
         example: 'This is a brand new aloe verra with durian scene',
       },
       {
-        name: 'quantityStock',
+        name: 'quantityInStock',
         type: 'integer',
         description: 'the quantity of the products',
         example: 10,
@@ -153,7 +153,7 @@ export default [
         type: 'uuid',
         description: 'the product id who to delete',
         required: true,
-        example: '{replace:product:id}',
+        example: () => prisma.product.findFirst({ where: { name: 'Bailoha' }, select: { id: true } }).then((x) => x?.id),
       },
     ],
   },
@@ -166,7 +166,7 @@ export default [
       {
         name: 'category',
         type: 'string',
-        description: 'the name of category',
+        description: 'the category name',
         required: true,
         example: '{replace:category:name}',
       },

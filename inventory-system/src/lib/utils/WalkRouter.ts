@@ -10,6 +10,7 @@ import catchAsync from './CatchAsync';
 export default class WalkRouter {
   public static async exec(router: Router, path: string = Config.routesPath, parent = '') {
     const dirs = await opendir(path);
+    const awaited = [] as Promise<void>[];
     /* eslint-disable-next-line no-restricted-syntax */
     for await (const item of dirs) {
       if (item.isFile() && (item.name.endsWith('.ts') || item.name.endsWith('.js'))) {
@@ -43,8 +44,9 @@ export default class WalkRouter {
             Logger.error(`register route '${route}' with method '${method}' failed cause ${(error as Error).message}`);
         }
       } else if (item.isDirectory()) {
-        await this.exec(router, join(path, item.name), item.name);
+        awaited.push(this.exec(router, join(path, item.name), item.name));
       }
     }
+    await Promise.all(awaited);
   }
 }

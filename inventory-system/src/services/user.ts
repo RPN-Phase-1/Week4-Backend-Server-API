@@ -16,7 +16,7 @@ export default class UserService {
   }
 
   public static async getAll({ pageSize, pageIndex }: { pageIndex: number; pageSize: number }) {
-    const datasSize = await prisma.user.count();
+    const datasSize = Math.max(await prisma.user.count());
     const numOfPages = Math.ceil(datasSize / Math.min(pageSize, datasSize));
     const index = Math.min(pageIndex, numOfPages);
     const skip = (index - 1) * pageSize;
