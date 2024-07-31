@@ -17,13 +17,13 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.ts",
     "prettier:fix": "prettier --write **/*.ts",
-    "prepare": "husky install",
     "test": "jest -i --colors --verbose --detectOpenHandles",
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
     "docs": "ts-node ./docs/parser.ts",
-    "build": "tsc --build"
+    "postinstall": "prisma generate",
+    "build": "prisma generate && tsc --build"
   },
   "keywords": [
     "node",
@@ -98,6 +98,7 @@
     "lint-staged": "^11.0.0",
     "node-mocks-http": "^1.8.0",
     "nodemon": "^2.0.0",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.0.5",
     "prisma": "^5.3.1",
     "supertest": "^6.0.1",
