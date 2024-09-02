@@ -1,0 +1,7 @@
+dist
+tsconfig.tsbuildinfo
+node_modules
+coverage
+.env
+
+.vercel
