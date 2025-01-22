@@ -157,19 +157,7 @@ Content-Type: application/json
   "totalPrice": 250.00,
   "customerName": "Fitra",
   "customerEmail": "fitra@gmail.com",
-  "userId": "{{userId}}",
-  "orderItems": [
-    {
-      "productId": "{{productId}}",
-      "quantity": 2,
-      "unitPrice": 100.00
-    },
-    {
-      "productId": "{{productId}}",
-      "quantity": 1,
-      "unitPrice": 50.00
-    }
-  ]
+  "userId": "{{userId}}"
 }
 
 ### Get All Orders
@@ -189,19 +177,7 @@ Content-Type: application/json
   "totalPrice": 250.00,
   "customerName": "Fitra",
   "customerEmail": "fitra@gmail.com",
-  "userId": "{{userId}}",
-  "orderItems": [
-    {
-      "productId": "{{productId}}",
-      "quantity": 2,
-      "unitPrice": 100.00
-    },
-    {
-      "productId": "{{productId}}",
-      "quantity": 1,
-      "unitPrice": 50.00
-    }
-  ]
+  "userId": "{{userId}}"
 }
 
 ### Delete Order

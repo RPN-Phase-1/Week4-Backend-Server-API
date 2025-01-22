@@ -32,6 +32,7 @@ const updateOrder = async (
 };
 
 const deleteOrder = async (orderId) => {
+  await prisma.orderItem.deleteMany({ where: { orderId } });
   return await prisma.order.delete({
     where: { id: orderId },
   });

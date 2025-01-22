@@ -1,13 +1,6 @@
 const orderService = require("../services/order.service");
-
-const handleResponse = (res, status, message, data = null, error = null) => {
-  res.status(status).json({
-    status,
-    message,
-    data,
-    error,
-  });
-};
+const { orderValidationSchema } = require("../validations/order.validation");
+const handleResponse = require("../utils/responseHandler");
 
 const getOrders = async (req, res) => {
   try {
@@ -30,6 +23,11 @@ const getOrder = async (req, res) => {
 const createOrder = async (req, res) => {
   try {
     const { totalPrice, customerName, customerEmail, userId } = req.body;
+    const { error } = orderValidationSchema.validate(req.body);
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
 
     const createdOrder = await orderService.createOrder({
       totalPrice,
@@ -48,10 +46,15 @@ const updateOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
     const { totalPrice, customerName, customerEmail, userId } = req.body;
-
+    const { error } = orderValidationSchema.validate(req.body);
     const existingOrder = await orderService.getOrder(orderId);
+
     if (!existingOrder) {
       return handleResponse(res, 404, "Order not found.");
+    }
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
     }
 
     const updatedOrder = await orderService.updateOrder(orderId, {
