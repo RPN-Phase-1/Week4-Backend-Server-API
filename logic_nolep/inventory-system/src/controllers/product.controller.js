@@ -1,13 +1,6 @@
 const productService = require("../services/product.service");
-
-const handleResponse = (res, status, message, data = null, error = null) => {
-  res.status(status).json({
-    status,
-    message,
-    data,
-    error,
-  });
-};
+const { productValidationSchema } = require("../validations/product.validation");
+const handleResponse = require("../utils/responseHandler");
 
 const getProducts = async (req, res) => {
   try {
@@ -31,6 +24,11 @@ const createProduct = async (req, res) => {
   try {
     const { name, description, price, quantityInStock, categoryId, userId } =
       req.body;
+    const { error } = productValidationSchema.validate(req.body);
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
 
     const createdProduct = await productService.createProduct({
       name,
@@ -52,12 +50,17 @@ const updateProduct = async (req, res) => {
     const productId = req.params.id;
     const { name, description, price, quantityInStock, categoryId, userId } =
       req.body;
-
+    const { error } = productValidationSchema.validate(req.body);
     const existingProduct = await productService.getProduct(productId);
+
     if (!existingProduct) {
       return handleResponse(res, 404, "Product not found.");
     }
-
+    
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
+    
     const updatedProduct = await productService.updateProduct(productId, {
       name,
       description,
