@@ -1,13 +1,6 @@
 const orderItemService = require("../services/order-item.service");
-
-const handleResponse = (res, status, message, data = null, error = null) => {
-  res.status(status).json({
-    status,
-    message,
-    data,
-    error,
-  });
-};
+const { orderItemValidationSchema } = require("../validations/order-item.validation");
+const handleResponse = require("../utils/responseHandler");
 
 const getOrderItems = async (req, res) => {
   try {
@@ -30,6 +23,11 @@ const getOrderItem = async (req, res) => {
 const createOrderItem = async (req, res) => {
   try {
     const { orderId, productId, quantity, unitPrice } = req.body;
+    const { error } = orderItemValidationSchema.validate(req.body);
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
 
     const createdOrderItem = await orderItemService.createOrderItem({
       orderId,
@@ -48,10 +46,15 @@ const updateOrderItem = async (req, res) => {
   try {
     const orderItemId = req.params.id;
     const { orderId, productId, quantity, unitPrice } = req.body;
-    
+    const { error } = orderItemValidationSchema.validate(req.body)
     const existingOrderItem = await orderItemService.getOrderItem(orderItemId);
+    
     if (!existingOrderItem) {
       return handleResponse(res, 404, "OrderItem not found.");
+    }
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
     }
 
     const updatedOrderItem = await orderItemService.updateOrderItem(

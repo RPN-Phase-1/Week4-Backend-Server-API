@@ -7,6 +7,9 @@
 @categoryId = category-id
 @productId = product-id
 @orderId = order-id
+@orderItemId = order-item-id
+
+# ------------ START USER CRUD API ------------ #
 
 ### Create User
 POST {{BASE_URL}}/users
@@ -44,39 +47,10 @@ Content-Type: application/json
 DELETE {{BASE_URL}}/users/{{userId}}
 # Authorization: Bearer {{JWT_TOKEN}}
 
-### Create Token
-POST {{BASE_URL}}/tokens
-Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+# ------------ END USER CRUD API ------------ #
 
-{
-  "token": "random-generated-token",
-  "userId": "{{userId}}",
-  "type": "access",
-  "expires": "2025-01-21T00:00:00Z",
-  "blacklisted": false
-}
 
-### Get All Tokens
-GET {{BASE_URL}}/tokens
-# Authorization: Bearer {{JWT_TOKEN}}
-
-### Get Token by ID
-GET {{BASE_URL}}/tokens/{{tokenId}}
-# Authorization: Bearer {{JWT_TOKEN}}
-
-### Update Token
-PUT {{BASE_URL}}/tokens/{{tokenId}}
-Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
-
-{
-  "blacklisted": true
-}
-
-### Delete Token
-DELETE {{BASE_URL}}/tokens/{{tokenId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+# ------------ START CATEGORY CRUD API ------------ #
 
 ### Create Category
 POST {{BASE_URL}}/categories
@@ -107,6 +81,11 @@ Content-Type: application/json
 ### Delete Category
 DELETE {{BASE_URL}}/categories/{{categoryId}}
 # Authorization: Bearer {{JWT_TOKEN}}
+
+# ------------ END CATEGORY CRUD API ------------ #
+
+
+# ------------ START PRODUCT CRUD API ------------ #
 
 ### Create Product
 POST {{BASE_URL}}/products
@@ -148,6 +127,11 @@ Content-Type: application/json
 DELETE {{BASE_URL}}/products/{{productId}}
 # Authorization: Bearer {{JWT_TOKEN}}
 
+# ------------ END PRODUCT CRUD API ------------ #
+
+
+# ------------ ORDER CRUD API ------------ #
+
 ### Create Order
 POST {{BASE_URL}}/orders
 Content-Type: application/json
@@ -174,7 +158,7 @@ Content-Type: application/json
 # Authorization: Bearer {{JWT_TOKEN}}
 
 {
-  "totalPrice": 250.00,
+  "totalPrice": 260.00,
   "customerName": "Fitra",
   "customerEmail": "fitra@gmail.com",
   "userId": "{{userId}}"
@@ -183,3 +167,46 @@ Content-Type: application/json
 ### Delete Order
 DELETE {{BASE_URL}}/orders/{{orderId}}
 # Authorization: Bearer {{JWT_TOKEN}}
+
+# ------------ END ORDER CRUD API ------------ #
+
+
+# ------------ START ORDER ITEM CRUD API ------------ #
+
+### Create Order Item
+POST {{BASE_URL}}/order-items
+Content-Type: application/json
+# Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "unitPrice": 250.00,
+  "quantity": 20,
+  "productId": "{{productId}}",
+  "orderId": "{{orderId}}"
+}
+
+### Get All Order Items
+GET {{BASE_URL}}/order-items
+# Authorization: Bearer {{JWT_TOKEN}}
+
+### Get Single Order Item by ID
+GET {{BASE_URL}}/order-items/{{orderItemId}}
+# Authorization: Bearer {{JWT_TOKEN}}
+
+### Update Order Item
+PUT {{BASE_URL}}/order-items/{{orderItemId}}
+Content-Type: application/json
+# Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "unitPrice": 260.00,
+  "quantity": 20,
+  "productId": "{{productId}}",
+  "orderId": "{{orderId}}"
+}
+
+### Delete Order Item
+DELETE {{BASE_URL}}/order-items/{{orderItemId}}
+# Authorization: Bearer {{JWT_TOKEN}}
+
+# ------------ END ORDER ITEM CRUD API ------------ #
