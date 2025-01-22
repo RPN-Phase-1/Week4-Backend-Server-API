@@ -17,7 +17,7 @@ Content-Type: application/json
   "name": "Fitra",
   "email": "fitra2@gmail.com",
   "password": "securepassword123",
-  "role": "customer"
+  "role": "user"
 }
 
 ### Get All Users
@@ -34,8 +34,10 @@ Content-Type: application/json
 # Authorization: Bearer {{JWT_TOKEN}}
 
 {
-  "name": "John Updated",
-  "email": "john.updated@gmail.com"
+  "name": "Fitra",
+  "email": "fitra2@gmail.com",
+  "password": "securepassword123",
+  "role": "admin"
 }
 
 ### Delete User
@@ -137,7 +139,9 @@ Content-Type: application/json
   "name": "Updated Product",
   "description": "Updated description",
   "price": 200.00,
-  "quantityInStock": 50
+  "quantityInStock": 50,
+  "categoryId": "{{categoryId}}",
+  "userId": "{{userId}}"
 }
 
 ### Delete Product
@@ -182,8 +186,22 @@ Content-Type: application/json
 # Authorization: Bearer {{JWT_TOKEN}}
 
 {
-  "totalPrice": 300.00,
-  "customerName": "Ilyasa"
+  "totalPrice": 250.00,
+  "customerName": "Fitra",
+  "customerEmail": "fitra@gmail.com",
+  "userId": "{{userId}}",
+  "orderItems": [
+    {
+      "productId": "{{productId}}",
+      "quantity": 2,
+      "unitPrice": 100.00
+    },
+    {
+      "productId": "{{productId}}",
+      "quantity": 1,
+      "unitPrice": 50.00
+    }
+  ]
 }
 
 ### Delete Order

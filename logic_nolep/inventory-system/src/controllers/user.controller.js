@@ -1,13 +1,6 @@
 const userService = require("../services/user.service");
-
-const handleResponse = (res, status, message, data = null, error = null) => {
-  res.status(status).json({
-    status,
-    message,
-    data,
-    error,
-  });
-};
+const { userValidationSchema } = require("../validations/user.validation");
+const handleResponse = require("../utils/responseHandler");
 
 const getUsers = async (req, res) => {
   try {
@@ -30,6 +23,17 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    const { error } = userValidationSchema.validate(req.body);
+    const allUsers = await userService.getUsers();
+    const isEmailTaken = allUsers.some((cat) => cat.email === email);
+
+    if (isEmailTaken) {
+      return handleResponse(res, 400, "User email already exists.");
+    }
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
 
     const createdUser = await userService.createUser({
       name,
@@ -46,12 +50,27 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
     const userId = req.params.id;
-
+    const { name, email, password, role } = req.body;
+    const { error } = userValidationSchema.validate(req.body);
     const existingUser = await userService.getUser(userId);
+    const isEmailChanged = email && email !== existingUser.email;
+
+    if (isEmailChanged) {
+      const allUsers = await userService.getUsers();
+      const isEmailTaken = allUsers.some((user) => user.email === email);
+
+      if (isEmailTaken) {
+        return handleResponse(res, 400, "User email already exists.");
+      }
+    }
+
     if (!existingUser) {
       return handleResponse(res, 404, "User not found.");
+    }
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
     }
 
     const updatedUser = await userService.updateUser(userId, {
