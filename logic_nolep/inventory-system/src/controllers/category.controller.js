@@ -1,13 +1,6 @@
 const categoryService = require("../services/category.service");
-
-const handleResponse = (res, status, message, data = null, error = null) => {
-  res.status(status).json({
-    status,
-    message,
-    data,
-    error,
-  });
-};
+const { categoryValidationSchema } = require("../validations/category.validation");
+const handleResponse = require("../utils/responseHandler");
 
 const getCategories = async (req, res) => {
   try {
@@ -30,6 +23,18 @@ const getCategory = async (req, res) => {
 const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
+    const { error } = categoryValidationSchema.validate(req.body);
+    const allCategories = await categoryService.getCategories();
+    const isNameTaken = allCategories.some((cat) => cat.name === name);
+
+    if (isNameTaken) {
+      return handleResponse(res, 400, "Category name already exists.");
+    }
+    
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
+
     const createdCategory = await categoryService.createCategory({ name });
 
     handleResponse(res, 200, "Success create Category!", createdCategory);
@@ -42,10 +47,21 @@ const updateCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
     const { name } = req.body;
-    
+    const { error } = categoryValidationSchema.validate(req.body)
     const existingCategory = await categoryService.getCategory(categoryId);
-    if (!existingCategory) {
-      return handleResponse(res, 404, "Category not found.");
+    const isNameChanged = name && name !== existingCategory.name;
+
+    if (isNameChanged) {
+      const allCategories = await categoryService.getCategories();
+      const isNameTaken = allCategories.some((category) => category.name === name);
+
+      if (isNameTaken) {
+        return handleResponse(res, 400, "Category name already exists.");
+      }
+    }
+
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
     }
 
     const updatedCategory = await categoryService.updateCategory(categoryId, {
