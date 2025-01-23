@@ -9,6 +9,36 @@
 @orderId = order-id
 @orderItemId = order-item-id
 
+# ------------ START AUTH API ------------ #
+
+### Register
+POST {{BASE_URL}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Fitra",
+  "email": "fitra@gmail.com",
+  "password": "password",
+  "role": "user"
+}
+
+### Login
+POST {{BASE_URL}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "fitra@gmail.com",
+  "password": "password"
+}
+
+### Logout
+POST {{BASE_URL}}/auth/logout
+Content-Type: application/json
+# Authorization: Bearer {{JWT_TOKEN}}
+
+# ------------ END AUTH API ------------ #
+
+
 # ------------ START USER CRUD API ------------ #
 
 ### Create User
@@ -19,7 +49,7 @@ Content-Type: application/json
 {
   "name": "Fitra",
   "email": "fitra2@gmail.com",
-  "password": "securepassword123",
+  "password": "password",
   "role": "user"
 }
 
@@ -39,7 +69,7 @@ Content-Type: application/json
 {
   "name": "Fitra",
   "email": "fitra2@gmail.com",
-  "password": "securepassword123",
+  "password": "password",
   "role": "admin"
 }
 
