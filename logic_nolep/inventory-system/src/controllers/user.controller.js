@@ -27,12 +27,12 @@ const createUser = async (req, res) => {
     const allUsers = await userService.getUsers();
     const isEmailTaken = allUsers.some((cat) => cat.email === email);
 
-    if (isEmailTaken) {
-      return handleResponse(res, 400, "User email already exists.");
-    }
-
     if (error) {
       return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
+
+    if (isEmailTaken) {
+      return handleResponse(res, 400, "User email already exists.");
     }
 
     const createdUser = await userService.createUser({
@@ -56,6 +56,14 @@ const updateUser = async (req, res) => {
     const existingUser = await userService.getUser(userId);
     const isEmailChanged = email && email !== existingUser.email;
 
+    if (error) {
+      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
+    }
+
+    if (!existingUser) {
+      return handleResponse(res, 404, "User not found.");
+    }
+
     if (isEmailChanged) {
       const allUsers = await userService.getUsers();
       const isEmailTaken = allUsers.some((user) => user.email === email);
@@ -63,14 +71,6 @@ const updateUser = async (req, res) => {
       if (isEmailTaken) {
         return handleResponse(res, 400, "User email already exists.");
       }
-    }
-
-    if (!existingUser) {
-      return handleResponse(res, 404, "User not found.");
-    }
-
-    if (error) {
-      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
     }
 
     const updatedUser = await userService.updateUser(userId, {
