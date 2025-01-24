@@ -18,7 +18,7 @@ async function main() {
     data: {
       name: "Fitra",
       email: "fitra@gmail.com",
-      password: "password",
+      password: "$2b$10$4uk.wCJvhIkrVUWga1HPk.voHd5L53sjGnohFDKr1ZVIlwPTeW9Xm", // password
       role: "customer",
     },
   });
@@ -27,7 +27,7 @@ async function main() {
     data: {
       name: "Ilyasa",
       email: "ilyasa@gmail.com",
-      password: "password",
+      password: "$2b$10$4uk.wCJvhIkrVUWga1HPk.voHd5L53sjGnohFDKr1ZVIlwPTeW9Xm", // password
       role: "admin",
     },
   });
