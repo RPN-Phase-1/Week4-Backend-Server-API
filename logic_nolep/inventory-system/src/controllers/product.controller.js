@@ -1,89 +1,68 @@
-const productService = require("../services/product.service");
-const { productValidationSchema } = require("../validations/product.validation");
-const handleResponse = require("../utils/responseHandler");
+const productService = require('../services/product.service');
+const { productValidationSchema } = require('../validations/product.validation');
+const handleResponse = require('../utils/responseHandler');
+const catchAsync = require('../utils/catchAsync');
 
-const getProducts = async (req, res) => {
-  try {
-    const products = await productService.getProducts();
-    handleResponse(res, 200, "Success get Products!", products);
-  } catch (err) {
-    handleResponse(res, 500, "Failed to get Products!", null, err.message);
+const getProducts = catchAsync(async (req, res) => {
+  const products = await productService.getProducts();
+  handleResponse(res, 200, 'Success get Products!', products);
+});
+
+const getProduct = catchAsync(async (req, res) => {
+  const product = await productService.getProduct(req.params.id);
+  handleResponse(res, 200, 'Success get Product!', product);
+});
+
+const createProduct = catchAsync(async (req, res) => {
+  const { name, description, price, quantityInStock, categoryId, userId } = req.body;
+  const { error } = productValidationSchema.validate(req.body);
+
+  if (error) {
+    return handleResponse(res, 400, 'Validation Error', null, error.details[0].message);
   }
-};
 
-const getProduct = async (req, res) => {
-  try {
-    const product = await productService.getProduct(req.params.id);
-    handleResponse(res, 200, "Success get Product!", product);
-  } catch (err) {
-    handleResponse(res, 500, "Failed to get Product!", null, err.message);
+  const createdProduct = await productService.createProduct({
+    name,
+    description,
+    price,
+    quantityInStock,
+    categoryId,
+    userId,
+  });
+
+  handleResponse(res, 200, 'Success create Product!', createdProduct);
+});
+
+const updateProduct = catchAsync(async (req, res) => {
+  const productId = req.params.id;
+  const { name, description, price, quantityInStock, categoryId, userId } = req.body;
+  const { error } = productValidationSchema.validate(req.body);
+  const existingProduct = await productService.getProduct(productId);
+
+  if (!existingProduct) {
+    return handleResponse(res, 404, 'Product not found.');
   }
-};
 
-const createProduct = async (req, res) => {
-  try {
-    const { name, description, price, quantityInStock, categoryId, userId } =
-      req.body;
-    const { error } = productValidationSchema.validate(req.body);
-
-    if (error) {
-      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
-    }
-
-    const createdProduct = await productService.createProduct({
-      name,
-      description,
-      price,
-      quantityInStock,
-      categoryId,
-      userId,
-    });
-
-    handleResponse(res, 200, "Success create Product!", createdProduct);
-  } catch (err) {
-    handleResponse(res, 500, "Failed to create Product!", null, err.message);
+  if (error) {
+    return handleResponse(res, 400, 'Validation Error', null, error.details[0].message);
   }
-};
 
-const updateProduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const { name, description, price, quantityInStock, categoryId, userId } =
-      req.body;
-    const { error } = productValidationSchema.validate(req.body);
-    const existingProduct = await productService.getProduct(productId);
+  const updatedProduct = await productService.updateProduct(productId, {
+    name,
+    description,
+    price,
+    quantityInStock,
+    categoryId,
+    userId,
+  });
 
-    if (!existingProduct) {
-      return handleResponse(res, 404, "Product not found.");
-    }
-    
-    if (error) {
-      return handleResponse(res, 400, "Validation Error", null, error.details[0].message);
-    }
-    
-    const updatedProduct = await productService.updateProduct(productId, {
-      name,
-      description,
-      price,
-      quantityInStock,
-      categoryId,
-      userId,
-    });
+  handleResponse(res, 200, 'Success update Product!', updatedProduct);
+});
 
-    handleResponse(res, 200, "Success update Product!", updatedProduct);
-  } catch (err) {
-    handleResponse(res, 500, "Failed to update Product!", null, err.message);
-  }
-};
-
-const deleteProduct = async (req, res) => {
-  try {
-    const deletedProduct = await productService.deleteProduct(req.params.id);
-    handleResponse(res, 200, "Success delete Product!", deletedProduct);
-  } catch (err) {
-    handleResponse(res, 500, "Failed to delete Product!", null, err.message);
-  }
-};
+const deleteProduct = catchAsync(async (req, res) => {
+  const deletedProduct = await productService.deleteProduct(req.params.id);
+  handleResponse(res, 200, 'Success delete Product!', deletedProduct);
+});
 
 module.exports = {
   getProducts,
