@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const orderItemController = require('../controllers/order-item.controller');
-const authenticate = require('../middlewares/auth.middleware');
+const { authenticate, authorize } = require('../middlewares/auth.middleware');
 
 router
   .route('/')
-  .get(authenticate(), orderItemController.getOrderItems)
-  .post(authenticate(), orderItemController.createOrderItem);
+  .get(authenticate(), authorize(['admin']), orderItemController.getOrderItems)
+  .post(authenticate(), authorize(['admin']), orderItemController.createOrderItem);
 
 router
   .route('/:id')
-  .get(authenticate(), orderItemController.getOrderItem)
-  .put(authenticate(), orderItemController.updateOrderItem)
-  .delete(authenticate(), orderItemController.deleteOrderItem);
+  .get(authenticate(), authorize(['admin']), orderItemController.getOrderItem)
+  .put(authenticate(), authorize(['admin']), orderItemController.updateOrderItem)
+  .delete(authenticate(), authorize(['admin']), orderItemController.deleteOrderItem);
 
 module.exports = router;

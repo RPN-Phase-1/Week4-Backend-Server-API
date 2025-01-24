@@ -24,4 +24,16 @@ const authenticate = () => {
     };
 };
 
-module.exports = authenticate;
+const authorize = (roles = []) => {
+    if (typeof roles === "string") {
+        roles = [roles];
+    }
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({ message: "Access denied. Insufficient role." });
+        }
+        next();
+    };
+};
+
+module.exports = { authenticate, authorize };
