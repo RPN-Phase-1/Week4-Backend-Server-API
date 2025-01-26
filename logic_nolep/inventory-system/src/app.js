@@ -1,8 +1,8 @@
-const express = require("express");
-const router = require("./routes");
-const cors = require("cors");
-const swaggerUi = require("swagger-ui-express");
-const yaml = require("yamljs");
+const express = require('express');
+const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const yaml = require('yamljs');
+const router = require('./routes');
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
-app.options("*", cors());
+app.options('*', cors());
 
 // API routes
 app.use('/api', router);

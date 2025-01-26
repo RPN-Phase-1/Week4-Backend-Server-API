@@ -9,7 +9,7 @@ const getOrderItems = catchAsync(async (req, res) => {
   if (!orderItems) {
     return handleResponse(res, 404, 'OrderItems not found.');
   }
-  
+
   handleResponse(res, 200, 'Success get OrderItems!', orderItems);
 });
 
@@ -71,14 +71,14 @@ const deleteOrderItem = catchAsync(async (req, res) => {
   if (!deletedOrderItem) {
     return handleResponse(res, 404, 'OrderItem not found.');
   }
-  
+
   handleResponse(res, 200, 'Success delete OrderItem!', deletedOrderItem);
 });
 
 const getOrderItemsByOrderId = catchAsync(async (req, res) => {
   const orderItems = await orderItemService.getOrderItemsByOrderId(req.params.orderId);
 
-  if(orderItems.length === 0) {
+  if (orderItems.length === 0) {
     return handleResponse(res, 404, 'OrderItems not found!');
   }
 

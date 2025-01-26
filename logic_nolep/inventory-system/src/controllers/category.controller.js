@@ -75,7 +75,7 @@ const deleteCategory = catchAsync(async (req, res) => {
   if (!deletedCategory) {
     return handleResponse(res, 404, 'Category not found.');
   }
-  
+
   handleResponse(res, 200, 'Success delete Category!', deletedCategory);
 });
 

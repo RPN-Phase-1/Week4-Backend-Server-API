@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const categoryController = require('../controllers/category.controller');
 const { authenticate, authorize } = require('../middlewares/auth.middleware');

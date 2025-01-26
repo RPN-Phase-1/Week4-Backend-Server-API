@@ -84,7 +84,7 @@ const updateUser = catchAsync(async (req, res) => {
 const deleteUser = catchAsync(async (req, res) => {
   const deletedUser = await userService.deleteUser(req.params.id);
 
-  if(!deletedUser) {
+  if (!deletedUser) {
     return handleResponse(res, 404, 'User not found!');
   }
 

@@ -1,12 +1,14 @@
 const app = require('./app');
-const prisma = require('../prisma/client')
+const prisma = require('../prisma/client');
 
 let server;
-let port = 3000
+const port = 3000;
 
-if(prisma){
+if (prisma) {
+  // eslint-disable-next-line no-console
   console.log('Connected to Database');
   server = app.listen(port, () => {
+    // eslint-disable-next-line no-console
     console.log(`Listening to port ${port}`);
   });
 }
@@ -14,6 +16,7 @@ if(prisma){
 const exitHandler = () => {
   if (server) {
     server.close(() => {
+      // eslint-disable-next-line no-console
       console.log('Server closed');
       process.exit(1);
     });
@@ -23,6 +26,7 @@ const exitHandler = () => {
 };
 
 const unexpectedErrorHandler = (error) => {
+  // eslint-disable-next-line no-console
   console.log(error);
   exitHandler();
 };
@@ -31,6 +35,7 @@ process.on('uncaughtException', unexpectedErrorHandler);
 process.on('unhandledRejection', unexpectedErrorHandler);
 
 process.on('SIGTERM', () => {
+  // eslint-disable-next-line no-console
   console.log('SIGTERM received');
   if (server) {
     server.close();
