@@ -5,11 +5,21 @@ const catchAsync = require('../utils/catchAsync');
 
 const getUsers = catchAsync(async (req, res) => {
   const users = await userService.getUsers();
+
+  if (!users) {
+    return handleResponse(res, 404, 'Users not found.');
+  }
+
   handleResponse(res, 200, 'Success get users!', users);
 });
 
 const getUser = catchAsync(async (req, res) => {
   const user = await userService.getUser(req.params.id);
+
+  if (!user) {
+    return handleResponse(res, 404, 'User not found.');
+  }
+
   handleResponse(res, 200, 'Success get user!', user);
 });
 
@@ -73,7 +83,18 @@ const updateUser = catchAsync(async (req, res) => {
 
 const deleteUser = catchAsync(async (req, res) => {
   const deletedUser = await userService.deleteUser(req.params.id);
+
+  if(!deletedUser) {
+    return handleResponse(res, 404, 'User not found!');
+  }
+
   handleResponse(res, 200, 'Success delete user!', deletedUser);
 });
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser };
+module.exports = {
+  getUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
+};

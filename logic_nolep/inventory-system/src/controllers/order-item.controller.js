@@ -5,11 +5,21 @@ const catchAsync = require('../utils/catchAsync');
 
 const getOrderItems = catchAsync(async (req, res) => {
   const orderItems = await orderItemService.getOrderItems();
+
+  if (!orderItems) {
+    return handleResponse(res, 404, 'OrderItems not found.');
+  }
+  
   handleResponse(res, 200, 'Success get OrderItems!', orderItems);
 });
 
 const getOrderItem = catchAsync(async (req, res) => {
   const orderItem = await orderItemService.getOrderItem(req.params.id);
+
+  if (!orderItem) {
+    return handleResponse(res, 404, 'OrderItem not found.');
+  }
+
   handleResponse(res, 200, 'Success get OrderItem!', orderItem);
 });
 
@@ -57,6 +67,11 @@ const updateOrderItem = catchAsync(async (req, res) => {
 
 const deleteOrderItem = catchAsync(async (req, res) => {
   const deletedOrderItem = await orderItemService.deleteOrderItem(req.params.id);
+
+  if (!deletedOrderItem) {
+    return handleResponse(res, 404, 'OrderItem not found.');
+  }
+  
   handleResponse(res, 200, 'Success delete OrderItem!', deletedOrderItem);
 });
 

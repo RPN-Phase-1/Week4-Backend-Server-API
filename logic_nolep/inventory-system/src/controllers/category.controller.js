@@ -5,11 +5,21 @@ const catchAsync = require('../utils/catchAsync');
 
 const getCategories = catchAsync(async (req, res) => {
   const categories = await categoryService.getCategories();
+
+  if (!categories) {
+    return handleResponse(res, 404, 'Categories not found.');
+  }
+
   handleResponse(res, 200, 'Success get Categories!', categories);
 });
 
 const getCategory = catchAsync(async (req, res) => {
   const category = await categoryService.getCategory(req.params.id);
+
+  if (!category) {
+    return handleResponse(res, 404, 'Category not found.');
+  }
+
   handleResponse(res, 200, 'Success get Category!', category);
 });
 
@@ -61,6 +71,11 @@ const updateCategory = catchAsync(async (req, res) => {
 
 const deleteCategory = catchAsync(async (req, res) => {
   const deletedCategory = await categoryService.deleteCategory(req.params.id);
+
+  if (!deletedCategory) {
+    return handleResponse(res, 404, 'Category not found.');
+  }
+  
   handleResponse(res, 200, 'Success delete Category!', deletedCategory);
 });
 

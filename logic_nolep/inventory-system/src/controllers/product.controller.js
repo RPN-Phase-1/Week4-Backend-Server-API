@@ -5,11 +5,21 @@ const catchAsync = require('../utils/catchAsync');
 
 const getProducts = catchAsync(async (req, res) => {
   const products = await productService.getProducts();
+
+  if (!products) {
+    return handleResponse(res, 404, 'Products not found.');
+  }
+
   handleResponse(res, 200, 'Success get Products!', products);
 });
 
 const getProduct = catchAsync(async (req, res) => {
   const product = await productService.getProduct(req.params.id);
+
+  if (!product) {
+    return handleResponse(res, 404, 'Product not found.');
+  }
+
   handleResponse(res, 200, 'Success get Product!', product);
 });
 

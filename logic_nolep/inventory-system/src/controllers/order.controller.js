@@ -5,11 +5,21 @@ const catchAsync = require('../utils/catchAsync');
 
 const getOrders = catchAsync(async (req, res) => {
   const orders = await orderService.getOrders();
+
+  if (!orders) {
+    return handleResponse(res, 404, 'Orders not found.');
+  }
+
   handleResponse(res, 200, 'Success get Orders!', orders);
 });
 
 const getOrder = catchAsync(async (req, res) => {
   const order = await orderService.getOrder(req.params.id);
+
+  if (!order) {
+    return handleResponse(res, 404, 'Order not found.');
+  }
+
   handleResponse(res, 200, 'Success get Order!', order);
 });
 
@@ -57,7 +67,18 @@ const updateOrder = catchAsync(async (req, res) => {
 
 const deleteOrder = catchAsync(async (req, res) => {
   const deletedOrder = await orderService.deleteOrder(req.params.id);
+
+  if (!deletedOrder) {
+    return handleResponse(res, 404, 'Order not found.');
+  }
+
   handleResponse(res, 200, 'Success delete Order!', deletedOrder);
 });
 
-module.exports = { getOrders, getOrder, createOrder, updateOrder, deleteOrder };
+module.exports = {
+  getOrders,
+  getOrder,
+  createOrder,
+  updateOrder,
+  deleteOrder,
+};
