@@ -29,10 +29,18 @@ const deleteProduct = async (productId) => {
   });
 };
 
+
+const getProductsByUserId = async (userId) => {
+  return await prisma.product.findMany({
+    where: { userId },
+  });
+};
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductsByUserId,
 };

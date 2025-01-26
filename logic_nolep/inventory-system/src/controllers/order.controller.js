@@ -1,4 +1,5 @@
 const orderService = require('../services/order.service');
+const { orderItemService } = require('../services/order-item.service');
 const { orderValidationSchema } = require('../validations/order.validation');
 const handleResponse = require('../utils/responseHandler');
 const catchAsync = require('../utils/catchAsync');
@@ -9,7 +10,7 @@ const getOrders = catchAsync(async (req, res) => {
   if (!orders) {
     return handleResponse(res, 404, 'Orders not found.');
   }
-
+  
   handleResponse(res, 200, 'Success get Orders!', orders);
 });
 
@@ -75,10 +76,21 @@ const deleteOrder = catchAsync(async (req, res) => {
   handleResponse(res, 200, 'Success delete Order!', deletedOrder);
 });
 
+const getOrdersByUserId = catchAsync(async (req, res) => {
+  const orders = await orderService.getOrdersByUserId(req.params.id);
+
+  if(orders.length === 0) {
+    return handleResponse(res, 404, 'Orders not found!');
+  }
+
+  handleResponse(res, 200, 'Success get orders!', orders);
+});
+
 module.exports = {
   getOrders,
   getOrder,
   createOrder,
   updateOrder,
   deleteOrder,
+  getOrdersByUserId,
 };

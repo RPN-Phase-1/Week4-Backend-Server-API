@@ -157,6 +157,10 @@ Authorization: Bearer {{JWT_TOKEN}}
 DELETE {{BASE_URL}}/products/{{productId}}
 Authorization: Bearer {{JWT_TOKEN}}
 
+### Get Products by User ID
+GET {{BASE_URL}}/users/{{userId}}/products
+Authorization: Bearer {{JWT_TOKEN}}
+
 # ------------ END PRODUCT CRUD API ------------ #
 
 
@@ -198,6 +202,10 @@ Authorization: Bearer {{JWT_TOKEN}}
 DELETE {{BASE_URL}}/orders/{{orderId}}
 Authorization: Bearer {{JWT_TOKEN}}
 
+### Get Orders by User ID
+GET {{BASE_URL}}/users/{{userId}}/orders
+Authorization: Bearer {{JWT_TOKEN}}
+
 # ------------ END ORDER CRUD API ------------ #
 
 
@@ -237,6 +245,10 @@ Authorization: Bearer {{JWT_TOKEN}}
 
 ### Delete Order Item
 DELETE {{BASE_URL}}/order-items/{{orderItemId}}
+Authorization: Bearer {{JWT_TOKEN}}
+
+### Get Order Items by Order ID
+GET {{BASE_URL}}/orders/{{orderId}}/order-items
 Authorization: Bearer {{JWT_TOKEN}}
 
 # ------------ END ORDER ITEM CRUD API ------------ #

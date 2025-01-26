@@ -10,21 +10,13 @@ const getOrder = async (orderId) => {
   });
 };
 
-const createOrder = async ({
-  totalPrice,
-  customerName,
-  customerEmail,
-  userId,
-}) => {
+const createOrder = async ({ totalPrice, customerName, customerEmail, userId }) => {
   return await prisma.order.create({
     data: { totalPrice, customerName, customerEmail, userId },
   });
 };
 
-const updateOrder = async (
-  orderId,
-  { totalPrice, customerName, customerEmail, userId }
-) => {
+const updateOrder = async (orderId, { totalPrice, customerName, customerEmail, userId }) => {
   return await prisma.order.update({
     where: { id: orderId },
     data: { totalPrice, customerName, customerEmail, userId },
@@ -38,4 +30,17 @@ const deleteOrder = async (orderId) => {
   });
 };
 
-module.exports = { getOrders, getOrder, createOrder, updateOrder, deleteOrder };
+const getOrdersByUserId = async (userId) => {
+  return await prisma.order.findMany({
+    where: { userId },
+  });
+};
+
+module.exports = {
+  getOrders,
+  getOrder,
+  createOrder,
+  updateOrder,
+  deleteOrder,
+  getOrdersByUserId,
+};

@@ -74,10 +74,21 @@ const deleteProduct = catchAsync(async (req, res) => {
   handleResponse(res, 200, 'Success delete Product!', deletedProduct);
 });
 
+const getProductsByUserId = catchAsync(async (req, res) => {
+  const products = await productService.getProductsByUserId(req.params.id);
+
+  if(products.length === 0) {
+    return handleResponse(res, 404, 'Products not found!');
+  }
+
+  handleResponse(res, 200, 'Success get products!', products);
+});
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductsByUserId,
 };
