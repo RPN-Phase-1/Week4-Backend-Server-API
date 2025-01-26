@@ -32,10 +32,17 @@ const deleteOrderItem = async (orderItemId) => {
   });
 };
 
+const getOrderItemsByOrderId = async (orderId) => {
+  return await prisma.orderItem.findMany({
+    where: { orderId },
+  });
+};
+
 module.exports = {
   getOrderItems,
   getOrderItem,
   createOrderItem,
   updateOrderItem,
   deleteOrderItem,
+  getOrderItemsByOrderId,
 };
