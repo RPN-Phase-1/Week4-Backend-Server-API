@@ -34,7 +34,7 @@ Content-Type: application/json
 ### Logout
 POST {{BASE_URL}}/auth/logout
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 # ------------ END AUTH API ------------ #
 
@@ -44,7 +44,7 @@ Content-Type: application/json
 ### Create User
 POST {{BASE_URL}}/users
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "name": "Fitra",
@@ -55,16 +55,16 @@ Content-Type: application/json
 
 ### Get All Users
 GET {{BASE_URL}}/users
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Get User by ID
 GET {{BASE_URL}}/users/{{userId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Update User
 PUT {{BASE_URL}}/users/{{userId}}
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "name": "Fitra",
@@ -75,7 +75,7 @@ Content-Type: application/json
 
 ### Delete User
 DELETE {{BASE_URL}}/users/{{userId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 # ------------ END USER CRUD API ------------ #
 
@@ -85,7 +85,7 @@ DELETE {{BASE_URL}}/users/{{userId}}
 ### Create Category
 POST {{BASE_URL}}/categories
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "name": "Electronics"
@@ -93,16 +93,16 @@ Content-Type: application/json
 
 ### Get All Categories
 GET {{BASE_URL}}/categories
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Get Category by ID
 GET {{BASE_URL}}/categories/{{categoryId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Update Category
 PUT {{BASE_URL}}/categories/{{categoryId}}
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "name": "Updated Electronics"
@@ -110,7 +110,7 @@ Content-Type: application/json
 
 ### Delete Category
 DELETE {{BASE_URL}}/categories/{{categoryId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 # ------------ END CATEGORY CRUD API ------------ #
 
@@ -120,7 +120,7 @@ DELETE {{BASE_URL}}/categories/{{categoryId}}
 ### Create Product
 POST {{BASE_URL}}/products
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "name": "New Product",
@@ -133,16 +133,16 @@ Content-Type: application/json
 
 ### Get All Products
 GET {{BASE_URL}}/products
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Get Product by ID
 GET {{BASE_URL}}/products/{{productId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Update Product
 PUT {{BASE_URL}}/products/{{productId}}
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "name": "Updated Product",
@@ -155,7 +155,11 @@ Content-Type: application/json
 
 ### Delete Product
 DELETE {{BASE_URL}}/products/{{productId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
+
+### Get Products by User ID
+GET {{BASE_URL}}/users/{{userId}}/products
+Authorization: Bearer {{JWT_TOKEN}}
 
 # ------------ END PRODUCT CRUD API ------------ #
 
@@ -165,7 +169,7 @@ DELETE {{BASE_URL}}/products/{{productId}}
 ### Create Order
 POST {{BASE_URL}}/orders
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "totalPrice": 250.00,
@@ -176,16 +180,16 @@ Content-Type: application/json
 
 ### Get All Orders
 GET {{BASE_URL}}/orders
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Get Single Order by ID
 GET {{BASE_URL}}/orders/{{orderId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Update Order
 PUT {{BASE_URL}}/orders/{{orderId}}
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "totalPrice": 260.00,
@@ -196,7 +200,11 @@ Content-Type: application/json
 
 ### Delete Order
 DELETE {{BASE_URL}}/orders/{{orderId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
+
+### Get Orders by User ID
+GET {{BASE_URL}}/users/{{userId}}/orders
+Authorization: Bearer {{JWT_TOKEN}}
 
 # ------------ END ORDER CRUD API ------------ #
 
@@ -206,7 +214,7 @@ DELETE {{BASE_URL}}/orders/{{orderId}}
 ### Create Order Item
 POST {{BASE_URL}}/order-items
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "unitPrice": 250.00,
@@ -217,16 +225,16 @@ Content-Type: application/json
 
 ### Get All Order Items
 GET {{BASE_URL}}/order-items
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Get Single Order Item by ID
 GET {{BASE_URL}}/order-items/{{orderItemId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 ### Update Order Item
 PUT {{BASE_URL}}/order-items/{{orderItemId}}
 Content-Type: application/json
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "unitPrice": 260.00,
@@ -237,6 +245,10 @@ Content-Type: application/json
 
 ### Delete Order Item
 DELETE {{BASE_URL}}/order-items/{{orderItemId}}
-# Authorization: Bearer {{JWT_TOKEN}}
+Authorization: Bearer {{JWT_TOKEN}}
+
+### Get Order Items by Order ID
+GET {{BASE_URL}}/orders/{{orderId}}/order-items
+Authorization: Bearer {{JWT_TOKEN}}
 
 # ------------ END ORDER ITEM CRUD API ------------ #

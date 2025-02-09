@@ -77,7 +77,7 @@ model User {
 
 model Token {
   id          String   @id @default(uuid())
-  token       String
+  token       String   @db.Text
   userId      String
   type        String
   expires     DateTime

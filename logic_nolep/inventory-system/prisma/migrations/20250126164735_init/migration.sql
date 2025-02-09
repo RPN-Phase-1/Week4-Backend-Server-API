@@ -64,7 +64,7 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Token` (
     `id` VARCHAR(191) NOT NULL,
-    `token` VARCHAR(191) NOT NULL,
+    `token` TEXT NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `type` VARCHAR(191) NOT NULL,
     `expires` DATETIME(3) NOT NULL,
