@@ -45,7 +45,7 @@ const getUserByEmail = async (email) => {
  * @param {object} options 
  * @returns {Promise<User>}
  */
-async function getUser() {
+async function getUser(options) {
   return prisma.user.findMany(
     {
       take:+options.take || 5,
