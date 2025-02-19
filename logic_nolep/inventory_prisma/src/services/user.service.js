@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -42,16 +42,14 @@ const getUserByEmail = async (email) => {
 
 /**
  * Get user
- * @param {object} options 
+ * @param {object} options
  * @returns {Promise<User>}
  */
 async function getUser(options) {
-  return prisma.user.findMany(
-    {
-      take:+options.take || 5,
-      skip:+options.skip || 0
-    }
-  );
+  return prisma.user.findMany({
+    take: +options.take || 5,
+    skip: +options.skip || 0,
+  });
 }
 
 /**
@@ -65,13 +63,15 @@ async function updateUser(userId, updateBody) {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const updatedUser = await prisma.user.update({
+  updateBody.password = bcrypt.hashSync(updateBody.password, 8);
+  const resultUpdate = await prisma.user.update({
     where: {
       id: userId,
     },
     data: updateBody,
   });
-  return updatedUser;
+
+  return resultUpdate;
 }
 
 /**
@@ -92,11 +92,11 @@ async function deleteUser(userId) {
   return deletedUser;
 }
 
-module.exports = { 
-  createUser, 
-  getUser, 
-  updateUser, 
-  deleteUser, 
-  getUserById, 
-  getUserByEmail 
+module.exports = {
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser,
+  getUserById,
+  getUserByEmail,
 };
