@@ -1,8 +1,8 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 const ApiError = require('../utils/ApiError');
 const userService = require('./user.service');
-const orderItemsService = require('./orderItem.service')
+const orderItemsService = require('./orderItem.service');
 
 /**
  * Get Order by id
@@ -26,38 +26,36 @@ async function createOrder(orderBody) {
   const order = await prisma.order.create({
     data: orderBody,
     include: {
-      orderItems: true
-    }
+      orderItems: true,
+    },
   });
 
-  for(const item of order.orderItems){
+  for (const item of order.orderItems) {
     const product = await prisma.product.findUnique({
       where: {
-        id: item.productId
-      }
+        id: item.productId,
+      },
     });
 
-    if(!product){
+    if (!product) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
-    };
-    if(product.quantityInStock < item.quantity){
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient stock for the product')
-    };
+    }
+    if (product.quantityInStock < item.quantity) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient stock for the product');
+    }
 
     await prisma.product.update({
       where: {
-        id: item.productId
+        id: item.productId,
       },
       data: {
-        quantityInStock: product.quantityInStock - item.quantity
-      }
+        quantityInStock: product.quantityInStock - item.quantity,
+      },
     });
-
-  };
+  }
 
   return order;
-
-};
+}
 
 /**
  * Update Order by id
@@ -86,8 +84,8 @@ async function updateOrder(Orderid, updateBody) {
  */
 async function getOrder(options) {
   const data = prisma.order.findMany({
-    take:+options.take || 5,
-    skip:+options.skip || 0
+    take: +options.take || 5,
+    skip: +options.skip || 0,
   });
   return data;
 }
@@ -121,17 +119,17 @@ async function getOrderbyUser(userId) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
   const orders = await prisma.order.findMany({
-    where: { userId },
+    where: { userId: userId },
   });
 
   return orders;
 }
 
-module.exports = { 
-  getOrder, 
-  getOrderById, 
-  deleteOrder, 
-  createOrder, 
-  updateOrder, 
-  getOrderbyUser 
+module.exports = {
+  getOrder,
+  getOrderById,
+  deleteOrder,
+  createOrder,
+  updateOrder,
+  getOrderbyUser,
 };
