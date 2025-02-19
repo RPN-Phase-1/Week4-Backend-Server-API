@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 const ApiError = require('../utils/ApiError');
 const userService = require('./user.service');
 
@@ -29,13 +29,13 @@ async function createProduct(productBody) {
 
 /**
  * Get a product
- * @param {object} options 
+ * @param {object} options
  * @returns {Promise<Product>}
  */
 async function getProduct(options) {
   return prisma.product.findMany({
-    take:+options.take || 5,
-    skip:+options.skip || 0
+    take: +options.take || 5,
+    skip: +options.skip || 0,
   });
 }
 
@@ -87,9 +87,9 @@ async function getProductbyUser(userId) {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const result = await prisma.product.findUnique({
+  const result = await prisma.product.findFirst({
     where: {
-      userId,
+      userId: userId,
     },
   });
 
@@ -101,25 +101,26 @@ async function getProductbyUser(userId) {
  * @param {string} filter
  * @returns {Promise<Product>}
  */
-const searchProductByCategory = async(filter) => {
-  const product = await prisma.product.findMany({
+const searchProductByCategory = async (filter) => {
+  const products = await prisma.product.findMany({
     where: {
-      categoryId: {
+      category: {
         name: {
           contains: filter,
-          mode: 'insensitive'
+          mode: "insensitive"
         }
       }
     }
-  })
+  });
+  return products
 };
 
-module.exports = { 
-  getProduct, 
-  getProductById, 
-  updateProduct, 
-  deleteProduct, 
-  createProduct, 
+module.exports = {
+  getProduct,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+  createProduct,
   getProductbyUser,
-  searchProductByCategory 
+  searchProductByCategory,
 };
