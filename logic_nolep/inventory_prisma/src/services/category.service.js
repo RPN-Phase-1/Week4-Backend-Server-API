@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -9,19 +9,22 @@ const ApiError = require('../utils/ApiError');
  */
 const createCategory = async (categoryBody) => {
   return prisma.category.create({
-    data: categoryBody
+    data: categoryBody,
   });
 };
 
 /**
  * Query for categorys
- * @param {object} options 
+ * @param {object} options
  * @returns {Promise<QueryResult>}
  */
 const queryCategorys = async (options) => {
   const categorys = await prisma.category.findMany({
-    take:+options.take || 5,
-    skip:+options.skip || 0
+    take: +options.take || 5,
+    skip: +options.skip || 0,
+    include:{
+      products: true
+    }
   });
   return categorys;
 };
