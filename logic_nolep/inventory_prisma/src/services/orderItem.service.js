@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma');
 const ApiError = require('../utils/ApiError');
 const orderService = require('./order.service');
 
@@ -23,21 +23,19 @@ async function getOrderItemById(orderItemId) {
  */
 async function createOrderItem(orderItemBody) {
   return prisma.orderItem.create({
-    data: {
-      
-    }
+    data: orderItemBody,
   });
 }
 
 /**
  * Get a Order Item
- * @param {object} options 
+ * @param {object} options
  * @returns {Promise<OrderItem>}
  */
 async function getOrderItem(options) {
   return prisma.orderItem.findMany({
-    take:+options.take || 5,
-    skip:+options.skip || 0
+    take: +options.take || 5,
+    skip: +options.skip || 0,
   });
 }
 
@@ -48,7 +46,7 @@ async function getOrderItem(options) {
  * @returns {Promise<OrderItem>}
  */
 async function updateOrderItem(orderItemId, orderItemBody) {
-  const orderItem = await findOrderItemById(orderItemId);
+  const orderItem = await getOrderItemById(orderItemId);
   if (!orderItem) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order item not found');
   }
@@ -67,7 +65,7 @@ async function updateOrderItem(orderItemId, orderItemBody) {
  * @returns {Promise<OrderItem>}
  */
 async function deleteOrderItem(orderItemId) {
-  const orderItem = await findOrderItemById(orderItemId);
+  const orderItem = await getOrderItemById(orderItemId);
   if (!orderItem) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order item not found');
   }
@@ -89,19 +87,19 @@ async function getOrderItembyOrder(orderId) {
   if (!order) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
-  const result = await prisma.orderItem.findUnique({
+  const result = await prisma.orderItem.findMany({
     where: {
-      orderId,
+      orderId: orderId,
     },
   });
   return result;
 }
 
-module.exports = { 
-  getOrderItem, 
-  getOrderItemById, 
-  createOrderItem, 
-  deleteOrderItem, 
-  updateOrderItem, 
-  getOrderItembyOrder 
+module.exports = {
+  getOrderItem,
+  getOrderItemById,
+  createOrderItem,
+  deleteOrderItem,
+  updateOrderItem,
+  getOrderItembyOrder,
 };
